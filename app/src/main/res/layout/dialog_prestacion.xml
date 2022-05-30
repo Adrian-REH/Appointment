@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/et_correo"
+    android:layout_margin="16dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_marginHorizontal="10dp"
+        android:id="@+id/textprest"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:focusable="false"
+        android:hint="NOMBRE DE LA PRESTACION">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtxtprest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <androidx.cardview.widget.CardView
+        android:id="@+id/detallesdate"
+        android:layout_marginHorizontal="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="5dp"
+        android:layout_marginVertical="10dp"
+        app:cardElevation="4dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_gravity="center">
+            <TextView
+                android:id="@+id/solodetalle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:text="DETALLES"
+                android:textColor="@color/black" />
+            <TextView
+                android:id="@+id/prestaciondetalle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:layout_margin="10dp"
+                android:gravity="start"
+                android:text="111\n111111\n111111\n111111\n111111\n111111\n111111\n111111\n111"
+                android:textColor="@color/black" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textdet"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+
+                android:focusable="false"
+                android:hint="DETALLES">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtxtdet"
+                    android:maxHeight="260dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+</LinearLayout>

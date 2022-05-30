@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="top">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardprest"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="10dp"
+        android:layout_width="140dp"
+        android:layout_height="160dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="5dp"
+        android:backgroundTint="#FFFFFF">
+        <RelativeLayout
+            android:id="@+id/RLview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp"
+            android:layout_marginBottom="10dp">
+            <TextView
+                android:id="@+id/txtsrv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="5"
+                android:gravity="center"
+                android:layout_marginBottom="10dp"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:text="Servicio A"/>
+
+            <TextView
+                android:id="@+id/txtdesc"
+                android:layout_width="135dp"
+                android:layout_height="93dp"
+                android:layout_marginHorizontal="2dp"
+                android:layout_alignParentBottom="true"
+                android:ems="5"
+                android:gravity="top"
+                android:text="lorem Ipsue Servicio A"
+                android:textColor="#000000"
+                android:textStyle="normal" />
+
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

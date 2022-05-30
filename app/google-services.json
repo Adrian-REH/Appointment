@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "761420709476",
+    "project_id": "appointment-d28b3",
+    "storage_bucket": "appointment-d28b3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:761420709476:android:5f530a1a889793a9386971",
+        "android_client_info": {
+          "package_name": "app.ibiocd.odontologia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "761420709476-os3p27qq4qck29of1n99egh4m3hmc129.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeh-mKMO_Mg4Nbdw7iMn9tfenqNDUDb6g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "761420709476-os3p27qq4qck29of1n99egh4m3hmc129.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
