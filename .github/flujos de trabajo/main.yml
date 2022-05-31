@@ -12,13 +12,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2.3.2
       - name: Setup JDK
-        uses: actions/setus-java@1.4.2
+        uses: actions/setus-java@v1.4.2
         with:
-          java-versions: 1.8
+          java-version: 1.8
       - name: Build with Gradle
         run: ./gradlew build
       - name: Upload APK
-        uses: actions/upload-artifact@2.1.4
+        uses: actions/upload-artifact@v2.1.4
         with:
           name: app
           path: app/build/outputs/apk/debug/app-debug.apk
