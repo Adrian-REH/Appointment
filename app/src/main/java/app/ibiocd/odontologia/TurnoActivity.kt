@@ -50,14 +50,19 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
     private var ARCHIVONAME = ""
     private var ESPECIALIDAD = ""
     var a:Int=0
+    var odont:Boolean=false
     var JSONAgregadoArchivo:String=""
+    var JSONAgregadoOdontograma:String=""
     var JSONCompletHistorial:String=""
     var JSONHistorial:String=""
     var JSONCompletArchivos:String=""
+    var JSONCOMPLETODONTOGRAMA:String=""
 
+    var JSONODONTOGRAMA: JSONObject? =null
 
     private var imageData: ByteArray? = null
 
+    var name:String?=""
     var url:String?=""
     var correo:String?=""
     var dni:String?=""
@@ -66,13 +71,46 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_turno)
+        btnodontologia.visibility=View.GONE
+
         if(intent.extras !=null){
             dni = intent.getStringExtra("dni")
             correo = intent.getStringExtra("correo")
             url = intent.getStringExtra("url")
+            name = intent.getStringExtra("name")
+            if (intent.getStringExtra("JSONODONT")!=""){
+                odont=true
+                JSONODONTOGRAMA= JSONObject(intent.getStringExtra("JSONODONT").toString())
+                for (i in 1 until 32){
+                    var JSON="\"d$i\": ${JSONODONTOGRAMA?.getString("d$i").toString()}\n"
+
+
+                    if (JSONAgregadoOdontograma==""){
+                        JSONAgregadoOdontograma = JSON
+                    }else if (JSONAgregadoOdontograma!=""){JSONAgregadoOdontograma = JSONAgregadoOdontograma+","+JSON }
+
+                }
+                JSONCOMPLETODONTOGRAMA="{\n" +
+                        "\"codigoprofesional\": \"${JSONODONTOGRAMA?.getString("codigoprofesional").toString()}\",\n" +
+                        "\"dni\": \"${JSONODONTOGRAMA?.getString("dni").toString()}\",\n" +
+                        JSONAgregadoOdontograma +
+                        "}"
+                ClickAgregarJson(View(applicationContext))
+            }
 
         }
         ClickRefresh()
+
+    }
+    fun ClickOdontograma(view: View){
+        ClickSave(View(applicationContext))
+        val intent = Intent(this, OdontogramaActivity::class.java)
+        intent.putExtra("url",url)
+        intent.putExtra("correo",correo)
+        intent.putExtra("dni",dni)
+        intent.putExtra("name",name)
+        startActivity(intent)
+        finish()
 
     }
     fun ClickRefresh(){
@@ -86,15 +124,15 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
                     val email = response.getString("correoprofesional").toString()
                     val coment = response.getString("comentario").toString()
                     val espc = response.getString("especialidad").toString()
-                    val fecha= response.getString("fecha").toString()
                     val prest= response.getString("prestacion").toString()
                     val img= response.getString("img").toString()
                     val namep= response.getString("nombrepaciente").toString()
-                    val horario = "{\n" +
-                            " \"hora\": \"15:25\",\n" +
-                            " \"fecha\": \"${fecha}\"\n" +
-                            " }"
+                    txthora.text=response.getString("hora").toString()
+                    txtdia.text=response.getString("fecha").toString()
                     txtespecialidad?.setText(espc)
+                    if(espc=="ODONTOLOGIA"){
+                        btnodontologia.visibility=View.VISIBLE
+                    }
                     txtepaciente?.setText(namep)
                     txteprofesional?.setText(name)
                     txteprestacion?.setText(prest)
@@ -103,20 +141,10 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
                         .centerCrop()
                         .into(viewimageperfilc)
                     txtcomentario?.text = coment
-                    if (horario!="null"){
-                        val JsonHora=JSONObject(horario)
-                        txthora.text=JsonHora.getString("hora").toString()
-                        txtdia.text=JsonHora.getString("fecha").toString()
-                        Historial(JsonHora.getString("fecha").toString())
-                    }
+
                     ESPECIALIDAD=espc
 
-                    /*
-                    listesp.add("adrian1")
-                    val especialidad = listesp
-                    val arrayAdapter = ArrayAdapter(this,R.layout.dropdown_item,especialidad)
-                    txtespecialidad.setAdapter(arrayAdapter) */
-
+                    Historial(response.getString("fecha").toString())
 
 
                 } catch (e: JSONException) {
@@ -140,37 +168,67 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
             { response2 ->
                 try {
                     val hist = response2.getString("historial").toString()
-                    JSONCompletHistorial=hist
-                    val jsonvalor = JSONObject(JSONCompletHistorial)
-                    val HistJSONArray=jsonvalor.getJSONArray("Historial")
-                    for (i in 0 until HistJSONArray.length()){
-                        var jsonObject2= HistJSONArray.getJSONObject(i)
+                    if(hist!=""){
+                        JSONCompletHistorial=hist
+                        val jsonvalor = JSONObject(JSONCompletHistorial)
+                        val HistJSONArray=jsonvalor.getJSONArray("Historial")
+                        for (i in 0 until HistJSONArray.length()){
+                            var jsonObject2= HistJSONArray.getJSONObject(i)
 
-                        if(jsonObject2.getString("Fecha")==fecha){
-                            var jsonArray3 = jsonObject2.getJSONArray("Archivos")
+                            if(jsonObject2.getString("Fecha")==fecha){
+                                var jsonArray3 = jsonObject2.getJSONArray("Archivos")
 
-                            if(jsonArray3.length()>0){
-                                for (i in 0 until jsonArray3.length()){
-                                    var jsonObject3= jsonArray3.getJSONObject(i)
+                                if(jsonArray3.length()>0){
+                                    for (i in 0 until jsonArray3.length()){
+                                        var jsonObject3= jsonArray3.getJSONObject(i)
+                                        var JSONArchivo=""
 
-                                    var JSONArchivo="{\n" +
-                                            "\"Nombre\": \"${jsonObject3.getString("Nombre")}\",\n" +
-                                            "\"Url\": \"${jsonObject3.getString("Url")}\"\n" +
-                                            "}"
+                                        if(jsonObject3.getString("Nombre")=="ODONTOGRAMA"){
 
-                                    if (JSONAgregadoArchivo==""){
-                                        JSONAgregadoArchivo = JSONArchivo
-                                    }else if (JSONAgregadoArchivo!=""){
-                                        JSONAgregadoArchivo = JSONAgregadoArchivo+","+JSONArchivo
+
+                                            JSONODONTOGRAMA= JSONObject(jsonObject3.getString("Url"))
+                                            for (i in 1 until 32){
+                                                var JSON="\"d$i\": ${JSONODONTOGRAMA?.getString("d$i").toString()}\n"
+
+
+                                                if (JSONAgregadoOdontograma==""){
+                                                    JSONAgregadoOdontograma = JSON
+                                                }else if (JSONAgregadoOdontograma!=""){JSONAgregadoOdontograma = JSONAgregadoOdontograma+","+JSON }
+
+                                            }
+                                            JSONCOMPLETODONTOGRAMA="{\n" +
+                                                    "\"codigoprofesional\": \"${JSONODONTOGRAMA?.getString("codigoprofesional").toString()}\",\n" +
+                                                    "\"dni\": \"${JSONODONTOGRAMA?.getString("dni").toString()}\",\n" +
+                                                    JSONAgregadoOdontograma +
+                                                    "}"
+                                             JSONArchivo="{\n" +
+                                                    "\"Nombre\": \"ODONTOGRAMA\",\n" +
+                                                    "\"Url\": ${JSONCOMPLETODONTOGRAMA}\n" +
+                                                    "}"
+
+                                        }else{
+                                             JSONArchivo="{\n" +
+                                                    "\"Nombre\": \"${jsonObject3.getString("Nombre")}\",\n" +
+                                                    "\"Url\": \"${jsonObject3.getString("Url")}\"\n" +
+                                                    "}"
+                                        }
+
+
+                                        if (JSONAgregadoArchivo==""){
+                                            JSONAgregadoArchivo = JSONArchivo
+                                        }else if (JSONAgregadoArchivo!=""){
+                                            JSONAgregadoArchivo = JSONAgregadoArchivo+","+JSONArchivo
+                                        }
+
                                     }
-
                                 }
+
+
+                                JSONCompletArchivos="{\"Archivos\":[$JSONAgregadoArchivo]}"
+                                ClickAgregarJson(View(applicationContext))
                             }
-
-
-                            JSONCompletArchivos="{\"Archivos\":[$JSONAgregadoArchivo]}"
-                            ClickAgregarJson(View(applicationContext))
                         }
+
                     }
 
                 } catch (e: JSONException) {
@@ -187,6 +245,7 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
         intent.putExtra("url",url)
         intent.putExtra("correo",correo)
         intent.putExtra("dni",dni)
+        intent.putExtra("name",name)
         startActivity(intent)
     }
     fun Back(view: View){
@@ -210,6 +269,17 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
                 }else if (JSONAgregadoArchivo!=""){JSONAgregadoArchivo = JSONAgregadoArchivo+","+JSONArchivo }
                 JSONCompletArchivos="{\"Archivos\":[$JSONAgregadoArchivo]}"
 
+
+            }else if (odont){
+                var JSONArchivo="{\n" +
+                        "\"Nombre\": \"ODONTOGRAMA\",\n" +
+                        "\"Url\": ${JSONCOMPLETODONTOGRAMA}\n" +
+                        "}"
+
+                if (JSONAgregadoArchivo==""){
+                    JSONAgregadoArchivo = JSONArchivo
+                }else if (JSONAgregadoArchivo!=""){JSONAgregadoArchivo = JSONAgregadoArchivo+","+JSONArchivo }
+                JSONCompletArchivos="{\"Archivos\":[$JSONAgregadoArchivo]}"
 
             }
 
@@ -240,6 +310,7 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
         val jsonObjectRequest= JsonObjectRequest(
             Request.Method.GET,url2,null,
             { response ->
+
                 val hist = response.getString("historial").toString()
                 if ( hist != ""){
                     val jsonvalor = JSONObject(hist)
@@ -273,14 +344,14 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
                 }
 
                 val url = "http://$url/enlace.php"
-                val queue= Volley.newRequestQueue(this)
+                val queue3= Volley.newRequestQueue(this)
                 //con este parametro aplico el metodo POST
                 var resultadoPost = object : StringRequest(
                     Method.POST,url,
                     Response.Listener<String> { response ->
 
                     }, Response.ErrorListener { error ->
-                        Toast.makeText(this,"ERROR $error", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this,"ERROR al modificar $error", Toast.LENGTH_LONG).show()
                     }){
                     override fun getParams(): MutableMap<String, String>? {
                         val parametros = HashMap<String,String>()
@@ -288,6 +359,7 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
                         parametros.put("historial",JSONHistorial)
                         parametros.put("estadoprofecional","OCUPADO")
                         parametros.put("especialidad",ESPECIALIDAD)
+                        parametros.put("nombreprofesional",name.toString())
                         parametros.put("profecionalemail",correo.toString())
                         parametros.put("pacientedni",dni.toString())
                         parametros.put("modificar","modificar")
@@ -295,26 +367,27 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
                     }
                 }
                 // con esto envio o SEND todo
-                queue.add(resultadoPost)
+                queue3.add(resultadoPost)
 
 
             }, { error ->
-
                 val url = "http://$url/enlace.php"
-                val queue= Volley.newRequestQueue(this)
+                val queue3= Volley.newRequestQueue(this)
                 //con este parametro aplico el metodo POST
                 var resultadoPost = object : StringRequest(
                     Method.POST,url,
                     Response.Listener<String> { response ->
 
                     }, Response.ErrorListener { error ->
-                        Toast.makeText(this,"ERROR $error", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this,"ERROR al insertar $error", Toast.LENGTH_LONG).show()
                     }){
                     override fun getParams(): MutableMap<String, String>? {
                         val parametros = HashMap<String,String>()
                         // Key y value
                         parametros.put("historial",JSONHistorial)
-
+                        parametros.put("estadoprofecional","OCUPADO")
+                        parametros.put("especialidad",ESPECIALIDAD)
+                        parametros.put("nombreprofesional",name.toString())
                         parametros.put("profecionalemail",correo.toString())
                         parametros.put("pacientedni",dni.toString())
                         parametros.put("insertar","insertar")
@@ -322,7 +395,7 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
                     }
                 }
                 // con esto envio o SEND todo
-                queue.add(resultadoPost)
+                queue3.add(resultadoPost)
             }
         )
         queue.add(jsonObjectRequest)
@@ -392,6 +465,8 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
                 JSONHistorial="{\"Historial\":[$JSONCompletHistorial]}"
                 Toast.makeText(this,"Archivos para el Historial agregado", Toast.LENGTH_SHORT).show()
             }
+
+        //TENGO QUE CREAR UN JSON DE ODONTOGRAMA APARTE SI NO SE CREO
     }
     private fun deleteArchivo(archivoname:String){
         val queue= Volley.newRequestQueue(this)
@@ -473,13 +548,14 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
             }
 
     } //BORRO UN ARCHIVO DEL JSON, DE LA LISTA Y DEL SERVIDOR
+
     private fun uploadImage() {
 
         imageData?: return
         val url = "http://$url/acceso.php"
         val request = object : VolleyFileUploadRequest( Method.POST, url,
             Response.Listener {
-
+                Toast.makeText(this,"ARCHIVO SUBIDO",Toast.LENGTH_LONG).show()
             },
             Response.ErrorListener {
 
@@ -507,6 +583,9 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
         Volley.newRequestQueue(this).add(request)
 
     }
+
+
+
     fun clickSelect(view: View){
         ArchivoController.selectArchivo(this, SELECT_ACTIVITY)
         a=1
@@ -550,6 +629,7 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
     override fun onArchivoItemClick(dato: String) {
 
         var a=false
+        var b=false
         var namel=""
         var uril=""
         val jsonvalor = JSONObject(JSONCompletArchivos)
@@ -564,12 +644,21 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
                     .setAllowedOverMetered(true)
                 val da = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
                 da.enqueue(requst)
+
             }
             if (jsonObject.getString("Nombre")==dato){
-                namel=jsonObject.getString("Nombre")
-                uril=jsonObject.getString("Url")
-                a=true
+                if ("ODONTOGRAMA"==dato){
+                    namel=jsonObject.getString("Nombre")
+                    JSONODONTOGRAMA= JSONObject(jsonObject.getString("Url"))
+
+                }else{
+                    namel=jsonObject.getString("Nombre")
+                    uril=jsonObject.getString("Url")
+                    a=true
+                }
+
             }
+
 
         }
         if (a){

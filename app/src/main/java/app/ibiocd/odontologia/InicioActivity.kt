@@ -16,6 +16,7 @@ import app.ibiocd.odontologia.Adapter.AdapterClienteB
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_inicio.*
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONException
@@ -23,6 +24,7 @@ import org.json.JSONException
 class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, AdapterClienteB.onClienteItemClick {
     var correo:String?=""
     var clientes:String?=""
+    var name:String?=""
     var url:String?=""
     var DATOS:String?=""
 
@@ -47,7 +49,7 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
         if(intent.extras !=null){
             correo = intent.getStringExtra("correo")
             url = intent.getStringExtra("url")
-
+            Refresh()
         }
 
         swipe_container.setOnRefreshListener  {
@@ -85,6 +87,31 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
 
     }
 
+    fun Refresh(){
+        val queue = Volley.newRequestQueue(this)
+        val url = "http://$url/cuentas.php?correo=${correo}"
+        val jsonObjectRequest= JsonObjectRequest(
+            Request.Method.GET,url,null,
+            { response ->
+                try {
+                    val jsonArray = response.getJSONArray("data")
+                    val jsonObject = jsonArray.getJSONObject(0)
+                    name = jsonObject.getString("nombreapellido").toString()
+                    correo = jsonObject.getString("correo").toString()
+                    val image= jsonObject.getString("img").toString()
+                    Glide.with(this)
+                        .load(image)
+                        .centerCrop()
+                        .into(viewminiperfil)
+
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            }, { error ->
+            }
+        )
+        queue.add(jsonObjectRequest)
+    }
 
     fun ListClienteA(search: String){
         //Limpio
@@ -123,7 +150,9 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
                         } catch (e: JSONException) {
                             e.printStackTrace()
                         }
-                    }, { error ->  Toast.makeText(this,"Error: $error", Toast.LENGTH_SHORT).show()}
+                    }, { error ->
+                        Toast.makeText(this,"Error1: $error", Toast.LENGTH_SHORT).show()
+                    }
                 )
                 queue.add(jsonObjectRequest)
             }
@@ -178,7 +207,9 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
                     }
 
 
-                }, { error ->  Toast.makeText(this,"Error: $error", Toast.LENGTH_SHORT).show()}
+                }, {
+                        error ->  Toast.makeText(this,"Error2: $error", Toast.LENGTH_SHORT).show()
+                }
             )
             queue.add(jsonObjectRequest)
         }
@@ -286,6 +317,8 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
         intent.putExtra("url",url)
         intent.putExtra("correo",correo)
         intent.putExtra("dni",dni)
+        intent.putExtra("name",name)
+        intent.putExtra("JSONODONT","")
         startActivity(intent)
     }
     override fun onClienteBItemClick(dni: String) {//Ingresa al perfil del paciente sin saber que tiene turno el mismo dia

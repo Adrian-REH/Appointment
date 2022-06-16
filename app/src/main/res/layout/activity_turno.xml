@@ -253,6 +253,7 @@
     android:orientation="horizontal"
     android:layout_alignParentEnd="true"
     android:layout_alignParentBottom="true">
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -267,6 +268,23 @@
         android:longClickable="false"
         android:onClick="ClickCancelar"
         android:src="@drawable/ic_cancel"
+        app:backgroundTint="#00FFFFFF"
+        app:tint="@color/black"></com.google.android.material.floatingactionbutton.FloatingActionButton>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnodontologia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/white"
+        android:baselineAlignBottom="true"
+        android:clickable="true"
+        android:focusable="true"
+        android:longClickable="false"
+        android:onClick="ClickOdontograma"
+        android:src="@drawable/ic_odontograma"
         app:backgroundTint="#00FFFFFF"
         app:tint="@color/black"></com.google.android.material.floatingactionbutton.FloatingActionButton>
 

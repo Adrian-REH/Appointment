@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
             swisesion.isChecked = true
             edtxtuser.setText(md5user)
             edtxtpass.setText(md5pass)
-            doLigin(edtxtuser.setText(md5user).toString())
+            doLigin(md5user)
         } else if (md5pass!=""&&md5user!=""){
             swisesion.isChecked = false
         }
@@ -113,7 +113,6 @@ class MainActivity : AppCompatActivity() {
             val jsonObjectRequest = JsonObjectRequest(
                 Request.Method.GET, url, null,
                 { response ->
-                    swipe_container.isRefreshing=false
                     try {
                         val jsonArray = response.getJSONArray("data")
                         val jsonObject = jsonArray.getJSONObject(0)

@@ -17,6 +17,9 @@
         android:theme="@style/Theme.Odontologia"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".OdontogramaActivity"
+            android:exported="false" />
+        <activity
             android:name=".MicapitalActivity"
             android:exported="false" />
         <activity

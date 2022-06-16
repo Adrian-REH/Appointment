@@ -28,6 +28,7 @@ class PacienteActivity : AppCompatActivity() {
     var url:String?=""
     var correo:String?=""
     var dni:String?=""
+    var name:String?=""
     var HISTORIAL:String?=""
     var edtxtnombre: EditText?=null
     var edtxttelefono: EditText?=null
@@ -46,6 +47,7 @@ class PacienteActivity : AppCompatActivity() {
             dni = intent.getStringExtra("dni")
             correo = intent.getStringExtra("correo")
             url = intent.getStringExtra("url")
+            name = intent.getStringExtra("name")
 
         }
         ClickRefresh()
@@ -83,6 +85,7 @@ class PacienteActivity : AppCompatActivity() {
                         parametros.put("historial",response.getString("historial"))
                         parametros.put("profecionalemail",correo.toString())
                         parametros.put("pacientedni",dni.toString())
+                        parametros.put("nombreprofesional",name.toString())
                         parametros.put("modificar","modificar")
                         return parametros
                     }
@@ -109,6 +112,7 @@ class PacienteActivity : AppCompatActivity() {
                         parametros.put("historial","")
                         parametros.put("profecionalemail",correo.toString())
                         parametros.put("pacientedni",dni.toString())
+                        parametros.put("nombreprofesional",name.toString())
                         parametros.put("insertar","insertar")
                         return parametros
                     }

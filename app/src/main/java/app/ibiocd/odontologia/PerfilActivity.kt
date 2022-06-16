@@ -401,16 +401,14 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
     override fun onHorarioItemClick(dia: String) {
 
         val builder= AlertDialog.Builder(this)
-        builder.setTitle("Recuperar Clave")
+        builder.setTitle("Horario del $dia")
         val view=layoutInflater.inflate(R.layout.dialog_horario,null)
         val horarioini=view.findViewById<EditText>(R.id.horaini)
         val horariofin=view.findViewById<EditText>(R.id.horafin)
         val solodetalle=view.findViewById<TextView>(R.id.solodetalle)
-        val textdia=view.findViewById<TextView>(R.id.dianame)
         val jsonObject=JSONObject(JSONHORA)
         solodetalle.setText(jsonObject.getString(dia))
 
-        textdia.setText(dia)
         horariofin.setOnClickListener {
             val timePicker = TimePickerFragment{horariofin?.setText("$it")}
             timePicker.show(supportFragmentManager,"time") }

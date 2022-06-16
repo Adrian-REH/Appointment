@@ -20,11 +20,22 @@
             android:layout_height="wrap_content"
             android:gravity="top"
             >
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cvid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                app:cardCornerRadius="1000dp">
+                <ImageView
+                    android:onClick="clickSelect"
+                    android:src="@drawable/blank_profile"
+                    android:id="@+id/viewventa"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    />
+            </androidx.cardview.widget.CardView>
 
-            <ImageView
-                android:id="@+id/viewventa"
-                android:layout_width="150dp"
-                android:layout_height="100dp" />
+
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -33,7 +44,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:layout_toEndOf="@+id/viewventa"
+                android:layout_toEndOf="@+id/cvid"
                 android:backgroundTint="@color/white"
                 android:gravity="center"
                 android:orientation="vertical">
