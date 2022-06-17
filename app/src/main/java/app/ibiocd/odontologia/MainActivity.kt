@@ -122,12 +122,9 @@ class MainActivity : AppCompatActivity() {
                         //val cedula= jsonObject.getString("cedula").toString()
 
                         if ( usuario==correo){
-                            doLigin(correo)
-                        }else if (usuario==""){
-                            edtxtuser.error="El usuario ingresado no existe, pruebe otro"
-                            edtxtuser.requestFocus()
-
+                            doLigin(usuario)
                         }
+
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     }
@@ -139,7 +136,6 @@ class MainActivity : AppCompatActivity() {
    private fun updateUI(currentUser:FirebaseUser?,correo:String){
         if (currentUser !=null){
             if (currentUser.isEmailVerified){
-                clickGuardar()
                 val intent = Intent(this, InicioActivity::class.java)
                 intent.putExtra("correo",correo)
                 intent.putExtra("url",URL)
@@ -157,6 +153,7 @@ class MainActivity : AppCompatActivity() {
     }
     fun ClickRegistrar(view: View){
         val intent = Intent(this, SignActivity::class.java)
+        intent.putExtra("url",URL)
         startActivity(intent)
     }
 
@@ -183,7 +180,8 @@ class MainActivity : AppCompatActivity() {
                 updateUI(user,correo)
                 GuardarSesion(correo)
             }else{
-                Toast.makeText(this,"Fallo el incio de Sesion",Toast.LENGTH_SHORT).show()
+                edtxtpass.error="La clave es incorrecta"
+                edtxtpass.requestFocus()
                 updateUI(null,"null")
             }
         }
@@ -213,7 +211,7 @@ class MainActivity : AppCompatActivity() {
         }
         auth.sendPasswordResetEmail(username.text.toString()).addOnCompleteListener { task ->
             if (task.isSuccessful){
-                Toast.makeText(this,"Email Sent.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,"Email enviado.", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -240,44 +238,6 @@ class MainActivity : AppCompatActivity() {
             archivo.close()
         } catch (e: IOException) {
         }
-
-
-
-    }
-    fun clickGuardar(){
-        //Primero Verifico si esta registrado el TOKEN ID
-        val queue = Volley.newRequestQueue(this)
-        val url = "http://$URL/cuentas.php?correo=${edtxtuser.text.toString()}"
-        val jsonObjectRequest= JsonObjectRequest(
-            Request.Method.GET,url,null,
-            { response ->
-
-            }, { error ->
-
-                val url = "http://$URL/cuentas.php"
-                val queue= Volley.newRequestQueue(this)
-                //con este parametro aplico el metodo POST
-                var resultadoPost = object : StringRequest(Method.POST,url,
-                    Response.Listener<String> { response ->
-
-                    }, Response.ErrorListener { error ->
-                        Toast.makeText(this,"ERROR $error", Toast.LENGTH_LONG).show()
-                    }){
-                    override fun getParams(): MutableMap<String, String>? {
-                        val parametros = HashMap<String,String>()
-                        // Key y value
-                        parametros.put("correo",md5user)
-                        parametros.put("horarios","")
-                        parametros.put("prestaciones","")
-                        parametros.put("insertar","insertar")
-                        return parametros
-                    }
-                }
-                // con esto envio o SEND todo
-                queue.add(resultadoPost)
-            }
-        )
-        queue.add(jsonObjectRequest)
 
 
 

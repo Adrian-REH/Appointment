@@ -17,24 +17,55 @@
         app:tint="@color/black"
         android:onClick="Back"/>
     <androidx.cardview.widget.CardView
-        android:id="@+id/cvid"
+        android:id="@+id/cvid2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_margin="10dp"
-        app:cardCornerRadius="1000dp">
-        <ImageView
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="40dp"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="10dp">
 
-            android:id="@+id/viewimageperfil"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            />
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginVertical="10dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cvid"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_margin="10dp"
+                app:cardCornerRadius="1000dp"
+                app:cardElevation="5dp">
+
+                <ImageView
+                    android:id="@+id/viewimageperfil"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/blank_profile" />
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+
+                android:id="@+id/txtnombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="30dp" />
+        </LinearLayout>
+
+
     </androidx.cardview.widget.CardView>
 
 
     <ScrollView
-        android:layout_marginTop="40dp"
-        android:layout_below="@+id/cvid"
+        android:layout_below="@+id/cvid2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
@@ -43,184 +74,102 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_marginHorizontal="20dp"
             android:gravity="center">
 
-            <LinearLayout
-                android:id="@+id/lltxt"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardinfo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="30dp"
+                app:cardCornerRadius="5dp"
+                app:cardElevation="10dp">
 
-                <TextView
-
-                    android:id="@+id/txtnombre"
-                    android:textSize="30dp"
-                    android:gravity="center"
+                <LinearLayout
+                    android:id="@+id/lltxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black" />
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginVertical="10dp"
+                    android:orientation="vertical">
 
-                <TextView
-
-                    android:id="@+id/txtmatricula"
-                    android:textSize="15dp"
-
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black" />
-                <TextView
-                    android:textSize="20dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Correo:"/>
-                <TextView
-                    android:textSize="20dp"
-                    android:id="@+id/txtcorreo"
-                    android:layout_marginStart="10dp"
-                    android:textStyle="normal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    />
-                <TextView
-                    android:textSize="20dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Celular:"/>
-                <TextView
-                    android:textSize="20dp"
-                    android:id="@+id/txtcel"
-                    android:layout_marginStart="10dp"
-                    android:textStyle="normal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    />
-                <TextView
-                    android:textSize="20dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Direccion:"/>
-                <TextView
-                    android:textSize="20dp"
-                    android:id="@+id/txtdirec"
-                    android:layout_marginStart="10dp"
-                    android:textStyle="normal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                   />
-                <TextView
-                    android:textSize="20dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="DNI:"/>
-                <TextView
-                    android:textSize="20dp"
-                    android:id="@+id/txtdni"
-                    android:layout_marginStart="10dp"
-                    android:textStyle="normal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/lledtxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/txtinpname"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
-                    android:clickable="false"
-                    android:focusable="false"
-                    app:startIconDrawable="@drawable/ic_account"
-                    android:hint="Nombre y Apellido">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtxtnombre"
+                    <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-                </com.google.android.material.textfield.TextInputLayout>
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/txtinpcel"
-                    android:layout_marginTop="5dp"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="false"
-                    app:startIconDrawable="@drawable/ic_phone"
-                    android:focusable="false"
-                    android:hint="Celular">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtxttelefono"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="20dp"
+                        android:text="Informacion personal"
+                        android:textColor="@color/black"
+                        android:textSize="15dp" />
+
+                    <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-                </com.google.android.material.textfield.TextInputLayout>
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/txtinpmail"
+                        android:layout_height="wrap_content"
+                        android:text="Correo:"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
 
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:clickable="false"
-                    app:startIconDrawable="@drawable/ic_email"
-                    android:focusable="false"
-                    android:hint="Email">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtxtemail"
+                    <TextView
+                        android:id="@+id/txtcorreo"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-                </com.google.android.material.textfield.TextInputLayout>
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/txtinpdire"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:clickable="false"
-                    app:startIconDrawable="@drawable/ic_location"
-                    android:focusable="false"
-                    android:hint="Direccion">
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:textSize="20dp"
+                        android:textStyle="normal" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtxtdirec"
+                    <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-                </com.google.android.material.textfield.TextInputLayout>
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/txtinpdni"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:clickable="false"
-                    app:startIconDrawable="@drawable/ic_baseline_fingerprint_24"
-                    android:focusable="false"
-                    android:hint="DNI">
+                        android:layout_height="wrap_content"
+                        android:text="Celular:"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/edtxtdni"
+                    <TextView
+                        android:id="@+id/txtcel"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:textSize="20dp"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Direccion:"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtdirec"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:textSize="20dp"
+                        android:textStyle="normal" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="DNI:"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtdni"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:textSize="20dp"
+                        android:textStyle="normal" />
+                </LinearLayout>
 
 
-            </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
 
 
             <androidx.cardview.widget.CardView

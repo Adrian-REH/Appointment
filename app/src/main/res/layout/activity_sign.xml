@@ -29,6 +29,30 @@
                 android:textStyle="bold"
                 android:textColor="@color/teal_700"/>
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txtmatricula"
+                android:layout_width="240dp"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:startIconDrawable="@drawable/ic_baseline_fingerprint_24"
+                android:hint="Matricula">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtxmatricula"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txtname"
+                android:layout_width="240dp"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:startIconDrawable="@drawable/ic_account"
+                android:hint="Nombre y apellido">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtxtname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/txtcorreo"
                 android:layout_width="240dp"
                 android:layout_height="wrap_content"

@@ -75,13 +75,8 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
         textemail=findViewById(R.id.textemail)
         textdire=findViewById(R.id.textdire)
         textesp=findViewById(R.id.textesp)
-
-        textname?.visibility = View.GONE
-        textcel?.visibility = View.GONE
-        textemail?.visibility = View.GONE
-        textdire?.visibility = View.GONE
-        textesp?.visibility = View.GONE
-
+        cvverif.visibility=View.GONE
+        cvedit?.visibility = View.GONE
         lishorario?.visibility = View.GONE
 
         if(intent.extras !=null){
@@ -147,25 +142,30 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             }
         })
+        edtxtmatr.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                txtmatricula.setText(s)
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+        })
         ClickRefresh(View(applicationContext))
     }
 
     fun ClickEditar(view: View){
         if(swe){
-            textname?.visibility = View.VISIBLE
-            textcel?.visibility = View.VISIBLE
-            textemail?.visibility = View.VISIBLE
-            textdire?.visibility = View.VISIBLE
-            textesp?.visibility = View.VISIBLE
+            cvedit?.visibility = View.VISIBLE
+            cvinfo?.visibility = View.GONE
+
             refreshcancel?.setImageDrawable(getDrawable(R.drawable.ic_cancel))
             refreshcancel?.imageTintList = resources.getColorStateList(R.color.black)
             swe=false
         }else if(!swe){
-            textname?.visibility = View.GONE
-            textcel?.visibility = View.GONE
-            textemail?.visibility = View.GONE
-            textdire?.visibility = View.GONE
-            textesp?.visibility = View.GONE
+            cvedit?.visibility = View.GONE
+            cvinfo?.visibility = View.VISIBLE
             refreshcancel?.setImageDrawable(getDrawable(R.drawable.ic_edit))
             refreshcancel?.imageTintList = resources.getColorStateList(R.color.black)
             swe=true
@@ -190,10 +190,13 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
                     val hora= jsonObject.getString("horarios").toString()
                     val prest= jsonObject.getString("prestaciones").toString()
                     val img= jsonObject.getString("img").toString()
+                    val matr= jsonObject.getString("matricula").toString()
+                    val verf= jsonObject.getString("verificar").toString()
                     if (hora!=""){
                         JSONHORA=hora
                     }
 
+                    txtmatricula?.setText(matr)
                     txtcorreo?.setText(correo)
                     edtxtemail?.setText(correo)
                     txtnombre?.setText(nombre)
@@ -204,15 +207,15 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
                     edtxtdirec?.setText(direc)
                     txtesp?.setText(espec)
                     edtxtesp?.setText(espec)
-                    if(img=="null"){
+                    if(verf=="V"){
+                        cvverif.visibility=View.VISIBLE
 
-                    }else{
-
+                    }
+                    if(img!="null"){
                         Glide.with(this)
                             .load(img)
                             .centerCrop()
                             .into(viewimageperfil)
-
 
                     }
 
@@ -250,6 +253,7 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
                     override fun getParams(): MutableMap<String, String>? {
                         val parametros = HashMap<String,String>()
                         // Key y value
+                        parametros.put("verificar",jsonObject.getString("verificar").toString())
                         parametros.put("correo",edtxtemail.text.toString())
                         parametros.put("celular",edtxttelefono.text.toString())
                         parametros.put("direccion",edtxtdirec.text.toString())
@@ -257,6 +261,7 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
                         parametros.put("prestaciones",jsonObject.getString("prestaciones").toString())
                         parametros.put("horarios",JSONHORA!!)
                         parametros.put("especialidad",edtxtesp.text.toString())
+                        parametros.put("matricula",txtmatricula.text.toString())
                         if (IMAGENAME==""){
                             parametros.put("img",jsonObject.getString("img").toString())
                         }else{
@@ -269,11 +274,8 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
                 }
                 // con esto envio o SEND todo
                 queue3.add(resultadoPost)
-                textname?.visibility = View.GONE
-                textcel?.visibility = View.GONE
-                textemail?.visibility = View.GONE
-                textesp?.visibility = View.GONE
-                textdire?.visibility = View.GONE
+                cvedit?.visibility = View.GONE
+                cvinfo?.visibility = View.VISIBLE
                 refreshcancel?.setImageDrawable(getDrawable(R.drawable.ic_edit))
                 refreshcancel?.imageTintList = resources.getColorStateList(R.color.black)
             }, { error ->

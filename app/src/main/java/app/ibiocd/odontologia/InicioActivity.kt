@@ -19,6 +19,7 @@ import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_inicio.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_perfil.*
 import org.json.JSONException
 
 class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, AdapterClienteB.onClienteItemClick {
@@ -46,6 +47,8 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
         arraylisConexion.clear()
         displayListTurno.clear()
         displayListConexion.clear()
+        cvverifI.visibility=View.GONE
+
         if(intent.extras !=null){
             correo = intent.getStringExtra("correo")
             url = intent.getStringExtra("url")
@@ -99,6 +102,12 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
                     name = jsonObject.getString("nombreapellido").toString()
                     correo = jsonObject.getString("correo").toString()
                     val image= jsonObject.getString("img").toString()
+                    val verif= jsonObject.getString("verificar").toString()
+
+                    if (verif=="V"){
+                        cvverifI.visibility=View.VISIBLE
+
+                    }
                     Glide.with(this)
                         .load(image)
                         .centerCrop()

@@ -32,13 +32,6 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.activity_inicio.*
-import kotlinx.android.synthetic.main.activity_paciente.*
-import kotlinx.android.synthetic.main.activity_paciente.edtxtdirec
-import kotlinx.android.synthetic.main.activity_paciente.edtxtemail
-import kotlinx.android.synthetic.main.activity_paciente.edtxtnombre
-import kotlinx.android.synthetic.main.activity_paciente.edtxttelefono
-import kotlinx.android.synthetic.main.activity_perfil.*
 import kotlinx.android.synthetic.main.activity_turno.*
 import org.json.JSONArray
 import org.json.JSONException

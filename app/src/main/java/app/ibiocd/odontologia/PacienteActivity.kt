@@ -42,7 +42,6 @@ class PacienteActivity : AppCompatActivity() {
         edtxttelefono = findViewById(R.id.edtxttelefono)
         edtxtemail = findViewById(R.id.edtxtemail)
         edtxtdirec = findViewById(R.id.edtxtdirec)
-        edtxtdni = findViewById(R.id.edtxtdni)
         if(intent.extras !=null){
             dni = intent.getStringExtra("dni")
             correo = intent.getStringExtra("correo")
@@ -51,11 +50,7 @@ class PacienteActivity : AppCompatActivity() {
 
         }
         ClickRefresh()
-        txtinpname?.visibility = View.GONE
-        txtinpcel?.visibility = View.GONE
-        txtinpmail?.visibility = View.GONE
-        txtinpdire?.visibility = View.GONE
-        txtinpdni?.visibility = View.GONE
+
         ClickEnlazar(View(applicationContext))
     }
 
