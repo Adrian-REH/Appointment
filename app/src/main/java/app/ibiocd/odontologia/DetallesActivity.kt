@@ -112,13 +112,13 @@ class DetallesActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick 
         finish()
     }
 
-    override fun onArchivoItemClick(dato: String) {
+    override fun onArchivoItemClick(url: String, name: String, download: Boolean, ver: Boolean) {
 
         val jsonvalor = JSONObject(JSONCompletArchivos)
         var jsonArray = jsonvalor.getJSONArray("Archivos")
         for (i in 0 until jsonArray.length()){
             var jsonObject= jsonArray.getJSONObject(i)
-            if (jsonObject.getString("Url")==dato ||jsonObject.getString("Nombre")==dato ){
+            if (jsonObject.getString("Url")==url ||jsonObject.getString("Nombre")==name ){
 
             val requst=DownloadManager.Request(Uri.parse(jsonObject.getString("Url")))
                 .setTitle(jsonObject.getString("Nombre"))
@@ -132,6 +132,7 @@ class DetallesActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick 
 
         }
     }
+
 }
 
 

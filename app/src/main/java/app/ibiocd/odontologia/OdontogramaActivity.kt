@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
 import app.ibiocd.lavanderia.Adapter.Clientes
 import app.ibiocd.lavanderia.Adapter.Odontograma
+import app.ibiocd.lavanderia.Adapter.OdontogramaRespons
+import app.ibiocd.lavanderia.Adapter.TurnoRespons
 import app.ibiocd.odontologia.Adapter.AdapterDientInfError
 import app.ibiocd.odontologia.Adapter.AdapterDientSupError
 import app.ibiocd.odontologia.Adapter.AdapterHorarios
@@ -26,9 +28,16 @@ import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.activity_odontograma.*
 import kotlinx.android.synthetic.main.activity_perfil.*
 import kotlinx.android.synthetic.main.activity_turno.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
 import java.lang.Error
+import java.lang.Exception
 import kotlinx.android.synthetic.main.activity_turno.txteprestacion as txteprestacion1
 
 class OdontogramaActivity : AppCompatActivity(),AdapterDientInfError.onDientInfItemClick,AdapterDientSupError.onDientSupItemClick,
@@ -38,6 +47,7 @@ class OdontogramaActivity : AppCompatActivity(),AdapterDientInfError.onDientInfI
     var correo:String?=""
     var dni:String?=""
     var Ndient:String?=""
+    var codigo:Int=0
     var JSONDiente:String?=""
     var JSONODONTOGRAMA: JSONObject? =null
 
@@ -62,10 +72,23 @@ class OdontogramaActivity : AppCompatActivity(),AdapterDientInfError.onDientInfI
             correo = intent.getStringExtra("correo")
             url = intent.getStringExtra("url")
             name = intent.getStringExtra("name")
+            codigo = intent.getStringExtra("codigo")?.toInt() ?: 0
+
+            if (codigo==0){
+                for (j in 1 until 33) {
+                    JSONDiente= ("{\n" +
+                            " \"url1\": \"http://23herrera.xyz:81/appointment/docs/dientes/inf$j.png\",\n" +
+                            " \"url2\": \"http://23herrera.xyz:81/appointment/docs/dientes/sup$j.png\"\n" +
+                            " }")
+                    JSONODONTOGRAMA = JSONObject("{\n" +
+                            " \"d$j\": \"${JSONDiente}\"\n" +
+                            " }")
+                }
+            }
 
 
         }
-        ClickRefresh(View(applicationContext))
+        getOdontogramaDatos(View(applicationContext))
 
 
         val arrayAdapter= ArrayAdapter(this,R.layout.dropdown_item,arrayList32)
@@ -76,154 +99,146 @@ class OdontogramaActivity : AppCompatActivity(),AdapterDientInfError.onDientInfI
         }
     }
 
+    fun getOdontogramaDatos(view: View){
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val call=RetrofitClient.instance.getOdontograma(dni.toString(),correo.toString())
+                val datos: List<OdontogramaRespons>? =call.body()
+                runOnUiThread{
+                    if(call.isSuccessful){
+                        for (i in 0 until datos?.size!!){
+                            if(codigo==datos[i].ID){
+                                //BUSCAR EL ARRAY LOS ODONTOGRAMAS Y DETERMINAR EL IDENTIFICADOR
+                                try {
+                                        JSONODONTOGRAMA=JSONObject(datos[i].dientes)
+                                    for (j in 1 until 32) {
+                                        val JsonOdont=JSONObject(JSONODONTOGRAMA?.getString("d$j").toString())
+                                        arraylistOdnt.add(Odontograma(JsonOdont.getString("url1").toString(),JsonOdont.getString("url2").toString()))
+                                    }
 
-    fun Back(view: View){
-        val intent = Intent(this, TurnoActivity::class.java)
-        intent.putExtra("url",url)
-        intent.putExtra("correo",correo)
-        intent.putExtra("dni",dni)
-        intent.putExtra("name",name)
-        intent.putExtra("JSONODONT",JSONODONTOGRAMA.toString())
-        startActivity(intent)
-        finish()
-    }
+                                      /*  arraylistOdnt.add(Odontograma(JSONObject(datos[i].d1).getString("url1").toString(),JSONObject(datos[i].d1).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d2).getString("url1").toString(),JSONObject(datos[i].d2).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d3).getString("url1").toString(),JSONObject(datos[i].d3).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d4).getString("url1").toString(),JSONObject(datos[i].d4).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d5).getString("url1").toString(),JSONObject(datos[i].d5).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d6).getString("url1").toString(),JSONObject(datos[i].d6).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d7).getString("url1").toString(),JSONObject(datos[i].d7).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d8).getString("url1").toString(),JSONObject(datos[i].d8).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d9).getString("url1").toString(),JSONObject(datos[i].d9).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d10).getString("url1").toString(),JSONObject(datos[i].d10).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d11).getString("url1").toString(),JSONObject(datos[i].d11).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d12).getString("url1").toString(),JSONObject(datos[i].d12).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d13).getString("url1").toString(),JSONObject(datos[i].d13).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d14).getString("url1").toString(),JSONObject(datos[i].d14).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d15).getString("url1").toString(),JSONObject(datos[i].d15).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d16).getString("url1").toString(),JSONObject(datos[i].d16).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d17).getString("url1").toString(),JSONObject(datos[i].d17).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d18).getString("url1").toString(),JSONObject(datos[i].d18).getString("url2").toString()))
++                                       arraylistOdnt.add(Odontograma(JSONObject(datos[i].d19).getString("url1").toString(),JSONObject(datos[i].d19).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d20).getString("url1").toString(),JSONObject(datos[i].d20).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d21).getString("url1").toString(),JSONObject(datos[i].d21).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d22).getString("url1").toString(),JSONObject(datos[i].d22).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d23).getString("url1").toString(),JSONObject(datos[i].d23).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d24).getString("url1").toString(),JSONObject(datos[i].d24).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d25).getString("url1").toString(),JSONObject(datos[i].d25).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d26).getString("url1").toString(),JSONObject(datos[i].d26).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d27).getString("url1").toString(),JSONObject(datos[i].d27).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d28).getString("url1").toString(),JSONObject(datos[i].d28).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d29).getString("url1").toString(),JSONObject(datos[i].d29).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d31).getString("url1").toString(),JSONObject(datos[i].d31).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d31).getString("url1").toString(),JSONObject(datos[i].d31).getString("url2").toString()))
+                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d32).getString("url1").toString(),JSONObject(datos[i].d32).getString("url2").toString()))
 
-    fun ClickImage(view: View){
+*/
+                                } catch (e: JSONException) {
+                                    e.printStackTrace()
+                                }
 
-    }
-    fun ClickAyuda(view: View){
-
-    }
-    fun ClickRefresh(view: View){
-        val queue = Volley.newRequestQueue(this)
-        val url3 = "http://$url/odontograma.php?dni=${dni}&codigoprofesional=${correo}"
-        val jsonObjectRequest= JsonObjectRequest(
-            Request.Method.GET,url3,null,
-            { response ->
-                try {
-                    JSONODONTOGRAMA=response
-                    for (j in 1 until 32) {
-                            val JsonOdont=JSONObject(response.getString("d$j").toString())
-                            arraylistOdnt.add(Odontograma(JsonOdont.getString("url1").toString(),JsonOdont.getString("url2").toString()))
-                    }
-                } catch (e: JSONException) {
-                    e.printStackTrace()
-                }
-            }, { error ->
-
-                val url = "http://$url/odontograma.php"
-                val queue= Volley.newRequestQueue(this)
-                //con este parametro aplico el metodo POST
-                var resultadoPost = object : StringRequest(
-                    Method.POST,url,
-                    Response.Listener<String> { response ->
-                        ClickRefresh(View(applicationContext))
-                    }, Response.ErrorListener { error ->
-                        Toast.makeText(this,"ERROR $error", Toast.LENGTH_LONG).show()
-                    }){
-                    override fun getParams(): MutableMap<String, String>? {
-                        val parametros = HashMap<String,String>()
-                        // Key y value
-                        for (j in 1 until 32) {
-                            parametros.put("d$j","{\n" +
-                                    " \"url1\": \"http://23herrera.xyz:81/appointment/docs/dientes/inf$j.png\",\n" +
-                                    " \"url2\": \"http://23herrera.xyz:81/appointment/docs/dientes/sup$j.png\"\n" +
-                                    " }")
-                        }
-
-
-                        parametros.put("dni",dni.toString())
-                        parametros.put("codigoprofesional",correo.toString())
-                        parametros.put("insertar","insertar")
-                        return parametros
-                    }
-                }
-                // con esto envio o SEND todo
-                queue.add(resultadoPost)
-            }
-        )
-        queue.add(jsonObjectRequest)
-    }
-
-    fun ClickSave(view: View){
-
-
-        //Primero Verifico si esta registrado el TOKEN ID
-        val queue = Volley.newRequestQueue(this)
-        val url2 = "http://$url/odontograma.php?dni=${dni}&codigoprofesional=${correo}"
-        val jsonObjectRequest= JsonObjectRequest(
-            Request.Method.GET,url2,null,
-            { response ->
-                //Toast.makeText(this,"$JSONCompletHistorial",Toast.LENGTH_SHORT).show()
-                val jsonArray = response.getJSONArray("data")
-                val jsonObject = jsonArray.getJSONObject(0)
-                val url = "http://$url/odontograma.php"
-                val queue= Volley.newRequestQueue(this)
-                //con este parametro aplico el metodo POST
-                var resultadoPost = object : StringRequest(
-                    Method.POST,url,
-                    Response.Listener<String> { response ->
-
-                        //SaveHistorial()
-                    }, Response.ErrorListener { error ->
-                        Toast.makeText(this,"ERROR $error", Toast.LENGTH_LONG).show()
-                    }){
-                    override fun getParams(): MutableMap<String, String>? {
-                        val parametros = HashMap<String,String>()
-                        // Key y value
-                        for (j in 1 until 32) {
-                            if(Ndient== "$j"){
-                                parametros.put("d$j",JSONDiente.toString())
+                            }else{
+                                codigo=0
 
                             }
-                            parametros.put("d$j",response?.getString("d$j").toString())
                         }
-                        parametros.put("dni",dni.toString())
-                        parametros.put("codigoprofesional",correo.toString())
-                        parametros.put("modificar","modificar")
-                        return parametros
+
+
+                    }else{
+
+
+
                     }
                 }
-                // con esto envio o SEND todo
-                queue.add(resultadoPost)
-
-
-            }, { error ->
-
-                val url = "http://$url/odontograma.php"
-                val queue= Volley.newRequestQueue(this)
-                //con este parametro aplico el metodo POST
-                var resultadoPost = object : StringRequest(
-                    Method.POST,url,
-                    Response.Listener<String> { response ->
-                        ClickRefresh(View(applicationContext))
-                    }, Response.ErrorListener { error ->
-                        Toast.makeText(this,"ERROR $error", Toast.LENGTH_LONG).show()
-                    }){
-                    override fun getParams(): MutableMap<String, String>? {
-                        val parametros = HashMap<String,String>()
-                        // Key y value
-                        for (j in 1 until 32) {
-                            if(Ndient== "$j"){
-                                parametros.put("d$j",JSONDiente.toString())
-
-                            }
-                            parametros.put("d$j",JSONODONTOGRAMA?.getString("d$j").toString())
-                        }
-                        parametros.put("dni",dni.toString())
-                        parametros.put("codigoprofesional",correo.toString())
-                        parametros.put("insertar","insertar")
-                        return parametros
-                    }
-                }
-                // con esto envio o SEND todo
-                queue.add(resultadoPost)
+            }catch (e: Exception){
 
             }
-        )
-        queue.add(jsonObjectRequest)
 
-    }//Guarda los datos del Turno y LLama a Save Historial
+
+        }
+
+    }//
+    fun getOdontogramaSave(view: View){
+        CoroutineScope(Dispatchers.IO).launch {
+            try{
+                val call=RetrofitClient.instance.getOdontograma(dni.toString(),correo.toString())
+                val datos: List<OdontogramaRespons>? =call.body()
+                if (datos != null) {
+                    for (i in 0 until datos.size){
+                        if(call.isSuccessful){
+                            if (codigo==0){
+                                postOdontograma("insertar")
+
+                            }else{
+                                postOdontograma("modificar")
+
+                            }
+
+                        }else{
+                            postOdontograma("insertar")
+                        }
+                    }
+                }
+
+
+            }catch (e:Exception){
+                postOdontograma("insertar")
+
+            }
+
+
+
+
+        }
+    }//
+    private fun postOdontograma(accion:String) {
+
+        for (j in 1 until 33) {
+            if(Ndient== "$j"){
+                JSONODONTOGRAMA = JSONObject("{\n" +
+                        " \"d$j\": \"$JSONDiente\"\n" +
+                        " }")
+            }
+            JSONODONTOGRAMA = JSONObject("{\n" +
+                    " \"d$j\": \"${JSONODONTOGRAMA?.getString("d$j")}\"\n" +
+                    " }")
+        }
+
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val call=RetrofitClient.instance.postOdontograma(JSONODONTOGRAMA.toString(),codigo.toInt(),"${correo}","${dni}",accion,accion)
+            call.enqueue(object : Callback<OdontogramaRespons> {
+                override fun onFailure(call: Call<OdontogramaRespons>, t: Throwable) {
+                    Toast.makeText(applicationContext,t.message,Toast.LENGTH_LONG).show()
+                }
+                override fun onResponse(call: Call<OdontogramaRespons>, response: retrofit2.Response<OdontogramaRespons>) {
+                    getOdontogramaDatos(View(applicationContext))
+
+                }
+            })
+
+
+
+        }
+    }
+
 
 
     fun dialog2(view: View){
@@ -238,7 +253,7 @@ class OdontogramaActivity : AppCompatActivity(),AdapterDientInfError.onDientInfI
 
 
             builder.setPositiveButton("Guardar", DialogInterface.OnClickListener { dialogInterface, i ->
-                ClickSave(View(applicationContext))
+                getOdontogramaSave(View(applicationContext))
 
             })
             builder.setNegativeButton("Cancelar", DialogInterface.OnClickListener { dialogInterface, i ->
@@ -259,7 +274,7 @@ class OdontogramaActivity : AppCompatActivity(),AdapterDientInfError.onDientInfI
 
 
         builder.setPositiveButton("Guardar", DialogInterface.OnClickListener { dialogInterface, i ->
-            ClickSave(View(applicationContext))
+            getOdontogramaSave(View(applicationContext))
 
         })
         builder.setNegativeButton("Cancelar", DialogInterface.OnClickListener { dialogInterface, i ->
@@ -279,7 +294,6 @@ class OdontogramaActivity : AppCompatActivity(),AdapterDientInfError.onDientInfI
             .centerCrop()
             .into(dientesup)
     }
-
     override fun onDientSupItemClick(url2: String) {
         val JsonOdont=JSONObject(JSONODONTOGRAMA?.getString("d$Ndient").toString())
         JSONDiente= "[{\n" +
@@ -296,16 +310,32 @@ class OdontogramaActivity : AppCompatActivity(),AdapterDientInfError.onDientInfI
         Ndient = parent?.getItemAtPosition(position).toString()
 
             val JsonOdont=JSONObject(JSONODONTOGRAMA?.getString("d$Ndient").toString())
+
             Glide.with(this)
                 .load(JsonOdont.getString("url1").toString())
-
                 .into(dienteinf)
+
             Glide.with(this)
                 .load(JsonOdont.getString("url2").toString())
-
                 .into(dientesup)
 
 
+    }
+    fun ClickImage(view: View){
+
+    }
+    fun ClickAyuda(view: View){
+
+    }
+    fun Back(view: View){
+        val intent = Intent(this, TurnoActivity::class.java)
+        intent.putExtra("url",url)
+        intent.putExtra("correo",correo)
+        intent.putExtra("dni",dni)
+        intent.putExtra("name",name)
+        intent.putExtra("JSONODONT",JSONODONTOGRAMA.toString())
+        startActivity(intent)
+        finish()
     }
 
 }

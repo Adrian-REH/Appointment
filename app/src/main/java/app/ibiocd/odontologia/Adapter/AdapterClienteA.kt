@@ -16,7 +16,7 @@ class AdapterClienteA(val arrayList: ArrayList<Clientes>, val context: Context, 
     RecyclerView.Adapter<AdapterClienteA.ViewHolder>(){
 
     interface onClienteItemClick{
-        fun onClienteAItemClick(dni: String)
+        fun onClienteAItemClick(dni: String,fecha:String)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -40,6 +40,7 @@ class AdapterClienteA(val arrayList: ArrayList<Clientes>, val context: Context, 
             var gem:String=model.correo
             var dir:String=model.direccion
             var img:String=model.img
+            var fcha:String=model.fecha
 
 
 
@@ -60,7 +61,7 @@ class AdapterClienteA(val arrayList: ArrayList<Clientes>, val context: Context, 
         fun bintItem(model: Clientes, context: Context){
 
 
-            itemView.view.setOnClickListener { itemClickListener.onClienteAItemClick(model.dni)}
+            itemView.view.setOnClickListener { itemClickListener.onClienteAItemClick(model.dni, model.fecha)}
             itemView.txtname.text=model.nombre
             Glide.with(context)
                 .load(model.image)

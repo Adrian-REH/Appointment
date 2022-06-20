@@ -22,7 +22,7 @@ class AdapterArchivo(val arrayList: ArrayList<Archivos>, val context: Context, v
     RecyclerView.Adapter<AdapterArchivo.ViewHolder>(){
 
     interface onArchivoItemClick{
-        fun onArchivoItemClick(dato: String)
+        fun onArchivoItemClick(url: String,name:String,download:Boolean,ver:Boolean)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -67,11 +67,11 @@ class AdapterArchivo(val arrayList: ArrayList<Archivos>, val context: Context, v
             {
                 itemView.txtdwn.visibility=View.VISIBLE
 
-                itemView.txtdwn.setOnClickListener { itemClickListener.onArchivoItemClick(model.url)}
+                itemView.txtdwn.setOnClickListener { itemClickListener.onArchivoItemClick(model.url,model.name,true,false)}
 
             }
 
-            itemView.txtnamearc.setOnClickListener { itemClickListener.onArchivoItemClick(model.name)}
+            itemView.txtnamearc.setOnClickListener { itemClickListener.onArchivoItemClick(model.url,model.name,false,true)}
             itemView.txtnamearc.text=model.name
 
 

@@ -255,6 +255,7 @@
     android:layout_alignParentBottom="true">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatcanc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -300,7 +301,7 @@
         android:clickable="true"
         android:focusable="true"
         android:longClickable="false"
-        android:onClick="ClickArchivos"
+        android:onClick="clickSelect"
         android:src="@drawable/ic_file"
         app:backgroundTint="#00FFFFFF"
         app:tint="@color/black"></com.google.android.material.floatingactionbutton.FloatingActionButton>
