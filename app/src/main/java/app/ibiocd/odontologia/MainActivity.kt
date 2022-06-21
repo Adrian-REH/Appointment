@@ -10,7 +10,9 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
+import app.ibiocd.lavanderia.Adapter.ClienteRespons
 import app.ibiocd.lavanderia.Adapter.Clientes
+import app.ibiocd.lavanderia.Adapter.ProfesionalRespons
 import app.ibiocd.odontologia.Adapter.AdapterClienteA
 import com.android.volley.Request
 import com.android.volley.Response
@@ -22,6 +24,9 @@ import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_inicio.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_sign.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONException
 import java.io.BufferedReader
 import java.io.IOException
@@ -105,34 +110,39 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
     fun profecionales(view: View){
         val usuario=edtxtuser.text.toString()
-        //GENERA LA LISTA
-            val queue = Volley.newRequestQueue(this)
-            val url = "http://23herrera.xyz:81/appointment/cuentas.php?todos="
-            val jsonObjectRequest = JsonObjectRequest(
-                Request.Method.GET, url, null,
-                { response ->
-                    try {
-                        val jsonArray = response.getJSONArray("data")
-                        val jsonObject = jsonArray.getJSONObject(0)
+        if (usuario.isNotEmpty()){
 
-                       // val dni= jsonObject.getString("dni").toString()
-                        val correo= jsonObject.getString("correo").toString()
-                        //val cedula= jsonObject.getString("cedula").toString()
+            CoroutineScope(Dispatchers.IO).launch {
 
-                        if ( usuario==correo){
+                try {
+
+                    val call=RetrofitClient.instance.getProfesional(usuario.toString())
+                    val datos: ProfesionalRespons? =call.body()
+                    runOnUiThread{
+                        if(call.isSuccessful){
+                            val usuario = datos?.correo ?: ""
                             doLigin(usuario)
-                        }
 
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
+                        }else{
+                            Toast.makeText(applicationContext,"Error",Toast.LENGTH_LONG).show()
+                        }
                     }
-                }, { error ->  Toast.makeText(this,"Error: $error", Toast.LENGTH_SHORT).show()}
-            )
-            queue.add(jsonObjectRequest)
+
+
+                }catch (e: java.lang.Exception){
+
+                }
+            }
+
+
+        }
+
 
     }
+
    private fun updateUI(currentUser:FirebaseUser?,correo:String){
         if (currentUser !=null){
             if (currentUser.isEmailVerified){
@@ -151,9 +161,9 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
+
     fun ClickRegistrar(view: View){
         val intent = Intent(this, SignActivity::class.java)
-        intent.putExtra("url",URL)
         startActivity(intent)
     }
 
@@ -201,6 +211,7 @@ class MainActivity : AppCompatActivity() {
         })
         builder.show()
     }
+
     private fun forgotPassword(username: EditText){
         if (username.text.toString().isEmpty()){
             username.error="Please enter email"
@@ -242,6 +253,7 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
     fun BorrarSesion(){
 
         md5user = ""
@@ -267,4 +279,5 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
 }

@@ -20,7 +20,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.SnapHelper
+import app.ibiocd.lavanderia.Adapter.ClienteRespons
 import app.ibiocd.lavanderia.Adapter.Horario
+import app.ibiocd.lavanderia.Adapter.ProfesionalRespons
 import app.ibiocd.lavanderia.FileDataPart
 import app.ibiocd.lavanderia.VolleyFileUploadRequest
 import app.ibiocd.odontologia.Adapter.AdapterHorarios
@@ -35,8 +37,13 @@ import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.activity_perfil.*
 import kotlinx.android.synthetic.main.activity_perfil.txtcorreo
 import kotlinx.android.synthetic.main.list_paciente_a.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
 import java.io.IOException
 
 class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
@@ -152,7 +159,7 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             }
         })
-        ClickRefresh(View(applicationContext))
+        getProfesionalDatos()
     }
 
     fun ClickEditar(view: View){
@@ -173,25 +180,25 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
 
 
     }
-    fun ClickRefresh(view: View){
-        val queue = Volley.newRequestQueue(this)
-        val url = "http://$url/cuentas.php?correo=${correo}"
-        val jsonObjectRequest= JsonObjectRequest(
-            Request.Method.GET,url,null,
-            { response ->
-                try {
-                    val jsonArray = response.getJSONArray("data")
-                    val jsonObject = jsonArray.getJSONObject(0)
-                    val correo = jsonObject.getString("correo").toString()
-                    val celul = jsonObject.getString("celular").toString()
-                    val direc = jsonObject.getString("direccion").toString()
-                    val nombre = jsonObject.getString("nombreapellido").toString()
-                    val espec= jsonObject.getString("especialidad").toString()
-                    val hora= jsonObject.getString("horarios").toString()
-                    val prest= jsonObject.getString("prestaciones").toString()
-                    val img= jsonObject.getString("img").toString()
-                    val matr= jsonObject.getString("matricula").toString()
-                    val verf= jsonObject.getString("verificar").toString()
+
+
+
+    private fun getProfesionalDatos(){
+        CoroutineScope(Dispatchers.IO).launch {
+            val call=RetrofitClient.instance.getProfesional(correo.toString())
+            val datos: ProfesionalRespons? =call.body()
+            runOnUiThread{
+                if(call.isSuccessful){
+                    val nombre = datos?.nameprof ?: ""
+                    val direc = datos?.direccion ?: ""
+                    val celul = datos?.celular ?: ""
+                    val matr= datos?.matricula ?: ""
+                    val espec= datos?.especialidad ?: ""
+                    val hora= datos?.horarios ?: ""
+                    val verf= datos?.verificar ?: ""
+                    val img= datos?.img ?: ""
+                    val prest= datos?.prestacion ?: ""
+
                     if (hora!=""){
                         JSONHORA=hora
                     }
@@ -212,7 +219,7 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
 
                     }
                     if(img!="null"){
-                        Glide.with(this)
+                        Glide.with(applicationContext)
                             .load(img)
                             .centerCrop()
                             .into(viewimageperfil)
@@ -221,70 +228,55 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
 
 
                     PRESTACION=prest
-                } catch (e: JSONException) {
-                    e.printStackTrace()
+                }else{
+                    Toast.makeText(applicationContext,"Error",Toast.LENGTH_LONG).show()
                 }
-            }, { error ->
-
             }
-        )
-        queue.add(jsonObjectRequest)
-    }
-    fun ClickSave(view: View){
-        //Primero Verifico si esta registrado el TOKEN ID
-        val queue = Volley.newRequestQueue(this)
-        val url2 = "http://$url/cuentas.php?correo=${correo}"
-        val jsonObjectRequest= JsonObjectRequest(
-            Request.Method.GET,url2,null,
-            { response ->
-                val jsonArray = response.getJSONArray("data")
-                val jsonObject = jsonArray.getJSONObject(0)
-                val url3 = "http://$url/cuentas.php"
-                val queue3= Volley.newRequestQueue(this)
-                //con este parametro aplico el metodo POST
-                val URL=url
-                var resultadoPost = object : StringRequest(Method.POST,url3,
-                    Response.Listener<String> { response ->
-                        uploadImage()
-                    }, Response.ErrorListener { error ->
-                        Toast.makeText(this,"ERROR $error", Toast.LENGTH_LONG).show()
-                    }){
 
-                    override fun getParams(): MutableMap<String, String>? {
-                        val parametros = HashMap<String,String>()
-                        // Key y value
-                        parametros.put("verificar",jsonObject.getString("verificar").toString())
-                        parametros.put("correo",edtxtemail.text.toString())
-                        parametros.put("celular",edtxttelefono.text.toString())
-                        parametros.put("direccion",edtxtdirec.text.toString())
-                        parametros.put("nombreapellido",edtxtnombre.text.toString())
-                        parametros.put("prestaciones",jsonObject.getString("prestaciones").toString())
-                        parametros.put("horarios",JSONHORA!!)
-                        parametros.put("especialidad",edtxtesp.text.toString())
-                        parametros.put("matricula",txtmatricula.text.toString())
-                        if (IMAGENAME==""){
-                            parametros.put("img",jsonObject.getString("img").toString())
-                        }else{
-                            parametros.put("img","http://${URL}/docs/$IMAGENAME")
+        }
+    }//
+    fun getProfesionalSave(view: View){
+        CoroutineScope(Dispatchers.IO).launch {
+            val call=RetrofitClient.instance.getProfesional(correo.toString())
+            val datos: ProfesionalRespons? =call.body()
+            runOnUiThread{
+                var Imagen=""
+                if(call.isSuccessful){
+                    if (IMAGENAME==""){
+                        if (datos != null) {
+                            postProfesional(datos.img,datos.verificar,datos.prestacion)
                         }
-
-                        parametros.put("modificar","modificar")
-                        return parametros
+                    }else{
+                        if (datos != null) {
+                            postProfesional("http://${url}/docs/$IMAGENAME",datos.verificar,datos.prestacion)
+                        }
                     }
                 }
-                // con esto envio o SEND todo
-                queue3.add(resultadoPost)
-                cvedit?.visibility = View.GONE
-                cvinfo?.visibility = View.VISIBLE
-                refreshcancel?.setImageDrawable(getDrawable(R.drawable.ic_edit))
-                refreshcancel?.imageTintList = resources.getColorStateList(R.color.black)
-            }, { error ->
-
             }
-        )
-        queue.add(jsonObjectRequest)
+        }
+    }//
+    private fun postProfesional(imagen:String,verificar:String,prestacion:String) {
 
+        CoroutineScope(Dispatchers.IO).launch {
+            val call=RetrofitClient.instance.postProfesional("${edtxtnombre?.text}","${edtxtdirec?.text}","${edtxtesp?.text}","","${edtxtdirec?.text}","${edtxtemail.text}","${JSONHORA}",prestacion,verificar,imagen,"${txtmatricula.text}","modificar","")
+            call.enqueue(object : Callback<ProfesionalRespons> {
+                override fun onFailure(call: Call<ProfesionalRespons>, t: Throwable) {
+                    Toast.makeText(applicationContext,t.message,Toast.LENGTH_LONG).show()
+                }
+                override fun onResponse(call: Call<ProfesionalRespons>, response: retrofit2.Response<ProfesionalRespons>) {
+
+                    uploadImage()
+
+                }
+            })
+
+
+
+        }
     }
+
+
+
     fun Back(view: View){
         finish()
     }

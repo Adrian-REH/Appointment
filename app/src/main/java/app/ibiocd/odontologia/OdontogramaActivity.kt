@@ -328,13 +328,17 @@ class OdontogramaActivity : AppCompatActivity(),AdapterDientInfError.onDientInfI
 
     }
     fun Back(view: View){
-        val intent = Intent(this, TurnoActivity::class.java)
-        intent.putExtra("url",url)
-        intent.putExtra("correo",correo)
-        intent.putExtra("dni",dni)
-        intent.putExtra("name",name)
-        intent.putExtra("JSONODONT",JSONODONTOGRAMA.toString())
-        startActivity(intent)
+        if(name!=""){
+            val intent = Intent(this, TurnoActivity::class.java)
+            intent.putExtra("url",url)
+            intent.putExtra("correo",correo)
+            intent.putExtra("dni",dni)
+            intent.putExtra("name",name)
+            intent.putExtra("JSONODONT",JSONODONTOGRAMA.toString())
+            startActivity(intent)
+
+        }
+
         finish()
     }
 

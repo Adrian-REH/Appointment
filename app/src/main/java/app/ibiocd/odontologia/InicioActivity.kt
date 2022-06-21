@@ -32,7 +32,6 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
     var clientes:String?=""
     var name:String?=""
     var url:String?=""
-    var DATOS:String?=""
 
     lateinit var swipeContainer: SwipeRefreshLayout
 

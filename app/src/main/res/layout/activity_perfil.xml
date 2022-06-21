@@ -444,7 +444,7 @@
             android:clickable="true"
             android:focusable="true"
             android:longClickable="false"
-            android:onClick="ClickSave"
+            android:onClick="getProfesionalSave"
             android:src="@drawable/ic_save"
             app:backgroundTint="#00FFFFFF"
             app:tint="@color/black"></com.google.android.material.floatingactionbutton.FloatingActionButton>
