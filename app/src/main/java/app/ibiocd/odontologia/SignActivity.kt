@@ -14,6 +14,7 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_perfil.*
 import kotlinx.android.synthetic.main.activity_sign.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,12 +24,18 @@ import retrofit2.Callback
 
 class SignActivity : AppCompatActivity() {
    private var  auth = FirebaseAuth.getInstance()
+    var BACKTXT:String=""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign)
 
-    }
+        BACKTXT=intent.getStringExtra("back").toString()
+        signbacktext.setText("$BACKTXT")
 
+    }
+    fun Back(view: View){
+        finish()
+    }
     fun ClickRegistrarse(view: View){
         if (edtxtcorreo.text.toString().isEmpty()){
             edtxtcorreo.error="Por favor ingrese un email"

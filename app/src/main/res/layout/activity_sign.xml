@@ -3,8 +3,47 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/grey"
     android:layout_height="match_parent"
     tools:context=".SignActivity">
+
+    <LinearLayout
+        android:onClick="Back"
+        android:layout_margin="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="start">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:src="@drawable/ic_back"
+            app:tint="@color/purple_200"
+            />
+        <TextView
+            android:id="@+id/signbacktext"
+
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="20dp"
+            android:textColor="@color/black"
+            />
+
+    </LinearLayout>
+    <TextView
+        android:layout_marginTop="5dp"
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Registro"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        />
+
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,15 +58,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="center">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Regitro"
-                android:textSize="20dp"
-                android:layout_marginVertical="5dp"
-                android:textStyle="bold"
-                android:textColor="@color/teal_700"/>
+            android:gravity="center"
+            android:layout_marginVertical="20dp">
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/txtmatricula"
                 android:layout_width="240dp"

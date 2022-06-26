@@ -8,6 +8,13 @@
     android:background="@color/grey"
     tools:context=".MainActivity">
 
+    <ImageView
+        android:id="@+id/fullscrean"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/splashscreen" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cards"

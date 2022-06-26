@@ -24,10 +24,13 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.activity_odontograma.*
+import kotlinx.android.synthetic.main.activity_odontograma.view.*
 import kotlinx.android.synthetic.main.activity_perfil.*
 import kotlinx.android.synthetic.main.activity_turno.*
+import kotlinx.android.synthetic.main.list_dientesup.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,20 +39,29 @@ import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
+import java.io.IOException
 import java.lang.Error
-import java.lang.Exception
+import kotlin.Exception
 import kotlinx.android.synthetic.main.activity_turno.txteprestacion as txteprestacion1
 
-class OdontogramaActivity : AppCompatActivity(),AdapterDientInfError.onDientInfItemClick,AdapterDientSupError.onDientSupItemClick,
-    AdapterView.OnItemClickListener {
+class OdontogramaActivity : AppCompatActivity(),AdapterDientInfError.onDientInfItemClick,AdapterDientSupError.onDientSupItemClick,AdapterView.OnItemClickListener {
+
     var name:String?=""
     var url:String?=""
     var correo:String?=""
     var dni:String?=""
-    var Ndient:String?=""
-    var codigo:Int=0
+    var Ndient:Int=0
+    var fecha:Int=0
     var JSONDiente:String?=""
+    var JSONDienteT:String?=""
+    var Diente:String?=""
+    var id:Int=0
+
+    var codigo:Int=0
+    var imghelp:Boolean=true
+
     var JSONODONTOGRAMA: JSONObject? =null
+    var JSONArrayODONTOGRAMA: JSONArray? =null
 
     val arraylistOdnt= ArrayList<Odontograma>()
     val arraylisError= ArrayList<Odontograma>()
@@ -57,14 +69,18 @@ class OdontogramaActivity : AppCompatActivity(),AdapterDientInfError.onDientInfI
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_odontograma)
+        lindienteinf.visibility=View.GONE
+        viewimghelp.visibility=View.GONE
 
         for (j in 1 until 15) {
             arraylisError.add(Odontograma("http://$url/docs/dientes/inf$j.png","http://$url/docs/dientes/sup$j.png"))
 
         }
+
         val arrayList32=ArrayList<String>()
-        for (i in 1 until 32) {
-            arrayList32.add("$i")
+
+        for (i in 0 until 32) {
+            arrayList32.add("${i+1}")
         }
 
         if(intent.extras !=null){
@@ -72,23 +88,43 @@ class OdontogramaActivity : AppCompatActivity(),AdapterDientInfError.onDientInfI
             correo = intent.getStringExtra("correo")
             url = intent.getStringExtra("url")
             name = intent.getStringExtra("name")
+            fecha = intent.getStringExtra("fecha").toString().toInt()
+            id = intent.getStringExtra("id").toString().toInt()
             codigo = intent.getStringExtra("codigo")?.toInt() ?: 0
 
-            if (codigo==0){
-                for (j in 1 until 33) {
-                    JSONDiente= ("{\n" +
-                            " \"url1\": \"http://23herrera.xyz:81/appointment/docs/dientes/inf$j.png\",\n" +
-                            " \"url2\": \"http://23herrera.xyz:81/appointment/docs/dientes/sup$j.png\"\n" +
-                            " }")
-                    JSONODONTOGRAMA = JSONObject("{\n" +
-                            " \"d$j\": \"${JSONDiente}\"\n" +
-                            " }")
-                }
-            }
-
-
         }
-        getOdontogramaDatos(View(applicationContext))
+
+
+        try {
+            if (codigo==0){
+                for (j in 0 until 33) {
+
+                    var Diente= ("{\n" +
+                            " \"d${j+1}\": ${"{\n" +
+                                    " \"url1\": \"http://23herrera.xyz:81/appointment/docs/dientes/inf${j+1}.png\",\n" +
+                                    " \"url2\": \"http://23herrera.xyz:81/appointment/docs/dientes/sup${j+1}.png\"\n" +
+                                    " }"}\n" +
+                            " }")
+
+                    if (JSONDiente==""){
+                        JSONDiente = Diente
+                    }else if (JSONDiente!=""){
+                        JSONDiente = JSONDiente+","+Diente
+                    }
+
+                }
+                JSONDienteT="{\"data\":[$JSONDiente]}"
+                JSONODONTOGRAMA= JSONObject(JSONDienteT)
+                JSONArrayODONTOGRAMA= JSONODONTOGRAMA!!.getJSONArray("data")
+
+            }
+            else if (codigo!=0){
+                getOdontogramaDatos(View(applicationContext),false)
+
+            }
+        }catch (e:Exception){
+            Toast.makeText(this,"$e",Toast.LENGTH_LONG).show()
+        }
 
 
         val arrayAdapter= ArrayAdapter(this,R.layout.dropdown_item,arrayList32)
@@ -99,137 +135,135 @@ class OdontogramaActivity : AppCompatActivity(),AdapterDientInfError.onDientInfI
         }
     }
 
-    fun getOdontogramaDatos(view: View){
+    fun getOdontogramaDatos(view: View,back:Boolean){
+
         CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val call=RetrofitClient.instance.getOdontograma(dni.toString(),correo.toString())
-                val datos: List<OdontogramaRespons>? =call.body()
-                runOnUiThread{
-                    if(call.isSuccessful){
-                        for (i in 0 until datos?.size!!){
-                            if(codigo==datos[i].ID){
-                                //BUSCAR EL ARRAY LOS ODONTOGRAMAS Y DETERMINAR EL IDENTIFICADOR
-                                try {
-                                        JSONODONTOGRAMA=JSONObject(datos[i].dientes)
-                                    for (j in 1 until 32) {
-                                        val JsonOdont=JSONObject(JSONODONTOGRAMA?.getString("d$j").toString())
-                                        arraylistOdnt.add(Odontograma(JsonOdont.getString("url1").toString(),JsonOdont.getString("url2").toString()))
-                                    }
+        try {
+            val call=RetrofitClient.instance.getOdontograma(dni.toString(),correo.toString(),fecha.toString())
+            val datos: OdontogramaRespons? =call.body()
+            runOnUiThread{
+                if(call.isSuccessful){
+                    Toast.makeText(applicationContext,"Se encontro un odontograma",Toast.LENGTH_LONG).show()
+                    if(datos != null){
+                        if(codigo==datos.ID){
 
-                                      /*  arraylistOdnt.add(Odontograma(JSONObject(datos[i].d1).getString("url1").toString(),JSONObject(datos[i].d1).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d2).getString("url1").toString(),JSONObject(datos[i].d2).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d3).getString("url1").toString(),JSONObject(datos[i].d3).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d4).getString("url1").toString(),JSONObject(datos[i].d4).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d5).getString("url1").toString(),JSONObject(datos[i].d5).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d6).getString("url1").toString(),JSONObject(datos[i].d6).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d7).getString("url1").toString(),JSONObject(datos[i].d7).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d8).getString("url1").toString(),JSONObject(datos[i].d8).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d9).getString("url1").toString(),JSONObject(datos[i].d9).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d10).getString("url1").toString(),JSONObject(datos[i].d10).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d11).getString("url1").toString(),JSONObject(datos[i].d11).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d12).getString("url1").toString(),JSONObject(datos[i].d12).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d13).getString("url1").toString(),JSONObject(datos[i].d13).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d14).getString("url1").toString(),JSONObject(datos[i].d14).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d15).getString("url1").toString(),JSONObject(datos[i].d15).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d16).getString("url1").toString(),JSONObject(datos[i].d16).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d17).getString("url1").toString(),JSONObject(datos[i].d17).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d18).getString("url1").toString(),JSONObject(datos[i].d18).getString("url2").toString()))
-+                                       arraylistOdnt.add(Odontograma(JSONObject(datos[i].d19).getString("url1").toString(),JSONObject(datos[i].d19).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d20).getString("url1").toString(),JSONObject(datos[i].d20).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d21).getString("url1").toString(),JSONObject(datos[i].d21).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d22).getString("url1").toString(),JSONObject(datos[i].d22).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d23).getString("url1").toString(),JSONObject(datos[i].d23).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d24).getString("url1").toString(),JSONObject(datos[i].d24).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d25).getString("url1").toString(),JSONObject(datos[i].d25).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d26).getString("url1").toString(),JSONObject(datos[i].d26).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d27).getString("url1").toString(),JSONObject(datos[i].d27).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d28).getString("url1").toString(),JSONObject(datos[i].d28).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d29).getString("url1").toString(),JSONObject(datos[i].d29).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d31).getString("url1").toString(),JSONObject(datos[i].d31).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d31).getString("url1").toString(),JSONObject(datos[i].d31).getString("url2").toString()))
-                                        arraylistOdnt.add(Odontograma(JSONObject(datos[i].d32).getString("url1").toString(),JSONObject(datos[i].d32).getString("url2").toString()))
+                            JSONDienteT="{\"data\":[${datos.dientes}]}"
+                            JSONODONTOGRAMA= JSONObject(JSONDienteT)
+                            JSONArrayODONTOGRAMA= JSONODONTOGRAMA!!.getJSONArray("data")
 
-*/
-                                } catch (e: JSONException) {
-                                    e.printStackTrace()
-                                }
-
-                            }else{
-                                codigo=0
-
+                            for (j in 0 until 32) {
+                                val jsonObject= JSONArrayODONTOGRAMA!!.getJSONObject(j)
+                                val JsonOdont=JSONObject(jsonObject?.getString("d${j+1}").toString())
+                                arraylistOdnt.add(Odontograma(JsonOdont.getString("url1").toString(),JsonOdont.getString("url2").toString()))
                             }
+
+
+
                         }
-
-
-                    }else{
-
-
-
                     }
                 }
-            }catch (e: Exception){
-
+                else{
+                    Toast.makeText(applicationContext,"ODONTOGRAMA no encontrado",Toast.LENGTH_LONG).show()
+                }
             }
 
+        }catch (e:Exception){
 
         }
 
-    }//
-    fun getOdontogramaSave(view: View){
+        }
+    }
+
+    fun getOdontogramaSave(view: View,back: Boolean){
+
         CoroutineScope(Dispatchers.IO).launch {
             try{
-                val call=RetrofitClient.instance.getOdontograma(dni.toString(),correo.toString())
-                val datos: List<OdontogramaRespons>? =call.body()
+                val call=RetrofitClient.instance.getOdontograma(dni.toString(),correo.toString(),fecha.toString())
+                val datos: OdontogramaRespons? =call.body()
+                runOnUiThread{
                 if (datos != null) {
-                    for (i in 0 until datos.size){
-                        if(call.isSuccessful){
-                            if (codigo==0){
-                                postOdontograma("insertar")
+                    if(call.isSuccessful){
 
-                            }else{
-                                postOdontograma("modificar")
-
-                            }
-
+                        if (codigo==0){
+                            Toast.makeText(applicationContext,"Se encontro un Odontograma pero necesitas uno nuevo",Toast.LENGTH_LONG).show()
+                            postOdontograma("insertar",back)
                         }else{
-                            postOdontograma("insertar")
+                            Toast.makeText(applicationContext,"Se encontro un Odontograma",Toast.LENGTH_LONG).show()
+                            postOdontograma("modificar",back)
                         }
+                    }else{
+                        Toast.makeText(applicationContext,"No se encontro un odontograma o hay un error del srv",Toast.LENGTH_LONG).show()
+                       // postOdontograma("insertar",back)
                     }
                 }
-
-
+                }
             }catch (e:Exception){
-                postOdontograma("insertar")
+                if (codigo==0){
+                    postOdontograma("insertar",back)
+                }
+            }
+        }
+    }
 
+    private fun postOdontograma(accion:String,back: Boolean) {
+        JSONDiente=""
+
+        for (j in 0 until JSONArrayODONTOGRAMA!!.length()) {
+                val jsonObject= JSONArrayODONTOGRAMA!!.getJSONObject(j)
+                val JsonOdont=JSONObject(jsonObject?.getString("d${j+1}").toString())
+                if(Ndient-1== j){
+                    if (JSONDiente==""){
+                        JSONDiente = Diente
+                    }else if (JSONDiente!=""){
+                        JSONDiente = JSONDiente+","+Diente
+                    }
+
+                }else
+                {
+                    var Diente= ("{\n" +
+                            " \"d${j+1}\": ${"{\n" +
+                                    " \"url1\": \"${JsonOdont.getString("url1")}\",\n" +
+                                    " \"url2\": \"${JsonOdont.getString("url2")}\"\n" +
+                                    " }"}\n" +
+                            " }")
+                    if (JSONDiente==""){
+                        JSONDiente = Diente
+                    }else if (JSONDiente!=""){
+                        JSONDiente = JSONDiente+","+Diente
+                    }
+                }
             }
 
 
 
 
-        }
-    }//
-    private fun postOdontograma(accion:String) {
 
-        for (j in 1 until 33) {
-            if(Ndient== "$j"){
-                JSONODONTOGRAMA = JSONObject("{\n" +
-                        " \"d$j\": \"$JSONDiente\"\n" +
-                        " }")
-            }
-            JSONODONTOGRAMA = JSONObject("{\n" +
-                    " \"d$j\": \"${JSONODONTOGRAMA?.getString("d$j")}\"\n" +
-                    " }")
-        }
 
 
         CoroutineScope(Dispatchers.IO).launch {
-            val call=RetrofitClient.instance.postOdontograma(JSONODONTOGRAMA.toString(),codigo.toInt(),"${correo}","${dni}",accion,accion)
+            val call=RetrofitClient.instance.postOdontograma(JSONDiente.toString(),codigo.toInt(),"${correo}","${dni}",fecha.toString(),accion,accion)
             call.enqueue(object : Callback<OdontogramaRespons> {
                 override fun onFailure(call: Call<OdontogramaRespons>, t: Throwable) {
                     Toast.makeText(applicationContext,t.message,Toast.LENGTH_LONG).show()
                 }
                 override fun onResponse(call: Call<OdontogramaRespons>, response: retrofit2.Response<OdontogramaRespons>) {
-                    getOdontogramaDatos(View(applicationContext))
+                    Toast.makeText(applicationContext,"Odontograma guardado",Toast.LENGTH_LONG).show()
+                    codigo=response.body()!!.ID
+                    if (back){
+                        val intent = Intent(applicationContext, TurnoActivity::class.java)
+                        intent.putExtra("url",url)
+                        intent.putExtra("correo",correo)
+                        intent.putExtra("dni",dni)
+                        intent.putExtra("name",name)
+                        intent.putExtra("fecha",fecha.toString())
+                        intent.putExtra("id",id.toString())
+                        intent.putExtra("codigo",response.body()!!.ID.toString())
+                        startActivity(intent)
+                        finish()
+
+                    }
+
+
 
                 }
             })
@@ -239,78 +273,147 @@ class OdontogramaActivity : AppCompatActivity(),AdapterDientInfError.onDientInfI
         }
     }
 
-
-
     fun dialog2(view: View){
-            val builder= AlertDialog.Builder(this)
-            builder.setTitle("Diente Sup")
-            val view=layoutInflater.inflate(R.layout.dialog_fallos,null)
-            val listerror=view.findViewById<RecyclerView>(R.id.horaini)
+        if (Ndient!=0){
+            arraylisError.clear()
+
+            btnhelp.visibility=View.GONE
+            carddientfuera.visibility=View.GONE
+            lindientesup.visibility=View.VISIBLE
+            arraylisError.clear()
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
 
             val adaptercliente = AdapterDientSupError(arraylisError, this, this)
-            listerror?.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-            listerror?.adapter = adaptercliente
+            rcydientesup?.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
 
+            rcydientesup?.adapter = adaptercliente
+        }else{
+            Toast.makeText(this,"Por favor selecciona un numero de Diente",Toast.LENGTH_SHORT).show()
 
-            builder.setPositiveButton("Guardar", DialogInterface.OnClickListener { dialogInterface, i ->
-                getOdontogramaSave(View(applicationContext))
-
-            })
-            builder.setNegativeButton("Cancelar", DialogInterface.OnClickListener { dialogInterface, i ->
-
-            })
-            builder.show()
+        }
 
     }
+
     fun dialog1(view: View){
-        val builder= AlertDialog.Builder(this)
-        builder.setTitle("Diente Inferior")
-        val view=layoutInflater.inflate(R.layout.dialog_fallos,null)
-        val listerror=view.findViewById<RecyclerView>(R.id.horaini)
+        if (Ndient!=0){
+            arraylisError.clear()
+            btnhelp.visibility=View.GONE
+            carddientedent.visibility=View.GONE
+            lindienteinf.visibility=View.VISIBLE
+            arraylisError.clear()
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
+            arraylisError.add(Odontograma("https://cdn-icons-png.flaticon.com/512/91/91160.png","https://cdn-icons-png.flaticon.com/512/91/91160.png"))
 
-        val adaptercliente = AdapterDientSupError(arraylisError, this, this)
-        listerror?.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        listerror?.adapter = adaptercliente
+            val adaptercliente = AdapterDientInfError(arraylisError, this, this)
+            rcydienteinf?.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+            rcydienteinf?.adapter = adaptercliente
+
+        }else{
+            Toast.makeText(this,"Por favor selecciona un numero de Diente",Toast.LENGTH_SHORT).show()
+        }
 
 
-        builder.setPositiveButton("Guardar", DialogInterface.OnClickListener { dialogInterface, i ->
-            getOdontogramaSave(View(applicationContext))
+    }
 
-        })
-        builder.setNegativeButton("Cancelar", DialogInterface.OnClickListener { dialogInterface, i ->
+    fun Back(view: View){
+            getOdontogramaSave(View(applicationContext),true)
 
-        })
-        builder.show()    }
+    }
+
+    fun help(view: View){
+
+        if (imghelp){
+            imghelp=false
+            viewimghelp.visibility=View.VISIBLE
+            carddientedent.visibility=View.GONE
+            //lindienteinf.visibility=View.GONE
+            carddientfuera.visibility=View.GONE
+           // lindientesup.visibility=View.GONE
+        }else if (!imghelp) {
+            imghelp=true
+            viewimghelp.visibility=View.GONE
+            carddientedent.visibility=View.VISIBLE
+          //  lindienteinf.visibility=View.VISIBLE
+            carddientfuera.visibility=View.VISIBLE
+        //    lindientesup.visibility=View.VISIBLE
+        }
+
+
+    }
 
     override fun onDientInfItemClick(url1: String) {
-        val JsonOdont=JSONObject(JSONODONTOGRAMA?.getString("d$Ndient").toString())
-        JSONDiente= "{\n" +
-                " \"url1\": \"$url1\",\n" +
-                " \"url2\": \"${JsonOdont.getString("url2")}\"\n" +
-                " }"
+        btnhelp.visibility=View.VISIBLE
+        carddientedent.visibility=View.VISIBLE
+        lindienteinf.visibility=View.GONE
+        var dientn= Ndient!!.toInt()-1
+        val jsonObject= JSONArrayODONTOGRAMA!!.getJSONObject(dientn!!.toInt())
+        val JsonOdont=JSONObject(jsonObject?.getString("d$Ndient").toString())
 
+        Diente= ("{\n" +
+                " \"d$Ndient\": ${"{\n" +
+                        " \"url1\": \"${url1}\",\n" +
+                        " \"url2\": \"${JsonOdont.getString("url2")}\"\n" +
+                        " }"}\n" +
+                " }")
         Glide.with(this)
-            .load(JsonOdont.getString(url1).toString())
-            .centerCrop()
-            .into(dientesup)
+            .load(url1)
+            .into(dienteinf)
     }
+
     override fun onDientSupItemClick(url2: String) {
-        val JsonOdont=JSONObject(JSONODONTOGRAMA?.getString("d$Ndient").toString())
-        JSONDiente= "[{\n" +
-                " \"url1\": \"${JsonOdont.getString("url2")}\",\n" +
-                " \"url2\": \"${url2}\"\n" +
-                " }]"
+        btnhelp.visibility=View.VISIBLE
+
+        carddientfuera.visibility=View.VISIBLE
+        lindientesup.visibility=View.GONE
+        var dientn= Ndient!!.toInt()-1
+        val jsonObject= JSONArrayODONTOGRAMA!!.getJSONObject(dientn!!.toInt())
+        val JsonOdont=JSONObject(jsonObject?.getString("d$Ndient").toString())
+
+
+        Diente= ("{\n" +
+                " \"d$Ndient\": ${"{\n" +
+                        " \"url1\": \"${JsonOdont.getString("url1")}\",\n" +
+                        " \"url2\": \"${url2}\"\n" +
+                        " }"}\n" +
+                " }")
         Glide.with(this)
-            .load(JsonOdont.getString(url2).toString())
-            .centerCrop()
+            .load(url2)
             .into(dientesup)
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        Ndient = parent?.getItemAtPosition(position).toString()
+        Ndient = parent?.getItemAtPosition(position).toString().toInt()
+        var dientn= Ndient!!.toInt()-1
+        val jsonObject= JSONArrayODONTOGRAMA!!.getJSONObject(dientn!!.toInt())
 
-            val JsonOdont=JSONObject(JSONODONTOGRAMA?.getString("d$Ndient").toString())
-
+        val JsonOdont=JSONObject(jsonObject?.getString("d$Ndient").toString())
             Glide.with(this)
                 .load(JsonOdont.getString("url1").toString())
                 .into(dienteinf)
@@ -319,27 +422,6 @@ class OdontogramaActivity : AppCompatActivity(),AdapterDientInfError.onDientInfI
                 .load(JsonOdont.getString("url2").toString())
                 .into(dientesup)
 
-
-    }
-    fun ClickImage(view: View){
-
-    }
-    fun ClickAyuda(view: View){
-
-    }
-    fun Back(view: View){
-        if(name!=""){
-            val intent = Intent(this, TurnoActivity::class.java)
-            intent.putExtra("url",url)
-            intent.putExtra("correo",correo)
-            intent.putExtra("dni",dni)
-            intent.putExtra("name",name)
-            intent.putExtra("JSONODONT",JSONODONTOGRAMA.toString())
-            startActivity(intent)
-
-        }
-
-        finish()
     }
 
 }

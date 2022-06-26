@@ -53,10 +53,9 @@ class AdapterDientSupError(val arrayList: ArrayList<Odontograma>, val context: C
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         fun bintItem(model: Odontograma, context: Context){
 
-            itemView.carddientfuera.setOnClickListener { itemClickListener.onDientSupItemClick(model.url1)}
+            itemView.carddientfuera.setOnClickListener { itemClickListener.onDientSupItemClick(model.url2)}
             Glide.with(context)
                 .load(model.url2)
-                .centerCrop()
                 .into(itemView.dientesup)
 
 

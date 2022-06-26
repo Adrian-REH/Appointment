@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.activity_paciente.txtdirec
 import kotlinx.android.synthetic.main.activity_paciente.txtnombre
 import kotlinx.android.synthetic.main.activity_paciente.viewimageperfil
 import kotlinx.android.synthetic.main.activity_perfil.*
+import kotlinx.android.synthetic.main.activity_sign.*
 import kotlinx.android.synthetic.main.activity_turno.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -34,7 +35,9 @@ import retrofit2.Callback
 class PacienteActivity : AppCompatActivity() {
     var url:String?=""
     var correo:String?=""
+    var BACKTXT:String?=""
     var dni:String?=""
+    var especialidad:String?=""
     var name:String?=""
     var HISTORIAL:String?=""
     var edtxtnombre: EditText?=null
@@ -54,7 +57,12 @@ class PacienteActivity : AppCompatActivity() {
             correo = intent.getStringExtra("correo")
             url = intent.getStringExtra("url")
             name = intent.getStringExtra("name")
+            especialidad = intent.getStringExtra("especialidad")
 
+
+
+            BACKTXT=intent.getStringExtra("back").toString()
+            pacbacktext.setText("$BACKTXT")
         }
         getClienteDatos()
 
@@ -65,6 +73,7 @@ class PacienteActivity : AppCompatActivity() {
         getClienteSave(View(applicationContext),"OCUPADO")
 
     }
+
     fun ClickBorrar(view: View){
         getClienteSave(View(applicationContext),"SN")
     }
@@ -89,6 +98,7 @@ class PacienteActivity : AppCompatActivity() {
             }
         }
     }//
+
     private fun postCliente(accion:String,especialidad:String,estado:String,nameprof:String) {
         CoroutineScope(Dispatchers.IO).launch {
             val call=RetrofitClient.instance.postEnlace("${correo}","${dni}","${especialidad}","$estado","${nameprof}","$accion",accion)
@@ -100,6 +110,9 @@ class PacienteActivity : AppCompatActivity() {
                     if(estado=="SN"){
                         handshake.visibility = View.VISIBLE
 
+                    }else if(estado=="OCUPADO"){
+                        handshake.visibility = View.GONE
+
                     }
 
 
@@ -110,8 +123,6 @@ class PacienteActivity : AppCompatActivity() {
 
         }
     }
-
-
 
     private fun getClienteDatos(){
         CoroutineScope(Dispatchers.IO).launch {
@@ -150,11 +161,15 @@ class PacienteActivity : AppCompatActivity() {
     fun Back(view: View){
         finish()
     }
+
     fun ClickHistorial(view: View){
+        Toast.makeText(this,"$especialidad",Toast.LENGTH_LONG).show()
         val intent = Intent(this, HistorialActivity::class.java)
         intent.putExtra("correo",correo)
         intent.putExtra("dni",dni)
         intent.putExtra("url",url)
+        intent.putExtra("especialidad",especialidad)
+        intent.putExtra("back",titlepaciente.text.toString())
         startActivity(intent)
     }
 }

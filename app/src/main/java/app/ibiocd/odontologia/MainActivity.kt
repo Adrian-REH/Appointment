@@ -4,6 +4,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.util.Patterns
 import android.view.View
 import android.widget.EditText
@@ -43,12 +44,21 @@ class MainActivity : AppCompatActivity() {
 
     var sw1b: Boolean=false
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.Theme_Odontologia)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        fullscrean.visibility=View.VISIBLE
+        lny.visibility=View.GONE
+        cards.visibility=View.GONE
+
         if(intent.extras !=null){
             DATA = intent.getStringExtra("DATA")
             if (DATA=="A"){
                 BorrarSesion()
+                fullscrean.visibility=View.GONE
+                lny.visibility=View.VISIBLE
+                cards.visibility=View.VISIBLE
             }
         }
         if (fileList().contains("usuarioC.txt")) {
@@ -67,7 +77,7 @@ class MainActivity : AppCompatActivity() {
             } catch (e: IOException) {
             }
         }else{
-
+            md5user = ""
         }
         if (fileList().contains("passwC.txt")) {
             try {
@@ -85,20 +95,7 @@ class MainActivity : AppCompatActivity() {
             } catch (e: IOException) {
             }
         }else{
-
-        }
-
-
-
-
-
-        if (md5pass!=""&&md5user!=""){
-            swisesion.isChecked = true
-            edtxtuser.setText(md5user)
-            edtxtpass.setText(md5pass)
-            doLigin(md5user)
-        } else if (md5pass!=""&&md5user!=""){
-            swisesion.isChecked = false
+            md5pass = ""
         }
 
         swisesion.setOnCheckedChangeListener { compoundButton, b ->
@@ -109,6 +106,7 @@ class MainActivity : AppCompatActivity() {
                 BorrarSesion()
             }
         }
+        FinFullScreen()
     }
 
     fun profecionales(view: View){
@@ -141,8 +139,30 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-    }
 
+    }
+    private fun FinFullScreen(){
+
+        Handler().postDelayed(Runnable {
+
+            if (md5pass!=""&&md5user!=""){
+                swisesion.isChecked = true
+                edtxtuser.setText(md5user)
+                edtxtpass.setText(md5pass)
+                doLigin(md5user)
+
+            } else if (md5pass==""&&md5user==""){
+                fullscrean.visibility=View.GONE
+                lny.visibility=View.VISIBLE
+                cards.visibility=View.VISIBLE
+                swisesion.isChecked = false
+            }
+
+
+        },3000)
+
+
+    }
    private fun updateUI(currentUser:FirebaseUser?,correo:String){
         if (currentUser !=null){
             if (currentUser.isEmailVerified){

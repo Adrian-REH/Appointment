@@ -26,7 +26,9 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.activity_perfil.*
+import kotlinx.android.synthetic.main.activity_prestaciones.*
 import kotlinx.android.synthetic.main.activity_turno.*
+import kotlinx.android.synthetic.main.activity_turno.rviewcliente
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -43,6 +45,9 @@ class PrestacionesActivity : AppCompatActivity(), AdapterPrestacion.onPrestacion
             JSONCompletPrestacion = intent.getStringExtra("prestacion").toString()
             correo = intent.getStringExtra("correo").toString()
             url = intent.getStringExtra("url").toString()
+
+            prestbacktext.setText(intent.getStringExtra("back").toString())
+
             if (JSONCompletPrestacion!=""){
                 refresh(intent.getStringExtra("prestacion").toString())
 

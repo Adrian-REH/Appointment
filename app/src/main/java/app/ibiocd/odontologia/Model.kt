@@ -2,7 +2,7 @@ package app.ibiocd.lavanderia.Adapter
 
 import com.google.gson.annotations.SerializedName
 
-class Clientes(val nombre:String,val celular:String,val dni:String,val image:String,val direccion:String,val correo:String,val img:String,val fecha: String) {
+class Clientes(val nombre:String,val celular:String,val dni:String,val image:String,val direccion:String,val correo:String,val img:String,val fecha: String,val ID: Int) {
 }
 class Historial(val especialidad:String,val prestacion:String,val fecha:String) {
 }
@@ -18,6 +18,7 @@ data class OdontogramaRespons(
     @SerializedName("dientes") var dientes:String,
     @SerializedName("odontogramaid") var ID:Int,
     @SerializedName("codigoprofesional") var matricula:String,
+    @SerializedName("fecha") var fecha: String,
     @SerializedName("dni") var dni:String
 )
 data class ClienteRespons(
@@ -56,8 +57,9 @@ data class TurnoRespons(
     @SerializedName("hora") var hora:String,
     @SerializedName("comentario") var comentario:String,
     @SerializedName("img") var img:String,
+    @SerializedName("imgprof") var imgprof:String,
     @SerializedName("estado") var estado:String,
-    @SerializedName("idturno") var ID:String,
+    @SerializedName("idturno") var ID:Int,
     @SerializedName("archivo1") var archivo1:String,
     @SerializedName("archivo2") var archivo2:String,
     @SerializedName("archivo3") var archivo3:String,

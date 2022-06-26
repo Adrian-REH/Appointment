@@ -4,20 +4,50 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/grey"
     tools:context=".PrestacionesActivity">
 
-    <ImageView
+    <LinearLayout
         android:id="@+id/back"
+
         android:onClick="Back"
+        android:layout_margin="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="start">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:src="@drawable/ic_back"
+            app:tint="@color/purple_200"
+            />
+        <TextView
+            android:id="@+id/prestbacktext"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="20dp"
+            android:textColor="@color/black"
+            />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/titlepaciente"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="5dp"
-        android:src="@drawable/ic_back"
-        app:tint="@color/black" />
-
+        android:text="Prestacion"
+        android:textColor="@color/black"
+        android:textSize="20dp" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/more"
         android:layout_width="wrap_content"

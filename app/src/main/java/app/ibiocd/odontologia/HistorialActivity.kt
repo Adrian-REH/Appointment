@@ -39,11 +39,13 @@ class HistorialActivity : AppCompatActivity(), AdapterHistorial.onHistorialItemC
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_historial)
         rcviewH=findViewById(R.id.rviewcliente)
+
         if(intent.extras !=null){
             dni = intent.getStringExtra("dni")
             correo = intent.getStringExtra("correo")
             url = intent.getStringExtra("url")
         }
+
         if ( correo != ""){
             getListHistorialturnos("",intent.getStringExtra("especialidad").toString())
             edtxtsearchhistorial.addTextChangedListener(object : TextWatcher {
@@ -64,6 +66,8 @@ class HistorialActivity : AppCompatActivity(), AdapterHistorial.onHistorialItemC
                 }
             })
         }
+
+
     }
 
     fun Back(view: View) {
@@ -74,45 +78,44 @@ class HistorialActivity : AppCompatActivity(), AdapterHistorial.onHistorialItemC
     fun getListHistorialturnos(search:String,espec:String){
         arraylisH.clear()
         CoroutineScope(Dispatchers.IO).launch {
-            val call=RetrofitClient.instance.getListturno(dni.toString())
-            runOnUiThread{
-                val datos: List<TurnoRespons>? = call.body()
-                for (i in 0 until datos?.size!!){
-                    val prestacion = datos[i].prestacion
-                    val fecha = datos[i].fecha
-                    val especialidad = datos[i].especialidad
-                    val estado = datos[i].estado
-                    if ( espec == especialidad){
-                        if (search==fecha){
-                            if (estado!="E"){ arraylisH.add(Historial(prestacion,especialidad,fecha)) }
-                            arraylisH.add(Historial(prestacion,especialidad,fecha))
-                        }else if (search==""){
-                            if (estado!="E"){ arraylisH.add(Historial(prestacion,especialidad,fecha)) }
-                            arraylisH.add(Historial(prestacion,especialidad,fecha))
+            try {
+                val call=RetrofitClient.instance.getListturno(dni.toString())
+                runOnUiThread{
+                    val datos: List<TurnoRespons>? = call.body()
+                    for (i in 0 until datos?.size!!){
+                        val prestacion = datos[i].prestacion
+                        val fecha = datos[i].fecha
+                        val especialidad = datos[i].especialidad
+                        val estado = datos[i].estado
+                        if ( espec == especialidad){
+                            Toast.makeText(applicationContext,"dd",Toast.LENGTH_LONG).show()
+                            if (search==fecha){
+                                if (estado!="E"){ arraylisH.add(Historial(prestacion,especialidad,fecha)) }
+                                arraylisH.add(Historial(prestacion,especialidad,fecha))
+                            }else if (search==""){
+
+                                arraylisH.add(Historial(prestacion,especialidad,fecha))
+
+                            }
+                        }else{
+                            Toast.makeText(applicationContext,"dd",Toast.LENGTH_LONG).show()
 
                         }
-                    }else if ( espec == ""){
-                        if (search==fecha){
-                            //if (estado!="E"){ arraylisH.add(Historial(prestacion,especialidad,fecha)) }
-                            arraylisH.add(Historial(prestacion,especialidad,fecha))
 
-                        }else if (search==""){
-                            //if (estado!="E"){ arraylisH.add(Historial(prestacion,especialidad,fecha)) }
-                            arraylisH.add(Historial(prestacion,especialidad,fecha))
-
-                        }
                     }
+                    val adapterhistorial = AdapterHistorial(arraylisH, applicationContext, this@HistorialActivity)
+                    rcviewH?.layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
+                    rcviewH?.adapter = adapterhistorial
+
+
+
+
 
                 }
-                val adapterhistorial = AdapterHistorial(arraylisH, applicationContext, this@HistorialActivity)
-                rcviewH?.layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
-                rcviewH?.adapter = adapterhistorial
-
-
-
-
+            }catch (e:Exception){
 
             }
+
         }
     }//
 
@@ -122,6 +125,7 @@ class HistorialActivity : AppCompatActivity(), AdapterHistorial.onHistorialItemC
          intent.putExtra("dni",dni)
          intent.putExtra("url",url)
          intent.putExtra("correo",correo)
+        intent.putExtra("back","Historial")
 
         startActivity(intent)
     }

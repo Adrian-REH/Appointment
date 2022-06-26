@@ -7,6 +7,7 @@
     android:layout_marginHorizontal="5dp"
     android:layout_height="wrap_content"
     android:gravity="top">
+
     <androidx.cardview.widget.CardView
         android:onClick="dialog2"
         android:id="@+id/carddientfuera"
@@ -19,8 +20,8 @@
 
         <ImageView
             android:id="@+id/dientesup"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/blank_profile"/>
+            android:layout_margin="20dp"
+            android:layout_width="130dp"
+            android:layout_height="130dp"/>
     </androidx.cardview.widget.CardView>
 </RelativeLayout>

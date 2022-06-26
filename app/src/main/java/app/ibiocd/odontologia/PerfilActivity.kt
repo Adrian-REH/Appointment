@@ -34,6 +34,7 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.android.synthetic.main.activity_detalles.*
 import kotlinx.android.synthetic.main.activity_perfil.*
 import kotlinx.android.synthetic.main.activity_perfil.txtcorreo
 import kotlinx.android.synthetic.main.list_paciente_a.view.*
@@ -49,6 +50,7 @@ import java.io.IOException
 class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
     var correo:String?=""
     var url:String?=""
+    var BACKTXT:String?=""
     var snaph:Boolean=false
 
     private var imageData: ByteArray? = null
@@ -96,6 +98,9 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
             }
             url = intent.getStringExtra("url")
 
+
+            BACKTXT=intent.getStringExtra("back")
+            perfbacktext.setText("$BACKTXT")
         }
         edtxtemail.setText(correo)
         txtcorreo.setText(correo)
@@ -290,6 +295,8 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
                 val dia = nombredias[i]
                 arraylisH.add(Horario(dia,hora,correo!!))
             }
+
+
             val adaptercliente = AdapterHorarios(arraylisH, this, this)
             lishorario?.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
             if (!snaph){
@@ -299,6 +306,9 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
 
             lishorario?.adapter = adaptercliente
             lishorario?.visibility = View.VISIBLE
+
+
+
             snaph=true
             sw=false
         }else if(!sw){
@@ -313,6 +323,7 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
         intent.putExtra("prestacion",PRESTACION)
         intent.putExtra("url",url)
         intent.putExtra("correo",correo)
+        intent.putExtra("back",titleperfil.text.toString())
 
         startActivity(intent)
     }
@@ -410,6 +421,7 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
             val timePicker = TimePickerFragment{horarioini?.setText("$it")}
             timePicker.show(supportFragmentManager,"time") }
         builder.setView(view)
+
         builder.setPositiveButton("Guardar", DialogInterface.OnClickListener { dialogInterface, i ->
             sw=true
             val dias= arrayOf("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sabado")

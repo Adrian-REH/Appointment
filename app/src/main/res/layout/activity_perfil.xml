@@ -3,19 +3,48 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/grey"
     android:layout_height="match_parent"
     tools:context=".PerfilActivity">
-    <ImageView
-        android:id="@+id/back"
+
+    <LinearLayout
+        android:onClick="Back"
+        android:layout_margin="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
+        android:orientation="horizontal"
+        android:layout_gravity="start">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:src="@drawable/ic_back"
+            app:tint="@color/purple_200"
+            />
+        <TextView
+            android:id="@+id/perfbacktext"
+
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="20dp"
+            android:textColor="@color/black"
+            />
+
+    </LinearLayout>
+    <TextView
+        android:id="@+id/titleperfil"
         android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="5dp"
-        android:onClick="Back"
-        android:src="@drawable/ic_back"
-        app:tint="@color/black" />
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Perfil"
+        android:textSize="20dp"
+        android:textColor="@color/black"
+        />
+
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardvtop"
@@ -102,7 +131,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="20dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -113,92 +143,68 @@
                         android:textColor="@color/black"
                         android:textSize="15dp" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Matricula:"
-                        android:textColor="@color/black"
-                        android:textSize="20dp"
-                        android:textStyle="bold"></TextView>
+
 
                     <TextView
+                        android:layout_marginTop="10dp"
+
                         android:id="@+id/txtmatricula"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
                         android:ems="10"
-                        android:text=""
+                        android:drawableStart="@drawable/ic_verified"
+                        android:hint="Matricula"
+                        android:drawableTint="@color/black"
                         android:textSize="20dp"
-                        android:textStyle="normal"></TextView>
-
+                        android:textStyle="normal"/>
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Correo:"
-                        android:textColor="@color/black"
-                        android:textSize="20dp"
-                        android:textStyle="bold"></TextView>
+                        android:layout_marginTop="10dp"
 
-                    <TextView
+                        android:drawableTint="@color/black"
+                        android:hint="Correo"
+                        android:drawableStart="@drawable/ic_email"
                         android:id="@+id/txtcorreo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
                         android:ems="10"
-                        android:text=""
-                        android:textSize="20dp"
-                        android:textStyle="normal"></TextView>
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Celular:"
-                        android:textColor="@color/black"
                         android:textSize="20dp"
-                        android:textStyle="bold"></TextView>
-
+                        android:textStyle="normal"/>
                     <TextView
+                        android:layout_marginTop="10dp"
+
+                        android:drawableTint="@color/black"
+                        android:hint="Celular"
+                        android:drawableStart="@drawable/ic_phone"
                         android:id="@+id/txtcel"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
                         android:ems="10"
                         android:textSize="20dp"
-                        android:textStyle="normal"></TextView>
-
+                        android:textStyle="normal"/>
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Direccion:"
-                        android:textColor="@color/black"
-                        android:textSize="20dp"
-                        android:textStyle="bold"></TextView>
-
-                    <TextView
+                        android:layout_marginTop="10dp"
+                        android:drawableTint="@color/black"
+                        android:hint="Direccion"
+                        android:drawableStart="@drawable/ic_location"
                         android:id="@+id/txtdirec"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
                         android:ems="10"
                         android:textSize="20dp"
-                        android:textStyle="normal"></TextView>
-
+                        android:textStyle="normal"/>
                     <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Especialidad:"
-                        android:textColor="@color/black"
-                        android:textSize="20dp"
-                        android:textStyle="bold"></TextView>
+                        android:layout_marginTop="10dp"
 
-                    <TextView
+                        android:drawableTint="@color/black"
+                        android:hint="Especialidad"
+                        android:drawableStart="@drawable/ic_handshake"
                         android:id="@+id/txtesp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
                         android:ems="10"
                         android:textSize="20dp"
-                        android:textStyle="normal"></TextView>
+                        android:textStyle="normal"/>
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
@@ -218,7 +224,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="20dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -256,7 +263,7 @@
                         android:clickable="false"
                         android:focusable="false"
                         android:hint="Matricula"
-                        app:startIconDrawable="@drawable/ic_baseline_fingerprint_24">
+                        app:startIconDrawable="@drawable/ic_verified">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edtxtmatr"
@@ -419,20 +426,6 @@
             app:backgroundTint="#00FFFFFF"
             app:tint="@color/black"></com.google.android.material.floatingactionbutton.FloatingActionButton>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:backgroundTint="@color/white"
-            android:baselineAlignBottom="true"
-            android:clickable="true"
-            android:focusable="true"
-            android:longClickable="false"
-            android:onClick="ClickRefresh"
-            android:src="@drawable/ic_refresh"
-            app:backgroundTint="#00FFFFFF"
-            app:tint="@color/black"></com.google.android.material.floatingactionbutton.FloatingActionButton>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_marginBottom="10sp"

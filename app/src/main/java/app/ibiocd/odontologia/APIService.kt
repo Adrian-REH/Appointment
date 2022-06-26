@@ -12,7 +12,10 @@ interface APIService {
     suspend fun getEspecialidades(@Query("todos") todos:String):Response<List<EspecialidadesRespons>>
 
     @GET("/appointment/odontograma.php?")
-    suspend fun getOdontograma(@Query("dni") dni:String,@Query("codigoprofesional") matricula:String):Response<List<OdontogramaRespons>>
+    suspend fun getListOdontograma(@Query("dni") dni:String,@Query("codigoprofesional") matricula:String):Response<List<OdontogramaRespons>>
+
+    @GET("/appointment/odontograma.php?")
+    suspend fun getOdontograma(@Query("dni") dni:String,@Query("codigoprofesional") matricula:String,@Query("fecha") fecha:String):Response<OdontogramaRespons>
 
     @FormUrlEncoded
     @POST("/appointment/odontograma.php")
@@ -21,6 +24,7 @@ interface APIService {
         @Field("odontogramaid")  ID:Int,
         @Field("codigoprofesional")  matricula:String,
         @Field("dni")  dni:String,
+        @Field("fecha")  fecha:String,
         @Field("insertar")  insertar:String,
         @Field("modificar")  modificar:String
     ): Call<OdontogramaRespons>

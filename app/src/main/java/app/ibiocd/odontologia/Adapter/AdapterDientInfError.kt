@@ -56,7 +56,6 @@ class AdapterDientInfError(val arrayList: ArrayList<Odontograma>, val context: C
             itemView.carddientedent.setOnClickListener { itemClickListener.onDientInfItemClick(model.url1)}
             Glide.with(context)
                 .load(model.url1)
-                .centerCrop()
                 .into(itemView.dienteinf)
 
         }

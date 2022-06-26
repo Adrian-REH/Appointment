@@ -20,6 +20,7 @@ import app.ibiocd.odontologia.Adapter.AdapterArchivo
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_detalles.*
 import kotlinx.android.synthetic.main.activity_detalles.rviewcliente
+import kotlinx.android.synthetic.main.activity_paciente.*
 import kotlinx.android.synthetic.main.activity_turno.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,9 +32,14 @@ import org.json.JSONObject
 class DetallesActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
     var HISTORIAL:String?=""
     var FECHA:String?=""
+    var NAME:String?=""
+    var ID:String?=""
     var URL:String?=""
     var DNI:String?=""
+    var codigo=0
+
     var CORREO:String?=""
+    var BACKTXT:String?=""
     var JSONAgregadoArchivo:String?=""
     var JSONCompletArchivos:String?=""
     val arraylisH= ArrayList<Historial>()
@@ -46,6 +52,9 @@ class DetallesActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick 
             URL = intent.getStringExtra("url")
             FECHA = intent.getStringExtra("fecha")
             DNI = intent.getStringExtra("dni")
+
+            BACKTXT=intent.getStringExtra("back")
+            detbacktext.setText("$BACKTXT")
         }
         getListTurnos()
 
@@ -140,7 +149,8 @@ class DetallesActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick 
 
                         if(call.isSuccessful){
                             if (FECHA==datos[i].fecha){
-
+                                ID=datos[i].ID.toString()
+                                NAME=datos[i].nameprof.toString()
                                 fechahist.text= datos[i].fecha
                                 horahist.text= datos[i].hora
                                 presthist.text=datos[i].prestacion
@@ -149,27 +159,73 @@ class DetallesActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick 
 
 
                                 if (datos[i].archivo1!=""){
-                                    displayListC.add(Archivos(JSONObject(datos[i].archivo1).getString("Nombre").toString(), JSONObject(datos[i].archivo1).getString("Url").toString()))
-                                }else if (datos[i].archivo2!=""){
-                                    displayListC.add(Archivos(JSONObject(datos[i].archivo2).getString("Nombre").toString(), JSONObject(datos[i].archivo2).getString("Url").toString()))
-                                }else if (datos[i].archivo3!=""){
-                                    displayListC.add(Archivos(JSONObject(datos[i].archivo3).getString("Nombre").toString(), JSONObject(datos[i].archivo3).getString("Url").toString()))
+                                    if (JSONObject(datos[i].archivo1).getString("Nombre").toString()=="ODONTOGRAMA"){
+                                        if (JSONObject(datos[i].archivo1).getString("Url").toString()!=codigo.toString()){
+                                            codigo= JSONObject(datos[i].archivo1).getString("Url").toString().toInt()
+                                            displayListC.add(Archivos(JSONObject(datos[i].archivo1).getString("Nombre").toString(), JSONObject(datos[i].archivo1).getString("Url").toString()))
 
-                                }else if (datos[i].archivo4!=""){
-                                    displayListC.add(Archivos(JSONObject(datos[i].archivo4).getString("Nombre").toString(), JSONObject(datos[i].archivo4).getString("Url").toString()))
+                                        }
+                                    }else{
+                                        displayListC.add(Archivos(JSONObject(datos[i].archivo1).getString("Nombre").toString(), JSONObject(datos[i].archivo1).getString("Url").toString()))
 
-                                }else if (datos[i].archivo5!=""){
-                                    displayListC.add(Archivos(JSONObject(datos[i].archivo5).getString("Nombre").toString(), JSONObject(datos[i].archivo5).getString("Url").toString()))
-
+                                    }
                                 }
-                                if (datos[i].estado=="C"){
-                                    floatcanc?.visibility=View.GONE
+                                else if (datos[i].archivo2!=""){
+                                    if (JSONObject(datos[i].archivo2).getString("Nombre").toString()=="ODONTOGRAMA"){
+                                        if (JSONObject(datos[i].archivo2).getString("Url").toString()!=codigo.toString()){
+                                            codigo= JSONObject(datos[i].archivo2).getString("Url").toString().toInt()
+                                            displayListC.add(Archivos(JSONObject(datos[i].archivo2).getString("Nombre").toString(), JSONObject(datos[i].archivo2).getString("Url").toString()))
+
+                                        }
+                                    }else{
+                                        displayListC.add(Archivos(JSONObject(datos[i].archivo2).getString("Nombre").toString(), JSONObject(datos[i].archivo2).getString("Url").toString()))
+
+                                    }
                                 }
+                                else if (datos[i].archivo3!=""){
+
+                                    if (JSONObject(datos[i].archivo3).getString("Nombre").toString()=="ODONTOGRAMA"){
+                                        if (JSONObject(datos[i].archivo3).getString("Url").toString()!=codigo.toString()){
+                                            codigo= JSONObject(datos[i].archivo3).getString("Url").toString().toInt()
+                                            displayListC.add(Archivos(JSONObject(datos[i].archivo3).getString("Nombre").toString(), JSONObject(datos[i].archivo3).getString("Url").toString()))
+
+                                        }
+                                    }else{
+                                        displayListC.add(Archivos(JSONObject(datos[i].archivo3).getString("Nombre").toString(), JSONObject(datos[i].archivo3).getString("Url").toString()))
+
+                                    }
+                                }
+                                else if (datos[i].archivo4!=""){
+
+                                    if (JSONObject(datos[i].archivo4).getString("Nombre").toString()=="ODONTOGRAMA"){
+                                        if (JSONObject(datos[i].archivo4).getString("Url").toString()!=codigo.toString()){
+                                            codigo= JSONObject(datos[i].archivo4).getString("Url").toString().toInt()
+                                            displayListC.add(Archivos(JSONObject(datos[i].archivo4).getString("Nombre").toString(), JSONObject(datos[i].archivo4).getString("Url").toString()))
+
+                                        }
+                                    }else{
+                                        displayListC.add(Archivos(JSONObject(datos[i].archivo4).getString("Nombre").toString(), JSONObject(datos[i].archivo4).getString("Url").toString()))
+
+                                    }
+                                }
+                                else if (datos[i].archivo5!=""){
+                                    if (JSONObject(datos[i].archivo5).getString("Nombre").toString()=="ODONTOGRAMA"){
+                                        if (JSONObject(datos[i].archivo5).getString("Url").toString()!=codigo.toString()){
+                                            codigo= JSONObject(datos[i].archivo5).getString("Url").toString().toInt()
+                                            displayListC.add(Archivos(JSONObject(datos[i].archivo5).getString("Nombre").toString(), JSONObject(datos[i].archivo5).getString("Url").toString()))
+
+                                        }
+                                    }else{
+                                        displayListC.add(Archivos(JSONObject(datos[i].archivo5).getString("Nombre").toString(), JSONObject(datos[i].archivo5).getString("Url").toString()))
+
+                                    }
+                                }
+
+                                rviewcliente.visibility=View.VISIBLE
 
                                 val adapterarchivo = AdapterArchivo(displayListC, applicationContext, this@DetallesActivity)
                                 rviewcliente?.layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
                                 rviewcliente?.adapter = adapterarchivo
-                                rviewcliente.visibility=View.VISIBLE
 
                                 // Historial(response.getString("fecha").toString())
                             }
@@ -187,13 +243,17 @@ class DetallesActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick 
 
         }
     }//
-    fun ClickOdontograma(view: View,codigo:String){
+    fun ClickOdontograma(view: View){
         val intent = Intent(this, OdontogramaActivity::class.java)
         intent.putExtra("url",URL)
         intent.putExtra("correo",CORREO)
         intent.putExtra("dni",DNI)
-        intent.putExtra("name","")
+        intent.putExtra("name",NAME)
         intent.putExtra("codigo",codigo)
+        intent.putExtra("id",ID)
+        intent.putExtra("fecha",FECHA)
+
+        intent.putExtra("back",titledetalles.text.toString())
         startActivity(intent)
         finish()
 
@@ -211,7 +271,7 @@ class DetallesActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick 
             da.enqueue(requst)
 
          }else if(name=="ODONTOGRAMA"){
-                ClickOdontograma(View(applicationContext),url)
+                ClickOdontograma(View(applicationContext))
          }
 
 
