@@ -27,11 +27,27 @@ data class ClienteRespons(
     @SerializedName("correo") var correo:String,
     @SerializedName("celular") var cel:String,
     @SerializedName("dni") var dni:String,
+    @SerializedName("TokenID") var TID:String,
     @SerializedName("img") var img:String
 )
 data class EspecialidadesRespons(
     @SerializedName("especialidad") var especialidad:String,
     @SerializedName("img") var img:String
+)
+data class NotificacionRespons(
+    @SerializedName("multicast_id") var multicast_id:String,
+    @SerializedName("success") var success:String,
+    @SerializedName("failure") var failure:String,
+    @SerializedName("canonical_ids") var canonical_ids:String,
+    @SerializedName("results") var data:String
+)
+data class PushNotification(
+    val data: NotificationData,
+    val to: String
+)
+data class NotificationData(
+    val title: String,
+    val message: String
 )
 data class ProfesionalRespons(
     @SerializedName("nombreapellido") var nameprof:String,
@@ -44,6 +60,7 @@ data class ProfesionalRespons(
     @SerializedName("prestaciones") var prestacion:String,
     @SerializedName("verificar") var verificar:String,
     @SerializedName("img") var img:String,
+    @SerializedName("TokenID") var TID:String,
     @SerializedName("matricula") var matricula:String
 )
 data class TurnoRespons(

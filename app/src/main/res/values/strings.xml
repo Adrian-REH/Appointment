@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Appointment</string>
+    <string name="notification_channel_group_general">General</string>
+
 </resources>

@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.widget.EditText
@@ -20,8 +21,10 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_inicio.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_sign.*
@@ -51,6 +54,8 @@ class MainActivity : AppCompatActivity() {
         fullscrean.visibility=View.VISIBLE
         lny.visibility=View.GONE
         cards.visibility=View.GONE
+
+
 
         if(intent.extras !=null){
             DATA = intent.getStringExtra("DATA")
@@ -109,6 +114,7 @@ class MainActivity : AppCompatActivity() {
         FinFullScreen()
     }
 
+
     fun profecionales(view: View){
         val usuario=edtxtuser.text.toString()
         if (usuario.isNotEmpty()){
@@ -134,13 +140,11 @@ class MainActivity : AppCompatActivity() {
 
                 }
             }
-
-
         }
-
-
-
     }
+
+
+
     private fun FinFullScreen(){
 
         Handler().postDelayed(Runnable {
@@ -209,6 +213,7 @@ class MainActivity : AppCompatActivity() {
 
                 updateUI(user,correo)
                 GuardarSesion(correo)
+
             }else{
                 edtxtpass.error="La clave es incorrecta"
                 edtxtpass.requestFocus()

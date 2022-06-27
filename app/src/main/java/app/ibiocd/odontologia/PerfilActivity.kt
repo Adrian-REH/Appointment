@@ -209,6 +209,7 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
                     }
 
                     txtmatricula?.setText(matr)
+                    edtxtmatr?.setText(matr)
                     txtcorreo?.setText(correo)
                     edtxtemail?.setText(correo)
                     txtnombre?.setText(nombre)
@@ -249,27 +250,27 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
                 if(call.isSuccessful){
                     if (IMAGENAME==""){
                         if (datos != null) {
-                            postProfesional(datos.img,datos.verificar,datos.prestacion)
+                            postProfesional(datos.img,datos.verificar,datos.prestacion,datos.TID)
                         }
                     }else{
                         if (datos != null) {
-                            postProfesional("http://${url}/docs/$IMAGENAME",datos.verificar,datos.prestacion)
+                            postProfesional("http://${url}/docs/$IMAGENAME",datos.verificar,datos.prestacion,datos.TID)
                         }
                     }
                 }
             }
         }
     }//
-    private fun postProfesional(imagen:String,verificar:String,prestacion:String) {
+    private fun postProfesional(imagen:String,verificar:String,prestacion:String,token:String) {
 
         CoroutineScope(Dispatchers.IO).launch {
-            val call=RetrofitClient.instance.postProfesional("${edtxtnombre?.text}","${edtxtdirec?.text}","${edtxtesp?.text}","","${edtxtdirec?.text}","${edtxtemail.text}","${JSONHORA}",prestacion,verificar,imagen,"${txtmatricula.text}","modificar","")
+            val call=RetrofitClient.instance.postProfesional("${edtxtnombre?.text}","${edtxtdirec?.text}","${edtxtesp?.text}","${edtxttelefono?.text}","${edtxtdirec?.text}","${edtxtemail.text}","${JSONHORA}",prestacion,verificar,imagen,"${txtmatricula.text}","$token","","modificar")
             call.enqueue(object : Callback<ProfesionalRespons> {
                 override fun onFailure(call: Call<ProfesionalRespons>, t: Throwable) {
                     Toast.makeText(applicationContext,t.message,Toast.LENGTH_LONG).show()
                 }
                 override fun onResponse(call: Call<ProfesionalRespons>, response: retrofit2.Response<ProfesionalRespons>) {
-
+                    ClickEditar(View(applicationContext))
                     uploadImage()
 
                 }

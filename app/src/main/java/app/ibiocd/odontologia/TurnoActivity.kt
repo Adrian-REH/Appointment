@@ -3,6 +3,7 @@ package app.ibiocd.odontologia
 import android.annotation.SuppressLint
 import android.app.DownloadManager
 import android.content.ContentValues
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.database.Cursor
@@ -16,8 +17,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
-import app.ibiocd.lavanderia.Adapter.Archivos
-import app.ibiocd.lavanderia.Adapter.TurnoRespons
+import app.ibiocd.lavanderia.Adapter.*
 import app.ibiocd.lavanderia.FileDataPart
 import app.ibiocd.lavanderia.VolleyFileUploadRequest
 import app.ibiocd.odontologia.Adapter.AdapterArchivo
@@ -27,6 +27,8 @@ import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_sign.*
 import kotlinx.android.synthetic.main.activity_turno.*
 import kotlinx.coroutines.CoroutineScope
@@ -38,6 +40,7 @@ import retrofit2.Callback
 import java.io.IOException
 
 class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
+    val TAG = "MainActivity"
 
     private val SELECT_ACTIVITY=50
     private var ARCHIVONAME = ""
@@ -116,6 +119,21 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
 
             }
         }
+
+
+
+    }
+    private fun sendNotification(notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val response = RetrofitInstance.api.postNotification(notification)
+            if(response.isSuccessful) {
+                // Log.d(TAG, "Response: ${Gson().toJson(response)}")
+            } else {
+                //Log.e(TAG, response.errorBody().toString())
+            }
+        } catch(e: Exception) {
+            Log.e(TAG, e.toString())
+        }
     }
 
     fun ClickOdontograma(view: View){
@@ -173,15 +191,18 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
                                             character=""
                                         }
                                     }
-                                    if(character.length==2){
-                                        if(messigno==""){
-                                            messigno = character
-                                            character=""
-                                        }else
-                                        {
-                                            diasigno = character
+                                    if(annosigno!=""){
+                                        if(character.length==2){
+                                            if(messigno==""){
+                                                messigno = character
+                                                character=""
+                                            }else
+                                            {
+                                                diasigno = character
+                                            }
                                         }
                                     }
+
                                 }
 
 
@@ -308,6 +329,7 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
         intent.putExtra("correo",correo)
         intent.putExtra("dni",dni)
         intent.putExtra("name",name)
+        intent.putExtra("back","Turno")
         startActivity(intent)
     }
 
@@ -315,6 +337,44 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
         getTurnoSave(View(applicationContext))
         finish()
     }
+
+    private fun getClientDatos(dni:String,accion: String,name:String){
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val call=RetrofitClient.instance.getCliente(dni.toString())
+                val datos: ClienteRespons? =call.body()
+                runOnUiThread{
+                    if(call.isSuccessful){
+                        if (datos != null) {
+
+                            if (accion=="modificar"){
+                                sendNotification(PushNotification(NotificationData("Turno cambiado ","$name modifico el turno del $fecha"),"${datos.TID}"))
+
+                            }else if (accion=="insertar"){
+                                sendNotification(PushNotification(NotificationData("Turno creado ","$name saco un turno para el $fecha"),"${datos.TID}"))
+
+                            }else if (accion=="borrar"){
+                                Toast.makeText(applicationContext,"El Turno se ${datos.TID} ", Toast.LENGTH_SHORT).show()
+
+                                sendNotification(PushNotification(NotificationData("Turno cancelado ","$name cancelo el turno de la fecha: $fecha"),"${datos.TID}"))
+
+                            }
+
+                        }
+
+                    }else{
+                        Toast.makeText(applicationContext,"Error",Toast.LENGTH_LONG).show()
+                    }
+                }
+            }catch (e: java.lang.Exception){
+
+            }
+
+
+        }
+
+    }//
+
 
     //----------------------------------------------------------------------------------------------Verifica si existe el turno crea una lista y compara la fecha
     fun getTurnoSave(view: View){
@@ -431,9 +491,18 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
                     Toast.makeText(applicationContext,t.message,Toast.LENGTH_LONG).show()
                 }
                 override fun onResponse(call: Call<TurnoRespons>, response: retrofit2.Response<TurnoRespons>) {
-                    Toast.makeText(applicationContext,"El Turno se $accion ", Toast.LENGTH_SHORT).show()
                     arraylisP.clear()
                     arraylisPres.clear()
+                    if (estado!="C"){
+
+                        getClientDatos(dni.toString(),accion,txtepaciente.text.toString())
+
+                    }else{
+
+                        getClientDatos(dni.toString(),"borrar",txtepaciente.text.toString())
+
+                    }
+
                     if (id==0){
                         finish()
                     }
@@ -686,4 +755,9 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
 
 
     }
+
+
+
+
+
 }

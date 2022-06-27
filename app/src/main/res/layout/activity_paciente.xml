@@ -235,7 +235,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10sp"
         android:layout_marginEnd="10dp"
         android:gravity="end"
         android:layout_alignParentBottom="true"
@@ -243,6 +242,7 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/handshake"
+            android:layout_marginBottom="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
@@ -255,6 +255,7 @@
         </com.google.android.material.floatingactionbutton.FloatingActionButton>
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
+            android:layout_marginBottom="10dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:backgroundTint="@color/white"

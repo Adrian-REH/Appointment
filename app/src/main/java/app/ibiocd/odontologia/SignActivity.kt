@@ -12,7 +12,9 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_perfil.*
 import kotlinx.android.synthetic.main.activity_sign.*
@@ -68,22 +70,32 @@ class SignActivity : AppCompatActivity() {
                 //val datos: ClienteRespons?=call.body()
                 runOnUiThread{
                     if(call.isSuccessful){
-                        postProfesionalSave()
-                    }else{
                         edtxtuser.error="El usuario ingresado existe, pruebe otro"
+
+                    }else{
+                        postProfesionalSave()
 
                     }
                 }
             }catch (e:Exception){
+                postProfesionalSave()
 
             }
         }
     }//
     private fun postProfesionalSave() {
+        var token=""
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                return@OnCompleteListener
+            }
+             token = task.result
 
+
+        })
         CoroutineScope(Dispatchers.IO).launch {
 
-            val call=RetrofitClient.instance.postProfesional("","","","","","${edtxtcorreo.text}","insertar","","N","",edtxmatricula.text.toString(),"insertar","")
+            val call=RetrofitClient.instance.postProfesional("","","","","","${edtxtcorreo.text}","","","N","",edtxmatricula.text.toString(),"$token","insertar","")
             call.enqueue(object : Callback<ProfesionalRespons> {
                 override fun onFailure(call: Call<ProfesionalRespons>, t: Throwable) {
                     Toast.makeText(applicationContext,t.message,Toast.LENGTH_LONG).show()

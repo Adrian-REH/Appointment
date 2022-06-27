@@ -17,6 +17,8 @@ import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_inicio.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_perfil.*
@@ -24,6 +26,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONException
+import retrofit2.Call
+import retrofit2.Callback
 import java.io.EOFException
 import java.lang.Exception
 import java.util.*
@@ -195,7 +199,9 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
     fun getComprobarCliente(){
         CoroutineScope(Dispatchers.IO).launch {
             val call=RetrofitClient.instance.getProfesional("$correo")
+
             runOnUiThread{
+
                 val datos: ProfesionalRespons? = call.body()
                 val nombre = datos?.nameprof ?: ""
                 val verif = datos?.verificar ?: ""
@@ -216,8 +222,40 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
 
                 }
 
+                FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+                    if (!task.isSuccessful) {
+                        return@OnCompleteListener
+                    }
+                    val token = task.result
+                    if (datos?.TID!=token){
+
+                        postProfesional(datos!!,token)
+                    }
+
+                })
+
+                //ENVIO LOS DATOS
+
 
             }
+        }
+    }
+
+    private fun postProfesional(datos:ProfesionalRespons,token:String) {
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val call=RetrofitClient.instance.postProfesional("${datos.nameprof}","${datos.col}","${datos.especialidad}","${datos.celular}","${datos.direccion}","${correo}","${datos.horarios}","${datos.prestacion}","${datos.verificar}","${datos.img}","${datos.matricula}","$token","","modificar")
+            call.enqueue(object : Callback<ProfesionalRespons> {
+                override fun onFailure(call: Call<ProfesionalRespons>, t: Throwable) {
+                    Toast.makeText(applicationContext,t.message,Toast.LENGTH_LONG).show()
+                }
+                override fun onResponse(call: Call<ProfesionalRespons>, response: retrofit2.Response<ProfesionalRespons>) {
+
+                }
+            })
+
+
+
         }
     }
 
@@ -295,14 +333,14 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
                                 for (j in listturnhora.indices){
                                     if (datos[i].hora==listturnhora[j]){
                                         if (j+10>=hour){
-
+                                            arraylisTurno.add(datos[i].fecha)
+                                            displayListTurno.add(datos[i].dni)
+                                            arraylisTurnoID.add(datos[i].ID)
                                         }
                                     }
                                 }
                             }
-                            arraylisTurno.add(datos[i].fecha)
-                            displayListTurno.add(datos[i].dni)
-                            arraylisTurnoID.add(datos[i].ID)
+
 
 
                         }

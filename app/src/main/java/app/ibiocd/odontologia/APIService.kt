@@ -2,6 +2,9 @@ package app.ibiocd.odontologia
 
 import app.ibiocd.lavanderia.Adapter.*
 import com.google.gson.annotations.SerializedName
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
@@ -37,8 +40,15 @@ interface APIService {
     @GET("/appointment/cuentas.php?")
     suspend fun getAllListProf(@Query("todos") todos:String):Response<List<ProfesionalRespons>>
 
+
+    @Headers("Authorization: key=${Constants.SERVER_KEY}", "Content-Type:${Constants.CONTENT_TYPE}")
+    @POST("fcm/send")
+    suspend fun postNotification(
+        @Body notification: PushNotification
+    ): Response<ResponseBody>
+
     @FormUrlEncoded
-    @POST("/appointment/cuenta.php")
+    @POST("/appointment/cuentas.php")
     fun postProfesional(
         @Field("nombreapellido") name:String,
         @Field("profesionalcol") col:String,
@@ -51,6 +61,7 @@ interface APIService {
         @Field("verificar") verificar:String,
         @Field("img") img:String,
         @Field("matricula") matricula:String,
+        @Field("TokenID") TID:String,
         @Field("insertar") insertar:String,
         @Field("modificar") modificar:String
     ): Call<ProfesionalRespons>
@@ -70,6 +81,7 @@ interface APIService {
         @Field("img") img:String,
         @Field("celular") celular:String,
         @Field("dni") dni:String,
+        @Field("TokenID") TID:String,
         @Field("insertar") insertar:String,
         @Field("modificar") modificar:String
     ): Call<ClienteRespons>
