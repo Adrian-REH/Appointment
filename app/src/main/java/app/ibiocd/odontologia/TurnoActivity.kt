@@ -84,10 +84,9 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
             url = intent.getStringExtra("url")
             name = intent.getStringExtra("name")
             fecha= intent.getStringExtra("fecha").toString().toInt()
-
             codigo= intent.getStringExtra("codigo").toString().toInt()
-
             id= intent.getStringExtra("id").toString().toInt()
+
             //Toast.makeText(this,"$codigo",Toast.LENGTH_LONG).show()
             turnobacktext.setText(intent.getStringExtra("back").toString())
             if (id != 0){

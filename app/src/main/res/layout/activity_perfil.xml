@@ -33,17 +33,17 @@
             />
 
     </LinearLayout>
+
     <TextView
         android:id="@+id/titleperfil"
-        android:layout_marginTop="5dp"
-        android:layout_gravity="center"
-        android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
         android:text="Perfil"
-        android:textSize="20dp"
         android:textColor="@color/black"
-        />
+        android:textSize="20dp" />
 
 
     <androidx.cardview.widget.CardView

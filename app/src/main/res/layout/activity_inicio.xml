@@ -97,13 +97,13 @@
                 android:layout_marginHorizontal="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="280dp"
+                android:layout_marginTop="20dp"
                 android:layout_above="@+id/boot">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginHorizontal="20dp"
-                    android:layout_marginTop="10sp">
+                    android:layout_marginHorizontal="20dp">
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -170,46 +170,52 @@
         </LinearLayout>
     </ScrollView>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/boot"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:backgroundTint="@color/white"
-        app:cardElevation="10dp">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true">
 
-        <LinearLayout
-
-            android:layout_width="match_parent"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatcanc"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="horizontal">
-            <ImageView
-                android:layout_width="140dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="20dp"
-                android:background="@drawable/log" />
-            <LinearLayout
-                android:layout_gravity="center"
-                android:layout_width="match_parent"
-                android:orientation="vertical"
-                android:layout_marginEnd="20dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:backgroundTint="@color/white"
+            android:baselineAlignBottom="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="ClickCalendar"
+            android:longClickable="false"
+            android:src="@drawable/ic_calendar"
+            app:backgroundTint="#00FFFFFF"
+            app:tint="@color/black">
+        </com.google.android.material.floatingactionbutton.FloatingActionButton>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnodontologia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:backgroundTint="@color/white"
+            android:baselineAlignBottom="true"
+            android:clickable="true"
+            android:focusable="true"
+            android:longClickable="false"
+            android:src="@drawable/ic_info"
+            app:backgroundTint="#00FFFFFF"
+            app:tint="@color/black">
+        </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:text="gmail: ibiocd@gmail.com" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:text="tel: 11 6857-2574" />
-            </LinearLayout>
 
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </LinearLayout>
+
 
 </RelativeLayout>

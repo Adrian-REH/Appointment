@@ -12,18 +12,17 @@
         android:layout_height="210dp"
         app:cardCornerRadius="10dp"
         android:backgroundTint="#FFFFFF">
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/RLview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="5dp"
-            android:orientation="vertical"
-            android:layout_marginBottom="10dp">
+            android:orientation="vertical">
             <androidx.cardview.widget.CardView
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:layout_width="80dp"
                 android:id="@+id/cdview"
+                android:layout_centerHorizontal="true"
                 android:layout_height="80dp"
                 app:cardCornerRadius="1000dp">
                 <ImageView
@@ -36,6 +35,7 @@
             </androidx.cardview.widget.CardView>
 
             <LinearLayout
+                android:layout_marginVertical="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
@@ -46,17 +46,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-
+                    android:text="Adrian Herrera"
                     android:textColor="#000000"
                     android:textSize="15dp" />
+
 
                 <TextView
                     android:id="@+id/txtesp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
                     android:gravity="center"
-
                     android:textColor="#000000"
                     android:textSize="10dp" />
 
@@ -65,7 +64,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-
                     android:textColor="#000000"
                     android:textSize="10dp" />
 
@@ -74,13 +72,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-
+                    android:textColor="#000000"
+                    android:textSize="15dp" />
+                <TextView
+                    android:id="@+id/txthora"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="14:55"
                     android:textColor="#000000"
                     android:textSize="15dp" />
             </LinearLayout>
 
 
-        </LinearLayout>
+        </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
 </RelativeLayout>

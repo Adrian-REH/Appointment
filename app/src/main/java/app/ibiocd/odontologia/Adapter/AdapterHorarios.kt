@@ -13,7 +13,6 @@ import app.ibiocd.odontologia.PerfilActivity
 import app.ibiocd.odontologia.R
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.list_horarios.view.*
-import kotlinx.android.synthetic.main.list_paciente_a.view.*
 
 class AdapterHorarios(val arrayList: ArrayList<Horario>, val context: Context, val itemClickListener: onHorarioItemClick):
     RecyclerView.Adapter<AdapterHorarios.ViewHolder>(){
@@ -59,8 +58,7 @@ class AdapterHorarios(val arrayList: ArrayList<Horario>, val context: Context, v
 
             itemView.cardhorariosd.setOnClickListener { itemClickListener.onHorarioItemClick(model.dia)}
             itemView.txtdia.text=model.dia
-            itemView.txthora.text=model.hora
-
+            itemView.txthora.text = model.dia
 
 
         }

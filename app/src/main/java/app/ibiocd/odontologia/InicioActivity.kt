@@ -4,28 +4,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import app.ibiocd.lavanderia.Adapter.*
 import app.ibiocd.odontologia.Adapter.AdapterClienteA
 import app.ibiocd.odontologia.Adapter.AdapterClienteB
-import com.android.volley.Request
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.android.synthetic.main.activity_inicio.*
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_perfil.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.json.JSONException
 import retrofit2.Call
 import retrofit2.Callback
 import java.io.EOFException
@@ -43,12 +35,8 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
 
     var id:Int=0
 
-     val arraylisConexion= ArrayList<String>()
-     val displayListConexion= ArrayList<String>()
-
-     val arraylisTurno= ArrayList<String>()
-     val displayListTurno= ArrayList<String>()
-     val arraylisTurnoID= ArrayList<Int>()
+     val lisTurno= ArrayList<TurnoRespons>()
+     val lisEnlace= ArrayList<EnlaceRespons>()
 
      val arraylisC= ArrayList<Clientes>()
      val displayListC= ArrayList<Clientes>()
@@ -58,10 +46,8 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
         setContentView(R.layout.activity_inicio)
         arraylisC.clear()
         displayListC.clear()
-        arraylisTurno.clear()
-        arraylisConexion.clear()
-        displayListTurno.clear()
-        displayListConexion.clear()
+        lisTurno.clear()
+        lisEnlace.clear()
         cvverifI.visibility=View.GONE
 
         if(intent.extras !=null){
@@ -104,8 +90,8 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
     fun getListClientes(search: String){
         arraylisC.clear()
         displayListC.clear()
-        for (j in 0 until displayListConexion.size) {
-            var clientes = displayListConexion[j]
+        for (j in 0 until lisEnlace.size) {
+            var clientes = lisEnlace[j].pacientedni
             CoroutineScope(Dispatchers.IO).launch {
                 val call=RetrofitClient.instance.getCliente("$clientes")
                 runOnUiThread{
@@ -122,9 +108,9 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
                         val dni=  datos?.dni ?: ""
 
                         if (search.equals(dni) || search.equals(name)){
-                            displayListC.add(Clientes(name, telefono, dni,image,direc,email,image,"",0))
+                            displayListC.add(Clientes(name, telefono, dni,image,direc,email,image,"",0,""))
                         }else if (search==""){
-                            displayListC.add(Clientes(name, telefono, dni,image,direc,email,image,"",0))
+                            displayListC.add(Clientes(name, telefono, dni,image,direc,email,image,"",0,""))
                         }
 
 
@@ -145,13 +131,14 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
         }
 
     }
+
     fun getListClientesTurnos(search: String){
 
         displayListC.clear()
         arraylisC.clear()
-        if (displayListTurno.size>0){
-            for (j in 0 until displayListTurno.size) {
-                var dni = displayListTurno[j]
+        if (lisTurno.size>0){
+            for (j in 0 until lisTurno.size) {
+                var dni = lisTurno[j].dni
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
                         val call=RetrofitClient.instance.getCliente("$dni")
@@ -169,9 +156,9 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
                                 val dni=  datos?.dni ?: ""
 
                                 if (search.equals(dni) || search.equals(name)){
-                                    arraylisC.add(Clientes(name, telefono, dni,image,direc,email,image,arraylisTurno[j],arraylisTurnoID[j] ))
+                                    arraylisC.add(Clientes(name, telefono, dni,image,direc,email,image,lisTurno[j].fecha,lisTurno[j].ID,lisTurno[j].hora))
                                 }else if (search==""){
-                                    arraylisC.add(Clientes(name, telefono, dni,image,direc,email,image,arraylisTurno[j],arraylisTurnoID[j] ))
+                                    arraylisC.add(Clientes(name, telefono, dni,image,direc,email,image,lisTurno[j].fecha,lisTurno[j].ID,lisTurno[j].hora))
                                 }
 
                                 val adapterclientea = AdapterClienteA(arraylisC, applicationContext, this@InicioActivity)
@@ -260,11 +247,9 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
     }
 
     fun getListEnlace(){
-        arraylisConexion.clear()
-        displayListConexion.clear()
-    arraylisTurno.clear()
-    displayListTurno.clear()
-    arraylisTurnoID.clear()
+
+        lisEnlace.clear()
+
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val call=RetrofitClient.instance.getAllEnlace(correo.toString())//turno.php
@@ -276,8 +261,8 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
                                 val dni = datos[i].pacientedni
                                 val estp = datos[i].estado
                                 if (estp=="OCUPADO"){
-                                    arraylisConexion.add(dni)
-                                    displayListConexion.add(dni)
+                                    lisEnlace.add(datos[i])
+
                                 }
                             }
                             getListClientes("")
@@ -298,11 +283,7 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
     }
     fun getListTurnos(){
 
-        arraylisTurno.clear()
-        displayListTurno.clear()
-        arraylisTurnoID.clear()
-        arraylisConexion.clear()
-        displayListConexion.clear()
+        lisTurno.clear()
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val call=RetrofitClient.instance.getListTurno(correo.toString())//turno.php
@@ -310,7 +291,7 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
                     val datos: List<TurnoRespons>? = call.body()
                     if (datos!=null){
                         for (i in 0 until datos.size){
-                            val listturnhora= arrayOf("10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00")
+                            val listturnhora= arrayOf("10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00")
                             val c= Calendar.getInstance()
                             val hour:Int=c.get(Calendar.HOUR_OF_DAY)
                             val dia:Int=c.get(Calendar.DAY_OF_MONTH)
@@ -327,19 +308,20 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
                             }else{
                                 fechahoy = ("$anno$mes$dia").toInt()
                             }
-
                             if (datos[i].fecha==fechahoy.toString()){
 
                                 for (j in listturnhora.indices){
                                     if (datos[i].hora==listturnhora[j]){
+                                        Toast.makeText(applicationContext,"${datos[i].hora}" +"=="+ "${listturnhora[j]}",Toast.LENGTH_SHORT).show()
+
                                         if (j+10>=hour){
-                                            arraylisTurno.add(datos[i].fecha)
-                                            displayListTurno.add(datos[i].dni)
-                                            arraylisTurnoID.add(datos[i].ID)
+                                            lisTurno.add(datos[i])
+
                                         }
                                     }
                                 }
                             }
+                            //TEST
 
 
 
@@ -378,17 +360,27 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
 
         startActivity(intent)
     }
+    fun ClickCalendar(view: View){
+        val intent = Intent(this, CalendarActivity::class.java)
+        intent.putExtra("correo",correo)
+        intent.putExtra("url",url)
+        intent.putExtra("especialidad",especialidad)
+        intent.putExtra("name",name)
+        intent.putExtra("back","Inicio")
+
+        startActivity(intent)
+    }
 
     override fun onClienteAItemClick(dni: String,fecha:String,ID:Int) {//Ingresa al perfil del paciente sabiendo que tiene turno el mismo dia
         val intent = Intent(this, TurnoActivity::class.java)
         intent.putExtra("url",url)
+        intent.putExtra("especialidad",especialidad)
+        intent.putExtra("name",name)
         intent.putExtra("correo",correo)
         intent.putExtra("dni",dni)
         intent.putExtra("fecha",fecha)
-        intent.putExtra("name",name)
         intent.putExtra("id","$ID")
         intent.putExtra("codigo","0")
-        intent.putExtra("especialidad",especialidad)
         intent.putExtra("JSONODONT","")
         intent.putExtra("back","Inicio")
 

@@ -2,7 +2,7 @@ package app.ibiocd.lavanderia.Adapter
 
 import com.google.gson.annotations.SerializedName
 
-class Clientes(val nombre:String,val celular:String,val dni:String,val image:String,val direccion:String,val correo:String,val img:String,val fecha: String,val ID: Int) {
+class Clientes(val nombre:String,val celular:String,val dni:String,val image:String,val direccion:String,val correo:String,val img:String,val fecha: String,val ID: Int,val hora:String) {
 }
 class Historial(val especialidad:String,val prestacion:String,val fecha:String) {
 }

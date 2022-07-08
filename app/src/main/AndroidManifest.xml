@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="app.ibiocd.odontologia"
-    >
+    package="app.ibiocd.odontologia">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -18,15 +17,20 @@
         android:supportsRtl="true"
         android:theme="@style/SplashTheme"
         android:usesCleartextTraffic="true">
-        <service android:name=".FirebaseService"
-            android:permission="com.google.android.c2dm.permission.SEND"
-            android:exported="true">
+        <activity
+            android:name=".CalendarActivity"
+            android:exported="false" />
+
+        <service
+            android:name=".FirebaseService"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
-
         </service>
+
         <activity
             android:name=".OdontogramaActivity"
             android:exported="false" />
@@ -63,15 +67,13 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/SplashTheme"
-            >
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

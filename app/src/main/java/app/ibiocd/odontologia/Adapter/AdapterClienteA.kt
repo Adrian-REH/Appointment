@@ -63,6 +63,7 @@ class AdapterClienteA(val arrayList: ArrayList<Clientes>, val context: Context, 
 
             itemView.view.setOnClickListener { itemClickListener.onClienteAItemClick(model.dni, model.fecha,model.ID)}
             itemView.txtname.text=model.nombre
+            itemView.txthora.text=model.hora
             Glide.with(context)
                 .load(model.image)
                 .centerCrop()
