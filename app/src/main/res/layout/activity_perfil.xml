@@ -144,67 +144,70 @@
                         android:textSize="15dp" />
 
 
-
                     <TextView
-                        android:layout_marginTop="10dp"
-
                         android:id="@+id/txtmatricula"
+
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="10"
+                        android:layout_marginTop="10dp"
                         android:drawableStart="@drawable/ic_verified"
+                        android:drawableTint="@color/black"
+                        android:ems="10"
                         android:hint="Matricula"
-                        android:drawableTint="@color/black"
                         android:textSize="20dp"
-                        android:textStyle="normal"/>
-                    <TextView
-                        android:layout_marginTop="10dp"
+                        android:textStyle="normal" />
 
-                        android:drawableTint="@color/black"
-                        android:hint="Correo"
-                        android:drawableStart="@drawable/ic_email"
+                    <TextView
                         android:id="@+id/txtcorreo"
+
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:drawableStart="@drawable/ic_email"
+                        android:drawableTint="@color/black"
                         android:ems="10"
+                        android:hint="Correo"
 
                         android:textSize="20dp"
-                        android:textStyle="normal"/>
-                    <TextView
-                        android:layout_marginTop="10dp"
+                        android:textStyle="normal" />
 
-                        android:drawableTint="@color/black"
-                        android:hint="Celular"
-                        android:drawableStart="@drawable/ic_phone"
+                    <TextView
                         android:id="@+id/txtcel"
+
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:textSize="20dp"
-                        android:textStyle="normal"/>
-                    <TextView
                         android:layout_marginTop="10dp"
+                        android:drawableStart="@drawable/ic_phone"
                         android:drawableTint="@color/black"
-                        android:hint="Direccion"
-                        android:drawableStart="@drawable/ic_location"
+                        android:ems="10"
+                        android:hint="Celular"
+                        android:textSize="20dp"
+                        android:textStyle="normal" />
+
+                    <TextView
                         android:id="@+id/txtdirec"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:textSize="20dp"
-                        android:textStyle="normal"/>
-                    <TextView
                         android:layout_marginTop="10dp"
-
+                        android:drawableStart="@drawable/ic_location"
                         android:drawableTint="@color/black"
-                        android:hint="Especialidad"
-                        android:drawableStart="@drawable/ic_handshake"
+                        android:ems="10"
+                        android:hint="Direccion"
+                        android:textSize="20dp"
+                        android:textStyle="normal" />
+
+                    <TextView
                         android:id="@+id/txtesp"
+
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:drawableStart="@drawable/ic_handshake"
+                        android:drawableTint="@color/black"
                         android:ems="10"
+                        android:hint="Especialidad"
                         android:textSize="20dp"
-                        android:textStyle="normal"/>
+                        android:textStyle="normal" />
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>

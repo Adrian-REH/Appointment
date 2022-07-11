@@ -70,7 +70,7 @@ class SignActivity : AppCompatActivity() {
                 //val datos: ClienteRespons?=call.body()
                 runOnUiThread{
                     if(call.isSuccessful){
-                        edtxtuser.error="El usuario ingresado existe, pruebe otro"
+                        edtxtcorreo.error="El usuario ingresado existe, pruebe otro"
 
                     }else{
                         postProfesionalSave()
@@ -95,7 +95,7 @@ class SignActivity : AppCompatActivity() {
         })
         CoroutineScope(Dispatchers.IO).launch {
 
-            val call=RetrofitClient.instance.postProfesional("","","","","","${edtxtcorreo.text}","","","N","",edtxmatricula.text.toString(),"$token","insertar","")
+            val call=RetrofitClient.instance.postProfesional("${edtxtname.text}","","","","","${edtxtcorreo.text}","","","N","http://23herrera.xyz:81/appointment/docs/Dc.webp","${edtxmatricula.text.toString()}","$token","insertar","")
             call.enqueue(object : Callback<ProfesionalRespons> {
                 override fun onFailure(call: Call<ProfesionalRespons>, t: Throwable) {
                     Toast.makeText(applicationContext,t.message,Toast.LENGTH_LONG).show()

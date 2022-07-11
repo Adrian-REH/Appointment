@@ -2,6 +2,8 @@ package app.ibiocd.odontologia
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -59,6 +61,13 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
             getListTurnos()
             getListEnlace()
             getComprobarCliente()
+
+
+            Handler(Looper.getMainLooper()).postDelayed({
+
+                swipe_container.isRefreshing=false
+
+            }, 3000)
         }
 
         getListTurnos()
@@ -98,7 +107,7 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
 
                     if (call.isSuccessful){
                         val datos: ClienteRespons? = call.body()
-                        swipe_container.isRefreshing=false
+                        //swipe_container.isRefreshing=false
 
                         val name =  datos?.name ?: ""
                         val direc =  datos?.direccion ?: ""
@@ -146,7 +155,7 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
 
                             if (call.isSuccessful){
                                 val datos: ClienteRespons? = call.body()
-                                swipe_container.isRefreshing=false
+                               // swipe_container.isRefreshing=false
 
                                 val name =  datos?.name ?: ""
                                 val direc =  datos?.direccion ?: ""
@@ -188,6 +197,7 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
             val call=RetrofitClient.instance.getProfesional("$correo")
 
             runOnUiThread{
+                swipe_container.isRefreshing=false
 
                 val datos: ProfesionalRespons? = call.body()
                 val nombre = datos?.nameprof ?: ""
@@ -255,6 +265,8 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
                     val call=RetrofitClient.instance.getAllEnlace(correo.toString())//turno.php
 
                     runOnUiThread{
+                        swipe_container.isRefreshing=false
+
                         val datos: List<EnlaceRespons>? = call.body()
                         if (datos!=null){
                             for (i in 0 until datos?.size!!){
@@ -272,7 +284,7 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
 
                     }
                 }catch (e: EOFException){
-                    Toast.makeText(applicationContext,"Error: $e",Toast.LENGTH_LONG).show()
+                    //Toast.makeText(applicationContext,"Error: $e",Toast.LENGTH_LONG).show()
 
                 }
 
@@ -289,7 +301,10 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
                 val call=RetrofitClient.instance.getListTurno(correo.toString())//turno.php
                 runOnUiThread{
                     val datos: List<TurnoRespons>? = call.body()
+
                     if (datos!=null){
+                        swipe_container.isRefreshing=false
+
                         for (i in 0 until datos.size){
                             val listturnhora= arrayOf("10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00")
                             val c= Calendar.getInstance()
@@ -335,7 +350,7 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
 
                 }
             }catch (e: EOFException){
-                Toast.makeText(applicationContext,"Error: $e",Toast.LENGTH_LONG).show()
+//                Toast.makeText(applicationContext,"Error: $e",Toast.LENGTH_LONG).show()
             }
 
         }

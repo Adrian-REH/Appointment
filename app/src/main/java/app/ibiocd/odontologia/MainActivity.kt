@@ -177,7 +177,7 @@ class MainActivity : AppCompatActivity() {
                 finish()
 
             }else{
-                Toast.makeText(this,"Por favor verifique su Email",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,"Por favor verifique su",Toast.LENGTH_SHORT).show()
 
             }
         }else{
@@ -188,6 +188,8 @@ class MainActivity : AppCompatActivity() {
 
     fun ClickRegistrar(view: View){
         val intent = Intent(this, SignActivity::class.java)
+        intent.putExtra("back","Inisiar Sesion")
+
         startActivity(intent)
     }
 

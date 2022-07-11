@@ -270,7 +270,11 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
                     Toast.makeText(applicationContext,t.message,Toast.LENGTH_LONG).show()
                 }
                 override fun onResponse(call: Call<ProfesionalRespons>, response: retrofit2.Response<ProfesionalRespons>) {
-                    ClickEditar(View(applicationContext))
+                    if(cvinfo.visibility!=View.VISIBLE){
+                        ClickEditar(View(applicationContext))
+
+                    }
+
                     uploadImage()
 
                 }
@@ -430,7 +434,7 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
             val diashora= ArrayList<String>()
             for (j in dias.indices){
                 if (dia==dias[j]){
-                    diashora.add("${horarioini.text} hasta ${horariofin.text}")
+                    diashora.add("${horarioini.text} a ${horariofin.text}")
                     dias2.add(dias[j])
                 }else{
                     dias2.add(dias[j])

@@ -58,7 +58,7 @@ class AdapterHorarios(val arrayList: ArrayList<Horario>, val context: Context, v
 
             itemView.cardhorariosd.setOnClickListener { itemClickListener.onHorarioItemClick(model.dia)}
             itemView.txtdia.text=model.dia
-            itemView.txthora.text = model.dia
+            itemView.txthora.text = model.hora
 
 
         }
