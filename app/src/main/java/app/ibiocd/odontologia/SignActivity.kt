@@ -57,7 +57,12 @@ class SignActivity : AppCompatActivity() {
         auth.createUserWithEmailAndPassword(edtxtcorreo.text.toString(),edtxtclave.text.toString()).addOnCompleteListener(this) {task ->
             if (task.isSuccessful){
                 getprofesionalSave()
+                auth.currentUser?.sendEmailVerification()?.addOnCompleteListener(this){ task ->
+                    if (task.isSuccessful){
+                        Toast.makeText(baseContext,"Se envio un correo de verificacion", Toast.LENGTH_LONG).show()
+                    }
 
+                }
             }else{
                 Toast.makeText(baseContext,"Registro fallido. Intenta de nuevo mas tarde", Toast.LENGTH_LONG).show()
             }
@@ -95,14 +100,13 @@ class SignActivity : AppCompatActivity() {
         })
         CoroutineScope(Dispatchers.IO).launch {
 
-            val call=RetrofitClient.instance.postProfesional("${edtxtname.text}","","","","","${edtxtcorreo.text}","","","N","http://23herrera.xyz:81/appointment/docs/Dc.webp","${edtxmatricula.text.toString()}","$token","insertar","")
+            val call=RetrofitClient.instance.postProfesional("${edtxtname.text}","","","","","${edtxtcorreo.text}","","","N","http://23herrera.xyz:81/appointment/docs/blank_profile.png","${edtxmatricula.text.toString()}","$token","insertar","")
             call.enqueue(object : Callback<ProfesionalRespons> {
                 override fun onFailure(call: Call<ProfesionalRespons>, t: Throwable) {
                     Toast.makeText(applicationContext,t.message,Toast.LENGTH_LONG).show()
                 }
                 override fun onResponse(call: Call<ProfesionalRespons>, response: retrofit2.Response<ProfesionalRespons>) {
-                    Toast.makeText(applicationContext,"Gracias por registrarse!, verifique su correo ",Toast.LENGTH_LONG).show()
-
+//Nunca se registro con nosotros
                     startActivity(Intent(applicationContext,MainActivity::class.java))
                     finish()
 

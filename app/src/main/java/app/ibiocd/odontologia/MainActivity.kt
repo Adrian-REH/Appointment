@@ -177,7 +177,7 @@ class MainActivity : AppCompatActivity() {
                 finish()
 
             }else{
-                Toast.makeText(this,"Por favor verifique su",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,"El correo no ha sido verificado todavai",Toast.LENGTH_SHORT).show()
 
             }
         }else{
@@ -196,16 +196,22 @@ class MainActivity : AppCompatActivity() {
     fun doLigin(correo:String){
         if (edtxtuser.text.toString().isEmpty()){
             edtxtuser.error="Por favor ingrese un email o su DNI"
+            BorrarSesion()
+
             edtxtuser.requestFocus()
             return
         }
         if (!Patterns.EMAIL_ADDRESS.matcher(correo).matches()){
             edtxtuser.error="Por favor ingrese un email valido"
+            BorrarSesion()
+
             edtxtuser.requestFocus()
             return
         }
         if (edtxtpass.text.toString().isEmpty()){
             edtxtpass.error="Por favor ingrese una clave"
+            BorrarSesion()
+
             edtxtpass.requestFocus()
             return
         }
