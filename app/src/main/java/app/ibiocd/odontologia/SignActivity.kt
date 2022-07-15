@@ -57,8 +57,8 @@ class SignActivity : AppCompatActivity() {
         auth.createUserWithEmailAndPassword(edtxtcorreo.text.toString(),edtxtclave.text.toString()).addOnCompleteListener(this) {task ->
             if (task.isSuccessful){
                 getprofesionalSave()
-                auth.currentUser?.sendEmailVerification()?.addOnCompleteListener(this){ task ->
-                    if (task.isSuccessful){
+                auth.currentUser?.sendEmailVerification()?.addOnCompleteListener(this){ ask ->
+                    if (ask.isSuccessful){
                         Toast.makeText(baseContext,"Se envio un correo de verificacion", Toast.LENGTH_LONG).show()
                     }
 
