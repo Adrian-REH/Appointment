@@ -55,6 +55,7 @@
         >
 
         <LinearLayout
+            android:id="@+id/sakdkasd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -64,15 +65,27 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/txtmatricula"
                 android:layout_width="240dp"
+
                 android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:startIconDrawable="@drawable/ic_baseline_fingerprint_24"
-                android:hint="Matricula">
+                android:hint="MATRICULA">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/edtxmatricula"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/txtdni"
+                android:layout_width="240dp"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:hint="DNI">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtxtdni"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/txtname"
                 android:layout_width="240dp"
@@ -130,6 +143,8 @@
                 android:onClick="ClickRegistrarse"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+
                 android:text="Registrarse"/>
 
         </LinearLayout>

@@ -10,6 +10,8 @@ class Horario(val dia:String, val hora:String, val correo:String) {
 }
 class Odontograma(val url1:String, val url2:String) {
 }
+class HoraTurno(val hora:String, val fecha:String,val selector:Boolean) {
+}
 class Archivos(val name:String, val url:String) {
 }
 class Prestacion(val name:String, val detalle:String) {

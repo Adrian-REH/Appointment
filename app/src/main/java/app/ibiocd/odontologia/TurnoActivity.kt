@@ -13,6 +13,8 @@ import android.os.Bundle
 import android.provider.OpenableColumns
 import android.util.Log
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -21,6 +23,7 @@ import app.ibiocd.lavanderia.Adapter.*
 import app.ibiocd.lavanderia.FileDataPart
 import app.ibiocd.lavanderia.VolleyFileUploadRequest
 import app.ibiocd.odontologia.Adapter.AdapterArchivo
+import app.ibiocd.odontologia.Adapter.AdapterTurnoHora
 import app.ibiocd.odontologia.Adapter.ArchivoController
 import com.android.volley.Request
 import com.android.volley.Response
@@ -37,9 +40,14 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
+import java.io.EOFException
 import java.io.IOException
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
-class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
+class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
+    AdapterView.OnItemClickListener, AdapterTurnoHora.onHorarioItemClick {
     val TAG = "MainActivity"
 
     private val SELECT_ACTIVITY=50
@@ -69,9 +77,11 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
     var dni:String?=""
     var name:String?=""
 
+    val arraylis=  ArrayList<TurnoRespons>()
     val arraylisP= ArrayList<String>()
     val arraylisPres= ArrayList<String>()
     val displayListC=ArrayList<Archivos>()
+    val arrayturnhora= ArrayList<HoraTurno>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -117,6 +127,14 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
 
 
             }
+            if(dni=="patient"){
+                getListPaciente(intent.getStringExtra("especialidad").toString())
+
+                txteprofesional.setText( intent.getStringExtra("name").toString())
+                txtprofesion.setText( intent.getStringExtra("especialidad").toString())
+                getListProfesional(correo.toString())
+            }
+
         }
 
 
@@ -206,7 +224,7 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
 
 
                                 txtdia.text="$annosigno/$messigno/$diasigno"
-                                txtespecialidad?.setText(espc)
+                                txtprofesion?.setText(espc)
 
                                 if(espc=="ODONTOLOGIA"){
                                     btnodontologia.visibility=View.VISIBLE
@@ -214,7 +232,7 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
 
                                 txtepaciente?.setText(namepac)
                                 txteprofesional?.setText(nameprof)
-                                txteprestacion?.setText(prest)
+                                txtespecialidad?.setText(prest)
                                 Glide.with(applicationContext)
                                     .load(img)
                                     .centerCrop()
@@ -483,7 +501,7 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
     private fun postCliente(accion:String,archivo1:String,archivo2:String,archivo3:String,archivo4:String,archivo5:String,estado:String) {
 
         CoroutineScope(Dispatchers.IO).launch {
-            val call=RetrofitClient.instance.postTurno(correo.toString(),txtepaciente.text.toString(),name.toString(),txtespecialidad.text.toString(),txteprestacion.text.toString(),dni.toString(),fecha.toString(),"${txtnumdia.text.toString()}",txtcomentario.text.toString(),estado,IMG.toString(),archivo1,archivo2,archivo3,archivo4,archivo5,accion,accion)
+            val call=RetrofitClient.instance.postTurno(correo.toString(),txtepaciente.text.toString(),name.toString(),txtprofesion.text.toString(),txtespecialidad.text.toString(),dni.toString(),fecha.toString(),"${txtnumdia.text.toString()}",txtcomentario.text.toString(),estado,IMG.toString(),archivo1,archivo2,archivo3,archivo4,archivo5,accion,accion)
             //val call=RetrofitClient.instance.postTurno(correo.toString(),name.toString(),txteprofesional.text.toString(),txtespecialidad.text.toString(),txteprestacion.text.toString(),dni.toString(),fecha.toString(),"${txthora.text.toString()}",txtcomentario.text.toString(),estado,IMG.toString(),JSONCompletArchivos,accion,accion)
             call.enqueue(object : Callback<TurnoRespons> {
                 override fun onFailure(call: Call<TurnoRespons>, t: Throwable) {
@@ -757,6 +775,281 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick {
 
 
 
+    fun getListPaciente(search: String){
+        arraylisP.clear()
+        CoroutineScope(Dispatchers.IO).launch {
 
+            val call=RetrofitClient.instance.getAllEnlace(correo.toString())
+            val datos: List<EnlaceRespons>? =call.body()
+            runOnUiThread{
+
+                if (datos != null) {
+                    for (i in 0 until datos.size) {
+
+                        if (search.equals(datos[i].especialidad)){
+
+
+                            arraylisP.add(datos[i].pacientedni)
+
+                            val arrayAdapter= ArrayAdapter(applicationContext,R.layout.dropdown_item,arraylisP)//
+                            with(txtepaciente){
+                                setAdapter(arrayAdapter)
+                                onItemClickListener = this@TurnoActivity
+                            }
+
+
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+
+        }
+
+    }//
+    fun getListProfesional(search: String){
+        arraylisP.clear()
+        CoroutineScope(Dispatchers.IO).launch {
+
+            val call=RetrofitClient.instance.getAllListProf("")
+            val datos: List<ProfesionalRespons>? =call.body()
+            runOnUiThread{
+
+                if (datos != null) {
+                    for (i in 0 until datos.size) {
+
+                        if (search.equals(datos[i].correo)){
+                            correo = datos[i].correo
+                            if(datos[i].img !="null"){
+                                Glide.with(applicationContext)
+                                    .load(datos[i].img )
+                                    .centerCrop()
+                                    .into(viewimageperfilc)
+                                IMG= datos[i].img
+                            }
+
+                            arraylisPres.clear()
+                            getTurnoHoraOcupada(correo.toString())
+
+                            val jsonvalor= JSONObject(datos[i].prestacion)
+                            val HistJSONArray=jsonvalor.getJSONArray("dato")
+
+                            if (HistJSONArray.length()>0){
+                                for (i in 0 until HistJSONArray.length()){
+                                    val jsonObject2= HistJSONArray.getJSONObject(i)
+                                    arraylisPres.add(jsonObject2.getString("Prestacion"))
+                                }
+
+                            }else{
+                                arraylisPres.clear()
+                            }
+
+                            val arrayAdapter= ArrayAdapter(applicationContext,R.layout.dropdown_item,arraylisPres)//
+                            with(txtespecialidad){
+                                setAdapter(arrayAdapter)
+                                onItemClickListener = this@TurnoActivity
+                            }
+
+                        }
+
+
+                    }
+
+                }
+
+            }
+
+
+        }
+
+    }//
+
+    //----------------------------------------------------------------------------------------------Busca los horarios y fecha ocupada del profesional
+    private fun getTurnoHoraOcupada(Search:String){
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val call=RetrofitClient.instance.getListTurno(correo.toString())
+
+                val datos: List<TurnoRespons>? =call.body()
+                runOnUiThread{
+                    if(call.isSuccessful){
+                        for (i in 0 until datos?.size!!){
+                            if (datos[i].dni==Search){
+                                arraylis.add(datos[i])
+                            }
+
+
+                        }
+                    }else{
+                        Toast.makeText(applicationContext,"Error",Toast.LENGTH_LONG).show()
+                    }
+                }
+            }catch (e: EOFException){
+
+            }
+        }
+
+
+
+    }//
+    fun  onDateSelected(day:Int,month:Int,year:Int){
+        rviewcliente.visibility=View.VISIBLE
+
+        txtdia.setText("$day"+"/"+"$month"+"/"+"$year")
+        val c= Calendar.getInstance()
+        val hour:Int=c.get(Calendar.HOUR_OF_DAY)
+        val dia:Int=c.get(Calendar.DAY_OF_MONTH)
+        val mes:Int=c.get(Calendar.MONTH)
+        val anno:Int=c.get(Calendar.YEAR)
+        var fechahoy=1
+        if (month<10){
+            fecha = ("$year"+"0"+"$month$day").toInt()
+            if(day<10){
+                fecha = ("$year"+"0"+"$month"+"0"+"$day").toInt()
+            }
+        } else if(day<10){
+            fecha = ("$year$month"+"0"+"$day").toInt()
+        }else{
+            fecha = ("$year$month$day").toInt()
+        } //Codigo para saber si esta bien la fecha porque el mes se cuenta desde cero
+
+        if (mes<10){
+            fechahoy = ("$anno"+"0"+"$mes$dia").toInt()
+            if(dia<10){
+                fechahoy = ("$anno"+"0"+"$mes"+"0"+"$dia").toInt()
+            }
+        } else if(dia<10){
+            fechahoy = ("$anno$mes"+"0"+"$dia").toInt()
+        }else{
+            fechahoy = ("$anno$mes$dia").toInt()
+        }
+
+        val listturnhora= arrayOf("10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00")
+
+
+        Toast.makeText(this,"$hour",Toast.LENGTH_SHORT).show()
+        for (i in listturnhora.indices){
+            if(fecha!=fechahoy){
+                arrayturnhora.add(HoraTurno(listturnhora[i],"$fecha",false))
+
+            }else{
+                if (arraylis.size>0){
+                    for (j in arraylis.indices){
+                        if(arraylis[j].fecha.toString()!=fecha.toString() && arraylis[j].hora.toString()!=listturnhora[i]){
+                            if (hour>9 && hour<10){
+                                arrayturnhora.add(HoraTurno(listturnhora[i],"$fecha",false))
+                            }else if (hour>10 && hour<11){
+                                if(i<7){
+                                    arrayturnhora.add(HoraTurno(listturnhora[i+1],"$fecha",false))
+                                }
+                            }else if (hour>11 && hour<12){
+                                if(i<6){
+                                    arrayturnhora.add(HoraTurno(listturnhora[i+2],"$fecha",false))
+                                }
+                            }else if (hour>12 && hour<13){
+                                if(i<5){
+                                    arrayturnhora.add(HoraTurno(listturnhora[i+3],"$fecha",false))
+                                }
+                            }else if (hour>13 && hour<14){
+                                if(i<4){
+                                    arrayturnhora.add(HoraTurno(listturnhora[i+4],"$fecha",false))
+                                }
+                            }else if (hour>14 && hour<15){
+                                if(i<3){
+                                    arrayturnhora.add(HoraTurno(listturnhora[i+5],"$fecha",false))
+                                }
+                            }else if (hour>15 && hour<16){
+                                if(i<2){
+                                    arrayturnhora.add(HoraTurno(listturnhora[i+6],"$fecha",false))
+                                }
+                            }else if (hour>17 && hour<18){
+                                if(i<1){
+                                    arrayturnhora.add(HoraTurno(listturnhora[i+7],"$fecha",false))
+                                }
+                            }
+
+                        }
+                    }
+                }else{
+                    if (hour in 10 downTo 9){
+                        arrayturnhora.add(HoraTurno(listturnhora[i],"$fecha",false))
+                    }else if (hour in 11 downTo 10){
+                        if(i<7){
+                            arrayturnhora.add(HoraTurno(listturnhora[i+1],"$fecha",false))
+                        }
+                    }else if (hour in 12 downTo 11){
+                        if(i<6){
+                            arrayturnhora.add(HoraTurno(listturnhora[i+2],"$fecha",false))
+                        }
+                    }else if (hour in 13 downTo 12){
+                        if(i<5){
+                            arrayturnhora.add(HoraTurno(listturnhora[i+3],"$fecha",false))
+                        }
+                    }else if (hour in 14 downTo 13){
+                        if(i<4){
+                            arrayturnhora.add(HoraTurno(listturnhora[i+4],"$fecha",false))
+                        }
+                    }else if (hour in 15 downTo 14){
+                        if(i<3){
+                            arrayturnhora.add(HoraTurno(listturnhora[i+5],"$fecha",false))
+                        }
+                    }else if (hour in 16 downTo 15){
+                        if(i<2){
+                            arrayturnhora.add(HoraTurno(listturnhora[i+6],"$fecha",false))
+                        }
+                    }else if (hour in 17 downTo 16){
+                        if(i<1){
+                            arrayturnhora.add(HoraTurno(listturnhora[i+7],"$fecha",false))
+                        }
+                    }
+
+                }
+            }
+
+
+
+        }
+
+
+        val adapterturnhora = AdapterTurnoHora(arrayturnhora, this, this)
+        rviewcliente?.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        rviewcliente?.adapter = adapterturnhora
+
+
+    }
+    fun clickdia(view: View){
+        val datePicker = DatePickerFragment{day,month,year -> onDateSelected(day,month,year)}
+        datePicker.show(supportFragmentManager,"datePicker")
+
+        getTurnoHoraOcupada(correo.toString())
+    }
+    override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        val item = parent?.getItemAtPosition(position).toString()
+
+    }
+
+    override fun onHorarioItemClick(hora: String) {
+        txtnumdia.setText(hora)
+        val listhoraturn= ArrayList<HoraTurno>()
+
+        for (i in 0 until arrayturnhora.size){
+            if (arrayturnhora[i].hora==hora){
+                listhoraturn.add(HoraTurno(arrayturnhora[i].hora,arrayturnhora[i].fecha,true))
+
+            }else{
+                listhoraturn.add(HoraTurno(arrayturnhora[i].hora,arrayturnhora[i].fecha,false))
+
+            }
+
+        }
+        val adapterturnhora = AdapterTurnoHora(listhoraturn, this, this)
+        rviewcliente?.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        rviewcliente?.adapter = adapterturnhora
+    }
 
 }

@@ -42,7 +42,6 @@ import retrofit2.Callback
 import java.io.IOException
 import java.lang.Error
 import kotlin.Exception
-import kotlinx.android.synthetic.main.activity_turno.txteprestacion as txteprestacion1
 
 class OdontogramaActivity : AppCompatActivity(),AdapterDientInfError.onDientInfItemClick,AdapterDientSupError.onDientSupItemClick,AdapterView.OnItemClickListener {
 

@@ -177,11 +177,12 @@ class MainActivity : AppCompatActivity() {
                 finish()
 
             }else{
-                Toast.makeText(this,"El correo no ha sido verificado todavai",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,"Todavia no verifico su correo",Toast.LENGTH_SHORT).show()
+
+
 
             }
         }else{
-            Toast.makeText(this,"Fallo el incio de Sesion",Toast.LENGTH_SHORT).show()
 
         }
     }
@@ -189,6 +190,7 @@ class MainActivity : AppCompatActivity() {
     fun ClickRegistrar(view: View){
         val intent = Intent(this, SignActivity::class.java)
         intent.putExtra("back","Inisiar Sesion")
+        intent.putExtra("quien","profesional")
 
         startActivity(intent)
     }

@@ -21,9 +21,6 @@ import kotlinx.android.synthetic.main.activity_paciente.txtcorreo
 import kotlinx.android.synthetic.main.activity_paciente.txtdirec
 import kotlinx.android.synthetic.main.activity_paciente.txtnombre
 import kotlinx.android.synthetic.main.activity_paciente.viewimageperfil
-import kotlinx.android.synthetic.main.activity_perfil.*
-import kotlinx.android.synthetic.main.activity_sign.*
-import kotlinx.android.synthetic.main.activity_turno.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -58,9 +55,6 @@ class PacienteActivity : AppCompatActivity() {
             url = intent.getStringExtra("url")
             name = intent.getStringExtra("name")
             especialidad = intent.getStringExtra("especialidad")
-
-
-
             BACKTXT=intent.getStringExtra("back").toString()
             pacbacktext.setText("$BACKTXT")
         }

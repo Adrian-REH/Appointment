@@ -411,5 +411,27 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
 
         startActivity(intent)
     }
+    fun AddAppointment(view: View){
+        val intent = Intent(this, TurnoActivity::class.java)
+        intent.putExtra("url",url)
+        intent.putExtra("especialidad",especialidad)
+        intent.putExtra("name",name)
+        intent.putExtra("correo",correo)
+        intent.putExtra("dni","patient")
+        intent.putExtra("fecha","0")
+        intent.putExtra("id","0")
+        intent.putExtra("codigo","0")
+        intent.putExtra("JSONODONT","")
+
+        intent.putExtra("back","Inicio")
+        startActivity(intent)
+    }
+    fun AddPatient(view: View){
+        val intent = Intent(this, SignActivity::class.java)
+        intent.putExtra("back","Inicio")
+        intent.putExtra("quien","paciente")
+
+        startActivity(intent)
+    }
 
 }
