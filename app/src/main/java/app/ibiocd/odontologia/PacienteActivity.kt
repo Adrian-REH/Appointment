@@ -95,7 +95,7 @@ class PacienteActivity : AppCompatActivity() {
 
     private fun postCliente(accion:String,especialidad:String,estado:String,nameprof:String) {
         CoroutineScope(Dispatchers.IO).launch {
-            val call=RetrofitClient.instance.postEnlace("${correo}","${dni}","${especialidad}","$estado","${nameprof}","$accion",accion)
+            val call=RetrofitClient.instance.postEnlace("${correo}","${dni}","${especialidad}","$estado","${nameprof}","${txtnombre.text}",accion,accion)
             call.enqueue(object : Callback<EnlaceRespons> {
                 override fun onFailure(call: Call<EnlaceRespons>, t: Throwable) {
                     Toast.makeText(applicationContext,t.message,Toast.LENGTH_LONG).show()

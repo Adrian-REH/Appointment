@@ -90,6 +90,7 @@ data class EnlaceRespons(
     @SerializedName("pacientedni") var pacientedni:String,
     @SerializedName("especialidad") var especialidad:String,
     @SerializedName("estadoprofecional") var estado:String,
-    @SerializedName("nombreprofesional") var nameprof:String
+    @SerializedName("nombreprofesional") var nameprof:String,
+    @SerializedName("nombrecliente") var nameclient:String
 )
 

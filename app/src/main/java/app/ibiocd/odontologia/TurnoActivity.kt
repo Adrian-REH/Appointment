@@ -78,7 +78,7 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
     var name:String?=""
 
     val arraylis=  ArrayList<TurnoRespons>()
-    val arraylisP= ArrayList<String>()
+    val arraylisP= ArrayList<EnlaceRespons>()
     val arraylisPres= ArrayList<String>()
     val displayListC=ArrayList<Archivos>()
     val arrayturnhora= ArrayList<HoraTurno>()
@@ -87,7 +87,11 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_turno)
         btnodontologia.visibility=View.GONE
+        btnarchivos.visibility=View.GONE
+        floatcanc.visibility=View.GONE
         rviewcliente.visibility=View.GONE
+        cardhorariosd.visibility=View.GONE
+
         if(intent.extras !=null){
             dni = intent.getStringExtra("dni")
             correo = intent.getStringExtra("correo")
@@ -99,10 +103,9 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
 
             //Toast.makeText(this,"$codigo",Toast.LENGTH_LONG).show()
             turnobacktext.setText(intent.getStringExtra("back").toString())
-            if (id != 0){
-                getListTurnos()
+            if (codigo!=0 && id!=0){
+                    getListTurnos()
 
-                if (codigo!=0){
                     odont=true
                     displayListC.clear()
                     if (odont){
@@ -125,14 +128,11 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
                     //ClickAgregarJson(View(applicationContext))
                 }
 
-
-            }
             if(dni=="patient"){
                 getListPaciente(intent.getStringExtra("especialidad").toString())
 
                 txteprofesional.setText( intent.getStringExtra("name").toString())
                 txtprofesion.setText( intent.getStringExtra("especialidad").toString())
-                getListProfesional(correo.toString())
             }
 
         }
@@ -351,7 +351,9 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
     }
 
     fun Back(view: View){
-        getTurnoSave(View(applicationContext))
+        if(dni!="patient" && fecha!=0 && txtnumdia.text.toString()!=""){
+            getTurnoSave(View(applicationContext))
+        }
         finish()
     }
 
@@ -419,15 +421,17 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
                 }else if (JSONAgregadoArchivo!=""){JSONAgregadoArchivo = JSONAgregadoArchivo+","+JSONArchivo }*/
                 JSONCompletArchivos="{\"Archivos\":[$JSONAgregadoArchivo]}"
             }
+
+
         CoroutineScope(Dispatchers.IO).launch {
                 try{
-
                     val call=RetrofitClient.instance.getListTurnodc(dni.toString(),correo.toString())
                     val BDatos: List<TurnoRespons>? =call.body()
                     if (BDatos != null) {
                         for (i in 0 until BDatos.size){
                             if(call.isSuccessful){
-                                    if (id==BDatos[i].ID.toInt()){
+
+                                if (id==BDatos[i].ID.toInt()){
                                         date=BDatos[i]
 
                                         if (BDatos[i].archivo1==""){
@@ -478,9 +482,10 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
                                             }
                                         }
                                         //postCliente("modificar",JSONCompletArchivos,estado)
-                                    }else{
-                                        //postCliente("insertar","","","","","","E")
+                                    }
 
+                                else if(BDatos[i].hora!=txtnumdia.text.toString()){
+                                    postCliente("insertar","","","","","","E")
                                     }
 
                             }else{
@@ -492,7 +497,7 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
 
 
                 }catch (e: Exception){
-                   // postCliente("insertar","","","","","","E")
+                    postCliente("insertar","","","","","","E")
                 }
             }
     }//
@@ -777,6 +782,7 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
 
     fun getListPaciente(search: String){
         arraylisP.clear()
+        val list=ArrayList<String>()
         CoroutineScope(Dispatchers.IO).launch {
 
             val call=RetrofitClient.instance.getAllEnlace(correo.toString())
@@ -789,18 +795,18 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
                         if (search.equals(datos[i].especialidad)){
 
 
-                            arraylisP.add(datos[i].pacientedni)
-
-                            val arrayAdapter= ArrayAdapter(applicationContext,R.layout.dropdown_item,arraylisP)//
-                            with(txtepaciente){
-                                setAdapter(arrayAdapter)
-                                onItemClickListener = this@TurnoActivity
-                            }
+                            arraylisP.add(datos[i])
+                            list.add(datos[i].nameclient)
 
 
 
                         }
 
+                    }
+                    val arrayAdapter= ArrayAdapter(applicationContext,R.layout.dropdown_item,list)//
+                    with(txtepaciente){
+                        setAdapter(arrayAdapter)
+                        onItemClickListener = this@TurnoActivity
                     }
 
                 }
@@ -812,7 +818,6 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
 
     }//
     fun getListProfesional(search: String){
-        arraylisP.clear()
         CoroutineScope(Dispatchers.IO).launch {
 
             val call=RetrofitClient.instance.getAllListProf("")
@@ -870,7 +875,7 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
 
     //----------------------------------------------------------------------------------------------Busca los horarios y fecha ocupada del profesional
     private fun getTurnoHoraOcupada(Search:String){
-
+        arraylis.clear()
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val call=RetrofitClient.instance.getListTurno(correo.toString())
@@ -879,12 +884,9 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
                 runOnUiThread{
                     if(call.isSuccessful){
                         for (i in 0 until datos?.size!!){
-                            if (datos[i].dni==Search){
                                 arraylis.add(datos[i])
-                            }
-
-
                         }
+
                     }else{
                         Toast.makeText(applicationContext,"Error",Toast.LENGTH_LONG).show()
                     }
@@ -899,10 +901,13 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
     }//
     fun  onDateSelected(day:Int,month:Int,year:Int){
         rviewcliente.visibility=View.VISIBLE
+        arrayturnhora.clear()
+        txtdia.setText("$day/$month/$year")
 
-        txtdia.setText("$day"+"/"+"$month"+"/"+"$year")
         val c= Calendar.getInstance()
         val hour:Int=c.get(Calendar.HOUR_OF_DAY)
+        val min:Int=c.get(Calendar.MINUTE)
+
         val dia:Int=c.get(Calendar.DAY_OF_MONTH)
         val mes:Int=c.get(Calendar.MONTH)
         val anno:Int=c.get(Calendar.YEAR)
@@ -929,94 +934,53 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
             fechahoy = ("$anno$mes$dia").toInt()
         }
 
-        val listturnhora= arrayOf("10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00")
 
+//Es utilizable para reducir el codigo de fechas pero nose si sirbe para cuando el mes es menor a 10 o para cuando el dia es menor a 10
+        if ("$day/$month/$year">"$dia/$mes/$anno"){
 
-        Toast.makeText(this,"$hour",Toast.LENGTH_SHORT).show()
-        for (i in listturnhora.indices){
-            if(fecha!=fechahoy){
-                arrayturnhora.add(HoraTurno(listturnhora[i],"$fecha",false))
+            Toast.makeText(applicationContext, "$day/$month/$year\">\"$dia/$mes/$anno", Toast.LENGTH_LONG).show()
 
-            }else{
-                if (arraylis.size>0){
-                    for (j in arraylis.indices){
-                        if(arraylis[j].fecha.toString()!=fecha.toString() && arraylis[j].hora.toString()!=listturnhora[i]){
-                            if (hour>9 && hour<10){
-                                arrayturnhora.add(HoraTurno(listturnhora[i],"$fecha",false))
-                            }else if (hour>10 && hour<11){
-                                if(i<7){
-                                    arrayturnhora.add(HoraTurno(listturnhora[i+1],"$fecha",false))
-                                }
-                            }else if (hour>11 && hour<12){
-                                if(i<6){
-                                    arrayturnhora.add(HoraTurno(listturnhora[i+2],"$fecha",false))
-                                }
-                            }else if (hour>12 && hour<13){
-                                if(i<5){
-                                    arrayturnhora.add(HoraTurno(listturnhora[i+3],"$fecha",false))
-                                }
-                            }else if (hour>13 && hour<14){
-                                if(i<4){
-                                    arrayturnhora.add(HoraTurno(listturnhora[i+4],"$fecha",false))
-                                }
-                            }else if (hour>14 && hour<15){
-                                if(i<3){
-                                    arrayturnhora.add(HoraTurno(listturnhora[i+5],"$fecha",false))
-                                }
-                            }else if (hour>15 && hour<16){
-                                if(i<2){
-                                    arrayturnhora.add(HoraTurno(listturnhora[i+6],"$fecha",false))
-                                }
-                            }else if (hour>17 && hour<18){
-                                if(i<1){
-                                    arrayturnhora.add(HoraTurno(listturnhora[i+7],"$fecha",false))
-                                }
-                            }
+        }
+        val listturnhora= arrayOf("09:00","09:15","09:30","09:45","10:00","10:15","10:30","10:45","11:00","11:25","11:45","12:00","12:15","12:30","12:45","13:00","13:15","13:30","13:45","14:00","14:15","14:30","14:45","15:00","15:15","15:30","15:45","16:00","16:15","16:30","16:45","17:00","17:15","17:30","17:45","18:00","18:15","18:30","18:45")
 
-                        }
-                    }
-                }else{
-                    if (hour in 10 downTo 9){
-                        arrayturnhora.add(HoraTurno(listturnhora[i],"$fecha",false))
-                    }else if (hour in 11 downTo 10){
-                        if(i<7){
-                            arrayturnhora.add(HoraTurno(listturnhora[i+1],"$fecha",false))
-                        }
-                    }else if (hour in 12 downTo 11){
-                        if(i<6){
-                            arrayturnhora.add(HoraTurno(listturnhora[i+2],"$fecha",false))
-                        }
-                    }else if (hour in 13 downTo 12){
-                        if(i<5){
-                            arrayturnhora.add(HoraTurno(listturnhora[i+3],"$fecha",false))
-                        }
-                    }else if (hour in 14 downTo 13){
-                        if(i<4){
-                            arrayturnhora.add(HoraTurno(listturnhora[i+4],"$fecha",false))
-                        }
-                    }else if (hour in 15 downTo 14){
-                        if(i<3){
-                            arrayturnhora.add(HoraTurno(listturnhora[i+5],"$fecha",false))
-                        }
-                    }else if (hour in 16 downTo 15){
-                        if(i<2){
-                            arrayturnhora.add(HoraTurno(listturnhora[i+6],"$fecha",false))
-                        }
-                    }else if (hour in 17 downTo 16){
-                        if(i<1){
-                            arrayturnhora.add(HoraTurno(listturnhora[i+7],"$fecha",false))
-                        }
-                    }
+        val array= ArrayList<String>()
+        array.addAll(listturnhora)
 
+        if(fecha!=fechahoy){
+            if (arraylis.size>0) {
+                for ((j,value) in arraylis.withIndex()){
+                        if (value.fecha==fecha.toString()){
+                            array.removeIf { it==value.hora}
+                        }
                 }
             }
+        }
+        else{
+            if (arraylis.size>0){
+                for ((j,value) in arraylis.withIndex()){
+                    if (value.fecha==fecha.toString()){
+                        array.removeIf { it==value.hora }
+                        array.removeIf {  it < ("0$hour:$min")}
+
+                    }else{
+                        array.removeIf {  it < ("0$hour:$min")}
+
+                    }
+                }
+            }
+        }
 
 
+        for ((i,hora) in array.distinct().withIndex()){
+
+            arrayturnhora.add(HoraTurno(hora.toString(),"$fecha",false))
 
         }
 
 
-        val adapterturnhora = AdapterTurnoHora(arrayturnhora, this, this)
+
+
+            val adapterturnhora = AdapterTurnoHora(arrayturnhora, this, this)
         rviewcliente?.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rviewcliente?.adapter = adapterturnhora
 
@@ -1031,6 +995,14 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val item = parent?.getItemAtPosition(position).toString()
 
+        for (i in 0 until arraylisP.size) {
+
+            if (item == arraylisP[i].nameclient) {
+                dni =  arraylisP[i].pacientedni
+                getListProfesional(correo.toString())
+                cardhorariosd.visibility=View.VISIBLE
+            }
+        }
     }
 
     override fun onHorarioItemClick(hora: String) {

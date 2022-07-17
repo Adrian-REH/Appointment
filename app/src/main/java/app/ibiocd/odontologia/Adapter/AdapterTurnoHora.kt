@@ -54,9 +54,7 @@ class AdapterTurnoHora(val arrayList: ArrayList<HoraTurno>, val context: Context
             fun bintItem(model: HoraTurno, context: Context){
 
 
-                itemView.cardhorariosd.setOnClickListener { itemClickListener.onHorarioItemClick(model.hora)
-
-                }
+                itemView.cardhorariosd.setOnClickListener { itemClickListener.onHorarioItemClick(model.hora) }
                 itemView.txthora.text=model.hora
 
                 if(model.selector)

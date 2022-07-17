@@ -130,6 +130,7 @@ interface APIService {
         @Field("especialidad") especialidad:String,
         @Field("estadoprofecional") estadoprofecional:String,
         @Field("nombreprofesional") nombreprofesional:String,
+        @Field("nombrecliente") nombrecliente:String,
         @Field("insertar") insertar:String,
         @Field("modificar") modificar:String
 

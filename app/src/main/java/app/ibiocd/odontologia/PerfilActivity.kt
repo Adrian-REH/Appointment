@@ -12,7 +12,9 @@ import android.provider.OpenableColumns
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.util.Patterns
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -21,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.SnapHelper
 import app.ibiocd.lavanderia.Adapter.ClienteRespons
+import app.ibiocd.lavanderia.Adapter.EspecialidadesRespons
 import app.ibiocd.lavanderia.Adapter.Horario
 import app.ibiocd.lavanderia.Adapter.ProfesionalRespons
 import app.ibiocd.lavanderia.FileDataPart
@@ -35,6 +38,7 @@ import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.android.synthetic.main.activity_detalles.*
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_perfil.*
 import kotlinx.android.synthetic.main.activity_perfil.txtcorreo
 import kotlinx.android.synthetic.main.list_paciente_a.view.*
@@ -72,7 +76,6 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
     var textcel: TextInputLayout?=null
     var textemail: TextInputLayout?=null
     var textdire: TextInputLayout?=null
-    var textesp: TextInputLayout?=null
     var sw: Boolean=true
     var swe: Boolean=true
     val arraylisH= ArrayList<Horario>()
@@ -83,7 +86,6 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
         textcel=findViewById(R.id.textcel)
         textemail=findViewById(R.id.textemail)
         textdire=findViewById(R.id.textdire)
-        textesp=findViewById(R.id.textesp)
         cvverif.visibility=View.GONE
         cvedit?.visibility = View.GONE
         lishorario?.visibility = View.GONE
@@ -117,7 +119,11 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
         })
         edtxttelefono.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                txtcel.setText(s)
+                txtcel.setText(edtxttcaracte.text.toString()+s)
+
+
+
+
             }
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
@@ -165,8 +171,29 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
             }
         })
         getProfesionalDatos()
+        getListAllEspecialidades()
     }
+    fun getListAllEspecialidades(){
+        var arraylisEspec = ArrayList<String>()
+        CoroutineScope(Dispatchers.IO).launch {
+            val call=RetrofitClient.instance.getEspecialidades("")
+            runOnUiThread{
+                val datos: List<EspecialidadesRespons>? = call.body()
+                for (i in 0 until datos?.size!!){
+                    val espec= datos[i].especialidad
+                    val img= datos[i].img
+                    arraylisEspec.add(espec)
+                }
+                val arrayAdapter= ArrayAdapter(applicationContext,R.layout.dropdown_item,arraylisEspec)//
+                with(edtxtesp){
+                    setAdapter(arrayAdapter)
 
+                }
+
+
+            }
+        }
+    }
     fun ClickEditar(view: View){
         if(swe){
             cvedit?.visibility = View.VISIBLE
@@ -264,7 +291,7 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
     private fun postProfesional(imagen:String,verificar:String,prestacion:String,token:String) {
 
         CoroutineScope(Dispatchers.IO).launch {
-            val call=RetrofitClient.instance.postProfesional("${edtxtnombre?.text}","${edtxtdirec?.text}","${edtxtesp?.text}","${edtxttelefono?.text}","${edtxtdirec?.text}","${edtxtemail.text}","${JSONHORA}",prestacion,verificar,imagen,"${txtmatricula.text}","$token","","modificar")
+            val call=RetrofitClient.instance.postProfesional("${edtxtnombre?.text}","${edtxtdirec?.text}","${edtxtesp?.text}","${edtxttcaracte.text}${edtxttelefono?.text}","${edtxtdirec?.text}","${edtxtemail.text}","${JSONHORA}",prestacion,verificar,imagen,"${txtmatricula.text}","$token","","modificar")
             call.enqueue(object : Callback<ProfesionalRespons> {
                 override fun onFailure(call: Call<ProfesionalRespons>, t: Throwable) {
                     Toast.makeText(applicationContext,t.message,Toast.LENGTH_LONG).show()

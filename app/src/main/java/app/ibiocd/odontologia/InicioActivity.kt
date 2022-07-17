@@ -327,8 +327,6 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
 
                                 for (j in listturnhora.indices){
                                     if (datos[i].hora==listturnhora[j]){
-                                        Toast.makeText(applicationContext,"${datos[i].hora}" +"=="+ "${listturnhora[j]}",Toast.LENGTH_SHORT).show()
-
                                         if (j+10>=hour){
                                             lisTurno.add(datos[i])
 
