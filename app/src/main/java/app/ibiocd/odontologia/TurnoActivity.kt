@@ -107,7 +107,7 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
             turnobacktext.setText(intent.getStringExtra("back").toString())
             if (codigo!=0 && id!=0){
                     getListTurnos()
-
+                Toast.makeText(applicationContext, "Por favor haz click en guardar", Toast.LENGTH_SHORT).show()
                     odont=true
                     displayListC.clear()
                     if (odont){
@@ -127,7 +127,8 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
                     rviewcliente?.layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.HORIZONTAL, false)
                     rviewcliente?.adapter = adapterarchivo
                     rviewcliente.visibility=View.VISIBLE
-                    //ClickAgregarJson(View(applicationContext))
+
+                //ClickAgregarJson(View(applicationContext))
                 }else if (id!=0){
                  getListTurnos()
 
@@ -435,70 +436,83 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
                     val call=RetrofitClient.instance.getListTurnodc(dni.toString(),IDP.toString())
                     val BDatos: List<TurnoRespons>? =call.body()
                     if (BDatos != null) {
-                        for (i in 0 until BDatos.size){
+                        var insertar =false
+                        dd@for (i in 0 until BDatos.size){
                             if(call.isSuccessful){
 
                                 if (id==BDatos[i].ID.toInt()){
+                                         insertar=false
                                         date=BDatos[i]
-
                                         if (BDatos[i].archivo1==""){
                                                 postCliente("modificar",JSONAgregadoArchivo,BDatos[i].archivo2,BDatos[i].archivo3,BDatos[i].archivo4,BDatos[i].archivo5,BDatos[i].estado)
-
+                                                break@dd
                                         }else if (BDatos[i].archivo1!=""){
                                             if (JSONObject(date!!.archivo1).getString("Url").toString()==JSONObject(JSONAgregadoArchivo).getString("Url")){
                                                 postCliente("modificar",JSONAgregadoArchivo,BDatos[i].archivo2,BDatos[i].archivo3,BDatos[i].archivo4,BDatos[i].archivo5,BDatos[i].estado)
+                                                break@dd
 
                                             }
                                         }
-
                                         if (BDatos[i].archivo2==""){
                                             postCliente("modificar",BDatos[i].archivo1,JSONAgregadoArchivo,BDatos[i].archivo3,BDatos[i].archivo4,BDatos[i].archivo5,BDatos[i].estado)
+                                            break@dd
 
                                         }else if (BDatos[i].archivo2!=""){
                                             if (JSONObject(date!!.archivo2).getString("Url").toString()==JSONObject(JSONAgregadoArchivo).getString("Url")){
                                                 postCliente("modificar",BDatos[i].archivo1,JSONAgregadoArchivo,BDatos[i].archivo3,BDatos[i].archivo4,BDatos[i].archivo5,BDatos[i].estado)
+                                                break@dd
 
                                             }
                                         }
-
                                         if (BDatos[i].archivo3==""){
+
                                             postCliente("modificar",BDatos[i].archivo1,BDatos[i].archivo2,JSONAgregadoArchivo,BDatos[i].archivo4,BDatos[i].archivo5,BDatos[i].estado)
+                                            break@dd
 
                                         }else if (BDatos[i].archivo3!=""){
                                             if (JSONObject(date!!.archivo3).getString("Url").toString()==JSONObject(JSONAgregadoArchivo).getString("Url")){
                                                 postCliente("modificar",BDatos[i].archivo1,BDatos[i].archivo2,JSONAgregadoArchivo,BDatos[i].archivo4,BDatos[i].archivo5,BDatos[i].estado)
+                                                break@dd
 
                                             }
                                         }
                                         if (BDatos[i].archivo4==""){
                                             postCliente("modificar",BDatos[i].archivo1,BDatos[i].archivo2,BDatos[i].archivo3,JSONAgregadoArchivo,BDatos[i].archivo5,BDatos[i].estado)
+                                            break@dd
 
                                         }else if (BDatos[i].archivo4!=""){
                                             if (JSONObject(date!!.archivo4).getString("Url").toString()==JSONObject(JSONAgregadoArchivo).getString("Url")){
                                                 postCliente("modificar",BDatos[i].archivo1,BDatos[i].archivo2,BDatos[i].archivo3,JSONAgregadoArchivo,BDatos[i].archivo5,BDatos[i].estado)
+                                                break@dd
 
                                             }
                                         }
                                         if (BDatos[i].archivo5==""){
                                             postCliente("modificar",BDatos[i].archivo1,BDatos[i].archivo2!!,BDatos[i].archivo3,BDatos[i].archivo4,JSONAgregadoArchivo,BDatos[i].estado)
+                                            break@dd
 
                                         }else if (BDatos[i].archivo5!=""){
                                             if (JSONObject(date!!.archivo5).getString("Url").toString()==JSONObject(JSONAgregadoArchivo).getString("Url")){
                                                 postCliente("modificar",BDatos[i].archivo1,BDatos[i].archivo2!!,BDatos[i].archivo3,BDatos[i].archivo4,JSONAgregadoArchivo,BDatos[i].estado)
+                                                break@dd
 
                                             }
                                         }
                                         //postCliente("modificar",JSONCompletArchivos,estado)
-                                    }
 
+                                }
                                 else if(BDatos[i].hora!=txtnumdia.text.toString()){
-                                    postCliente("insertar","","","","","","E")
-                                    }
+                                    insertar=true
+                                }
 
                             }else{
                                // postCliente("insertar","","","","","","E")
                                 //postCliente("insertar","","E")
                             }
+                        }
+                        if (insertar){
+                            postCliente("insertar","","","","","","E")
+
                         }
                     }
 
