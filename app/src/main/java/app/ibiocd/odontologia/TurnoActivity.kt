@@ -128,6 +128,9 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
                     rviewcliente?.adapter = adapterarchivo
                     rviewcliente.visibility=View.VISIBLE
                     //ClickAgregarJson(View(applicationContext))
+                }else if (id!=0){
+                 getListTurnos()
+
                 }
 
             if(dni=="patient"){
@@ -318,6 +321,8 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
                                     btnarchivos.visibility=View.GONE
                                 }
 
+                                cardhorariosd.visibility=View.VISIBLE
+                                btnarchivos.visibility=View.VISIBLE
 
                                 val adapterarchivo = AdapterArchivo(displayListC, applicationContext, this@TurnoActivity)
                                 rviewcliente?.layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.HORIZONTAL, false)
@@ -328,7 +333,7 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
                                // Historial(response.getString("fecha").toString())
                             }
                         }else{
-                            Toast.makeText(applicationContext,"Error",Toast.LENGTH_LONG).show()
+                            Toast.makeText(applicationContext,"Error", Toast.LENGTH_LONG).show()
                         }
                     }
 
@@ -938,11 +943,11 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
 
 
 //Es utilizable para reducir el codigo de fechas pero nose si sirbe para cuando el mes es menor a 10 o para cuando el dia es menor a 10
-        if ("$day/$month/$year">"$dia/$mes/$anno"){
+/*        if ("$day/$month/$year">"$dia/$mes/$anno"){
 
             Toast.makeText(applicationContext, "$day/$month/$year\">\"$dia/$mes/$anno", Toast.LENGTH_LONG).show()
 
-        }
+        }*/
         val listturnhora= arrayOf("09:00","09:15","09:30","09:45","10:00","10:15","10:30","10:45","11:00","11:25","11:45","12:00","12:15","12:30","12:45","13:00","13:15","13:30","13:45","14:00","14:15","14:30","14:45","15:00","15:15","15:30","15:45","16:00","16:15","16:30","16:45","17:00","17:15","17:30","17:45","18:00","18:15","18:30","18:45")
 
         val array= ArrayList<String>()
@@ -962,11 +967,22 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
                 for ((j,value) in arraylis.withIndex()){
                     if (value.fecha==fecha.toString()){
                         array.removeIf { it==value.hora }
-                        array.removeIf {  it < ("0$hour:$min")}
+                        if (hour<10){
+                            array.removeIf {  it < ("0$hour:$min")}
+
+                        }else{
+                            array.removeIf {  it < ("$hour:$min")}
+
+                        }
 
                     }else{
-                        array.removeIf {  it < ("0$hour:$min")}
+                        if (hour<10){
+                            array.removeIf {  it < ("0$hour:$min")}
 
+                        }else{
+                            array.removeIf {  it < ("$hour:$min")}
+
+                        }
                     }
                 }
             }

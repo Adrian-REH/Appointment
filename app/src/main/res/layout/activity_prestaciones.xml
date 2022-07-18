@@ -48,11 +48,20 @@
         android:text="Especialidad"
         android:textColor="@color/black"
         android:textSize="20dp" />
+<LinearLayout
+    android:id="@+id/btns"
+    android:layout_below="@+id/back"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:layout_centerHorizontal="true"
+    >
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/more"
+        android:layout_marginVertical="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/back"
         android:layout_centerHorizontal="true"
         android:layout_marginEnd="10dp"
         android:backgroundTint="@color/white"
@@ -61,12 +70,27 @@
         android:src="@drawable/ic_add"
         app:backgroundTint="#00FFFFFF"
         app:tint="@color/black" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/save"
+        android:layout_marginVertical="10dp"
 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="10dp"
+        android:backgroundTint="@color/white"
+        android:baselineAlignBottom="true"
+        android:onClick="Subir"
+        android:src="@drawable/ic_save"
+        app:backgroundTint="#00FFFFFF"
+        app:tint="@color/black" />
+
+</LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/more"
+        android:layout_below="@+id/btns"
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="10dp">
 

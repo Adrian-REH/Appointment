@@ -310,13 +310,26 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
                     if (datos!=null){
                         swipe_container.isRefreshing=false
 
+                        val c= Calendar.getInstance()
+                        val hour:Int=c.get(Calendar.HOUR_OF_DAY)
+                        val min:Int=c.get(Calendar.MINUTE)
+                        val dia:Int=c.get(Calendar.DAY_OF_MONTH)
+                        val mes:Int=c.get(Calendar.MONTH)
+                        val anno:Int=c.get(Calendar.YEAR)
+
+                        val listturnhora= arrayOf("09:00","09:15","09:30","09:45","10:00","10:15","10:30","10:45","11:00","11:25","11:45","12:00","12:15","12:30","12:45","13:00","13:15","13:30","13:45","14:00","14:15","14:30","14:45","15:00","15:15","15:30","15:45","16:00","16:15","16:30","16:45","17:00","17:15","17:30","17:45","18:00","18:15","18:30","18:45")
+                        val array= ArrayList<String>()
+                        array.addAll(listturnhora)
+                        if (hour<10){
+                            array.removeIf {  it < ("0$hour:$min")}
+
+                        }else{
+                            array.removeIf {  it < ("$hour:$min")}
+
+                        }
                         for (i in 0 until datos.size){
-                            val listturnhora= arrayOf("10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00")
-                            val c= Calendar.getInstance()
-                            val hour:Int=c.get(Calendar.HOUR_OF_DAY)
-                            val dia:Int=c.get(Calendar.DAY_OF_MONTH)
-                            val mes:Int=c.get(Calendar.MONTH)
-                            val anno:Int=c.get(Calendar.YEAR)
+
+
                             var fechahoy=0
                             if (mes<10){
                                 fechahoy = ("$anno"+"0"+"$mes$dia").toInt()
@@ -330,13 +343,15 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
                             }
                             if (datos[i].fecha==fechahoy.toString()){
 
-                                for (j in listturnhora.indices){
-                                    if (datos[i].hora==listturnhora[j]){
-                                        if (j+10>=hour){
-                                            lisTurno.add(datos[i])
-
-                                        }
+                                for (j in listturnhora){
+                                    if (datos[i].hora==j ){
+                                        lisTurno.add(datos[i])
                                     }
+
+
+
+
+
                                 }
                             }
                             //TEST
@@ -373,7 +388,6 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
         intent.putExtra("IDP",IDP)
         intent.putExtra("url",url)
         intent.putExtra("DATOS",DATO)
-
         intent.putExtra("back","Inicio")
 
         startActivity(intent)
