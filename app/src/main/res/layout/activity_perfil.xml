@@ -46,7 +46,7 @@
         android:textSize="20dp" />
 
 
-    <androidx.cardview.widget.CardView
+<!--    <androidx.cardview.widget.CardView
         android:id="@+id/cardvtop"
         android:layout_marginTop="40dp"
         android:layout_width="match_parent"
@@ -428,7 +428,615 @@
         </LinearLayout>
 
 
-    </ScrollView>
+    </ScrollView>-->
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvid2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="40dp"
+        app:cardCornerRadius="40dp"
+        app:cardElevation="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:elevation="1dp"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="start"
+                android:orientation="horizontal">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cvid"
+                    android:layout_margin="20dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:cardCornerRadius="1000dp"
+                    app:cardElevation="5dp">
+
+                    <ImageView
+                        android:id="@+id/viewimageperfil"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:onClick="clickSelect"
+                        android:src="@drawable/blank_profile" />
+                </androidx.cardview.widget.CardView>
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cvverifperf"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="1000dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_verified" />
+
+                </androidx.cardview.widget.CardView>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/btnimgedit"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginHorizontal="10dp"
+                        android:onClick="ClickEditar"
+                        android:src="@drawable/ic_edit"
+                        app:tint="@color/black" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_centerVertical="true"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/hello"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="40dp"
+                            android:gravity="center"
+                            android:text="Hola!"
+                            android:textColor="#858585"
+                            android:textSize="15dp" />
+
+                        <TextView
+                            android:id="@+id/txtnombre"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/hello"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="40dp"
+
+                            android:textColor="@color/black"
+                            android:textSize="20dp" />
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/LinearMisDatos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="30dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="Mis datos"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:elevation="1dp"
+                    android:layout_marginVertical="1dp"
+                    android:background="@color/white"
+                    android:backgroundTint="@color/white"
+                    android:orientation="horizontal"
+                    android:onClick="Emailedit"
+                    >
+                    <androidx.cardview.widget.CardView
+                        android:layout_margin="10dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:cardCornerRadius="1000dp"
+                        app:cardElevation="1dp">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+
+                            android:src="@drawable/ic_email"
+                            app:tint="@color/black" />
+                    </androidx.cardview.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView
+                            android:drawableTint="@color/black"
+                            android:textColor="@color/black"
+                            android:text="  E-mail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:textStyle="normal" />
+                        <TextView
+                            android:id="@+id/txtcorreo"
+                            android:textColor="#595959"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="13sp"
+                            android:textStyle="normal" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:elevation="1dp"
+                    android:layout_marginVertical="1dp"
+                    android:background="@color/white"
+                    android:backgroundTint="@color/white"
+                    android:orientation="horizontal"
+                    android:onClick="Telefonoedit"
+                    >
+                    <androidx.cardview.widget.CardView
+                        android:layout_margin="10dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:cardCornerRadius="1000dp"
+                        app:cardElevation="1dp">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/ic_phone"
+                            app:tint="@color/black" />
+                    </androidx.cardview.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView
+                            android:drawableTint="@color/black"
+                            android:textColor="@color/black"
+                            android:text="  Telefono de contacto"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:textStyle="normal" />
+                        <TextView
+                            android:id="@+id/txtcel"
+                            android:textColor="#595959"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="13sp"
+                            android:textStyle="normal" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:elevation="1dp"
+                    android:background="@color/white"
+                    android:backgroundTint="@color/white"
+                    android:orientation="horizontal"
+                    android:onClick="Ubicacionedit"
+                    >
+                    <androidx.cardview.widget.CardView
+                        android:layout_margin="10dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:cardCornerRadius="1000dp"
+                        app:cardElevation="1dp">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+
+                            android:src="@drawable/ic_location"
+                            app:tint="@color/black" />
+                    </androidx.cardview.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView
+                            android:drawableTint="@color/black"
+                            android:textColor="@color/black"
+                            android:text="  Ubicacion"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:textStyle="normal" />
+                        <TextView
+                            android:id="@+id/txtdirec"
+                            android:textColor="#595959"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="13sp"
+                            android:textStyle="normal" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:elevation="1dp"
+                    android:layout_marginVertical="1dp"
+                    android:background="@color/white"
+                    android:backgroundTint="@color/white"
+                    android:orientation="horizontal"
+                    android:onClick="Identidadedit"
+                    >
+                    <androidx.cardview.widget.CardView
+                        android:layout_margin="10dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:cardCornerRadius="1000dp"
+                        app:cardElevation="1dp">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/ic_account"
+                            app:tint="@color/black" />
+                    </androidx.cardview.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView
+                            android:drawableTint="@color/black"
+                            android:textColor="@color/black"
+                            android:text="  Identidad"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:textStyle="normal" />
+                        <TextView
+                            android:id="@+id/txtdni"
+                            android:textColor="#595959"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="13sp"
+                            android:textStyle="normal" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:elevation="1dp"
+                    android:layout_marginVertical="1dp"
+                    android:background="@color/white"
+                    android:backgroundTint="@color/white"
+                    android:orientation="horizontal"
+                    android:onClick="Matriculaedit"
+                    >
+                    <androidx.cardview.widget.CardView
+                        android:layout_margin="10dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:cardCornerRadius="1000dp"
+                        app:cardElevation="1dp">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/appointment"
+                            app:tint="@color/black" />
+                    </androidx.cardview.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView
+                            android:drawableTint="@color/black"
+                            android:textColor="@color/black"
+                            android:text="  Matricula"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:textStyle="normal" />
+                        <TextView
+                            android:id="@+id/txtmatricula"
+                            android:textColor="#595959"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="13sp"
+                            android:textStyle="normal" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:elevation="1dp"
+                    android:layout_marginVertical="1dp"
+                    android:background="@color/white"
+                    android:backgroundTint="@color/white"
+                    android:orientation="horizontal"
+                    android:onClick="Profesionedit"
+                    >
+                    <androidx.cardview.widget.CardView
+                        android:layout_margin="10dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        app:cardCornerRadius="1000dp"
+                        app:cardElevation="1dp">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/ic_work"
+                            app:tint="@color/black" />
+                    </androidx.cardview.widget.CardView>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView
+                            android:drawableTint="@color/black"
+                            android:textColor="@color/black"
+                            android:text="  Profesion"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:textStyle="normal" />
+                        <TextView
+                            android:id="@+id/txtesp"
+                            android:textColor="#595959"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="13sp"
+                            android:textStyle="normal" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+
+        android:layout_below="@+id/cvid2"
+        android:orientation="vertical">
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+
+            android:layout_marginBottom="-30dp"
+            app:cardCornerRadius="40dp"
+            app:cardElevation="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="20dp"
+
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginHorizontal="20dp"
+                    android:text="General"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+
+
+
+                <TextView
+                    android:layout_marginTop="20dp"
+                    android:drawableTint="@color/black"
+                    android:text="   Historial de Atencion"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:gravity="center_vertical"
+                    android:drawableEnd="@drawable/ic_ir"
+                    android:background="@color/white"
+                    android:elevation="2dp"
+                    android:textSize="15dp"
+
+                    android:textColor="@color/black"
+                    android:textStyle="normal"
+                    android:onClick="ClickHistorial"/>
+                <TextView
+                    android:layout_marginTop="1dp"
+                    android:drawableTint="@color/black"
+                    android:text="   Horarios"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:gravity="center_vertical"
+                    android:drawableEnd="@drawable/ic_ir"
+                    android:background="@color/white"
+                    android:elevation="2dp"
+                    android:textSize="15dp"
+
+                    android:textColor="@color/black"
+                    android:textStyle="normal"
+                    android:onClick="ClickHorario"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <androidx.recyclerview.widget.RecyclerView
+
+                        android:id="@+id/lishorario"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp" />
+
+
+                </LinearLayout>
+                <TextView
+                    android:layout_marginTop="1dp"
+                    android:drawableTint="@color/black"
+                    android:text="   Especialidades"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:gravity="center_vertical"
+                    android:drawableEnd="@drawable/ic_ir"
+                    android:background="@color/white"
+                    android:elevation="2dp"
+                    android:textSize="15dp"
+
+                    android:textColor="@color/black"
+                    android:textStyle="normal"
+                    android:onClick="ClickPrestaciones"/>
+
+
+                <TextView
+                    android:visibility="gone"
+
+                    android:layout_marginTop="1dp"
+                    android:drawableTint="@color/black"
+                    android:text="   Seguridad"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:gravity="center_vertical"
+                    android:drawableEnd="@drawable/ic_ir"
+                    android:background="@color/white"
+                    android:elevation="2dp"
+                    android:textSize="15dp"
+                    android:textColor="@color/black"
+                    android:textStyle="normal"
+                    android:onClick="ClickSeguridad"/>
+
+                <TextView
+                    android:visibility="gone"
+
+                    android:layout_marginTop="1dp"
+                    android:drawableTint="@color/black"
+                    android:text="   Lenguaje"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:gravity="center_vertical"
+                    android:drawableEnd="@drawable/ic_ir"
+                    android:background="@color/white"
+                    android:elevation="2dp"
+                    android:textSize="15dp"
+                    android:textColor="@color/black"
+                    android:textStyle="normal"
+                    android:onClick="ClickLenguaje"/>
+
+
+                <TextView
+                    android:visibility="gone"
+
+                    android:layout_marginTop="1dp"
+                    android:drawableTint="@color/black"
+                    android:text="   Acerca de "
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:gravity="center_vertical"
+                    android:drawableEnd="@drawable/ic_ir"
+                    android:background="@color/white"
+                    android:elevation="2dp"
+                    android:textSize="15dp"
+                    android:textColor="@color/black"
+                    android:textStyle="normal"
+                    android:onClick="ClcikAcercade"/>
+
+
+                <TextView
+                    android:visibility="gone"
+                    android:layout_marginTop="1dp"
+                    android:drawableTint="@color/black"
+                    android:text="   Borrar cuenta"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:gravity="center_vertical"
+                    android:drawableEnd="@drawable/ic_ir"
+                    android:background="@color/white"
+                    android:elevation="2dp"
+                    android:textSize="15dp"
+                    android:textColor="@color/black"
+                    android:layout_marginBottom="1dp"
+                    android:textStyle="normal"
+                    android:onClick="ClickBorrarCuenta"/>
+
+
+
+            </LinearLayout>
+
+
+        </androidx.cardview.widget.CardView>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_edit"
+            />
+
+
+    </LinearLayout>
 
 
     <LinearLayout
@@ -438,20 +1046,6 @@
         android:layout_marginEnd="10dp"
         android:gravity="end"
         android:orientation="horizontal">
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:layout_marginBottom="10sp"
-
-            android:id="@+id/refreshcancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:backgroundTint="@color/white"
-            android:baselineAlignBottom="true"
-            android:onClick="ClickEditar"
-            android:src="@drawable/ic_edit"
-            app:backgroundTint="#00FFFFFF"
-            app:tint="@color/black"></com.google.android.material.floatingactionbutton.FloatingActionButton>
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

@@ -52,6 +52,7 @@ data class NotificationData(
     val message: String
 )
 data class ProfesionalRespons(
+    @SerializedName("idprofesional") var IDP:String,
     @SerializedName("nombreapellido") var nameprof:String,
     @SerializedName("profesionalcol") var col:String,
     @SerializedName("especialidad") var especialidad:String,

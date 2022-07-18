@@ -13,9 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.SnapHelper
-import app.ibiocd.lavanderia.Adapter.Archivos
-import app.ibiocd.lavanderia.Adapter.Horario
-import app.ibiocd.lavanderia.Adapter.Prestacion
+import app.ibiocd.lavanderia.Adapter.*
 import app.ibiocd.odontologia.Adapter.AdapterArchivo
 import app.ibiocd.odontologia.Adapter.AdapterHorarios
 import app.ibiocd.odontologia.Adapter.AdapterPrestacion
@@ -29,13 +27,19 @@ import kotlinx.android.synthetic.main.activity_perfil.*
 import kotlinx.android.synthetic.main.activity_prestaciones.*
 import kotlinx.android.synthetic.main.activity_turno.*
 import kotlinx.android.synthetic.main.activity_turno.rviewcliente
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONException
 import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
 
 class PrestacionesActivity : AppCompatActivity(), AdapterPrestacion.onPrestacionItemClick {
     private var JSONAgregadoPrestacion = ""
     private var JSONCompletPrestacion = ""
-     var correo = ""
+     //var correo = ""
+     var IDP = ""
      var url = ""
     val arraylisP= ArrayList<Prestacion>()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +47,7 @@ class PrestacionesActivity : AppCompatActivity(), AdapterPrestacion.onPrestacion
         setContentView(R.layout.activity_prestaciones)
         if(intent.extras !=null){
             JSONCompletPrestacion = intent.getStringExtra("prestacion").toString()
-            correo = intent.getStringExtra("correo").toString()
+            IDP = intent.getStringExtra("IDP").toString()
             url = intent.getStringExtra("url").toString()
 
             prestbacktext.setText(intent.getStringExtra("back").toString())
@@ -67,7 +71,6 @@ class PrestacionesActivity : AppCompatActivity(), AdapterPrestacion.onPrestacion
         JSONAgregadoPrestacion=""
         val jsonvalor=JSONObject(response)
         val HistJSONArray=jsonvalor.getJSONArray("dato")
-        val info= jsonvalor.getString("dato")
 
 
         if (HistJSONArray.length()>0){
@@ -87,6 +90,10 @@ class PrestacionesActivity : AppCompatActivity(), AdapterPrestacion.onPrestacion
                 arraylisP.add(Prestacion(jsonObject2.getString("Prestacion"),jsonObject2.getString("Detalle")))
             }
             JSONCompletPrestacion="{\"dato\":[$JSONAgregadoPrestacion]}"
+
+
+
+
 
         }else{
             arraylisP.clear()
@@ -192,57 +199,6 @@ class PrestacionesActivity : AppCompatActivity(), AdapterPrestacion.onPrestacion
     override fun onPrestacionItemClick(nombre: String) {
         PrestacionDialogSee(nombre,JSONCompletPrestacion)
     } //CLICK EN EL RECYLCER VIEW
-    fun ClickSave(view: View){
-        //Primero Verifico si esta registrado el TOKEN ID
-        val queue = Volley.newRequestQueue(this)
-        val url2 = "http://$url/cuentas.php?correo=${correo}"
-        val jsonObjectRequest= JsonObjectRequest(
-            Request.Method.GET,url2,null,
-            { response ->
-                val jsonArray = response.getJSONArray("data")
-                val jsonObject = jsonArray.getJSONObject(0)
-                val url3 = "http://$url/cuentas.php"
-                val queue3= Volley.newRequestQueue(this)
-                //con este parametro aplico el metodo POST
-                val URL=url
-                var resultadoPost = object : StringRequest(Method.POST,url3,
-                    Response.Listener<String> { response ->
-
-                    }, Response.ErrorListener { error ->
-                        Toast.makeText(this,"ERROR $error", Toast.LENGTH_LONG).show()
-                    }){
-
-                    override fun getParams(): MutableMap<String, String>? {
-                        val parametros = HashMap<String,String>()
-                        // Key y value
-                        parametros.put("correo",jsonObject.getString("correo").toString())
-                        parametros.put("celular",jsonObject.getString("celular").toString())
-                        parametros.put("direccion",jsonObject.getString("direccion").toString())
-                        parametros.put("nombreapellido",jsonObject.getString("nombreapellido").toString())
-                        parametros.put("prestaciones","")
-                        parametros.put("horarios",jsonObject.getString("horarios").toString())
-                        parametros.put("especialidad",jsonObject.getString("especialidad").toString())
-                        parametros.put("img",jsonObject.getString("img").toString())
-                        parametros.put("modificar","modificar")
-                        return parametros
-                    }
-                }
-                // con esto envio o SEND todo
-                queue3.add(resultadoPost)
-                textname?.visibility = View.GONE
-                textcel?.visibility = View.GONE
-                textemail?.visibility = View.GONE
-                textesp?.visibility = View.GONE
-                textdire?.visibility = View.GONE
-                refreshcancel?.setImageDrawable(getDrawable(R.drawable.ic_edit))
-                refreshcancel?.imageTintList = resources.getColorStateList(R.color.black)
-            }, { error ->
-
-            }
-        )
-        queue.add(jsonObjectRequest)
-
-    }
     fun DeletJson(nombre:String){
         JSONAgregadoPrestacion=""
         try{
@@ -277,7 +233,7 @@ class PrestacionesActivity : AppCompatActivity(), AdapterPrestacion.onPrestacion
             JSONCompletPrestacion="{\"dato\":[$JSONAgregadoPrestacion]}"
 
             refresh(JSONCompletPrestacion)
-            Save(JSONCompletPrestacion)
+            getProfesionalSave(JSONCompletPrestacion)
 
         } catch (e: JSONException) {
             e.printStackTrace()
@@ -293,16 +249,55 @@ class PrestacionesActivity : AppCompatActivity(), AdapterPrestacion.onPrestacion
         if (JSONAgregadoPrestacion==""){
             JSONAgregadoPrestacion = JSONArchivo
         }else if (JSONAgregadoPrestacion!=""){JSONAgregadoPrestacion = JSONAgregadoPrestacion+","+JSONArchivo }
+        JSONCompletPrestacion="{\"dato\":[$JSONAgregadoPrestacion]}"
 
-        SaveHistorial(nombre,detalle)
+        getProfesionalSave(JSONCompletPrestacion)
     } //AGREGO LOS DATOS PARA UN NUEVO JSON
-    fun SaveHistorial(nombre:String,detalle:String){
+
+
+
+
+
+
+    fun getProfesionalSave(JSON: String){
+        CoroutineScope(Dispatchers.IO).launch {
+            val call=RetrofitClient.instance.getProfesional(IDP.toString())
+            val datos: ProfesionalRespons? =call.body()
+            runOnUiThread{
+                if(call.isSuccessful){
+                    if (datos!=null){
+                        postProfesional(datos,JSON)
+                    }
+                }
+            }
+        }
+    }//
+    private fun postProfesional(datos: ProfesionalRespons,JSON:String) {
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val call=RetrofitClient.instance.postProfesional("${datos.nameprof}","${datos.col}","${datos.especialidad}","${datos.celular}","${datos.direccion}","${datos.correo}","${datos.horarios}","$JSON","${datos.verificar}","${datos.img}","${datos.matricula}","${datos.TID}","$IDP","modificar","modificar")
+            call.enqueue(object : Callback<ProfesionalRespons> {
+                override fun onFailure(call: Call<ProfesionalRespons>, t: Throwable) {
+                    Toast.makeText(applicationContext,t.message,Toast.LENGTH_LONG).show()
+                }
+                override fun onResponse(call: Call<ProfesionalRespons>, response: retrofit2.Response<ProfesionalRespons>) {
+
+                    DeletJson("S/N")
+
+                }
+            })
+
+
+
+        }
+    }
+    fun SaveHistorial(){
 
         JSONCompletPrestacion="{\"dato\":[$JSONAgregadoPrestacion]}"
 
 
         val queue = Volley.newRequestQueue(this)
-        val url2 = "http://$url/cuentas.php?correo=${correo}"
+        val url2 = "http://$url/cuentas.php?idprofesional=${IDP}"
         val jsonObjectRequest= JsonObjectRequest(
             Request.Method.GET,url2,null,
             { response ->
@@ -323,7 +318,7 @@ class PrestacionesActivity : AppCompatActivity(), AdapterPrestacion.onPrestacion
                         val parametros = HashMap<String,String>()
                         // Key y value
                         parametros.put("modificar","modificar")
-                        parametros.put("correo",correo)
+                        parametros.put("correo",jsonObject.getString("correo").toString())
                         parametros.put("celular",jsonObject.getString("celular").toString())
                         parametros.put("direccion",jsonObject.getString("direccion").toString())
                         parametros.put("nombreapellido",jsonObject.getString("nombreapellido").toString())
@@ -331,6 +326,7 @@ class PrestacionesActivity : AppCompatActivity(), AdapterPrestacion.onPrestacion
                         parametros.put("horarios",jsonObject.getString("horarios").toString())
                         parametros.put("especialidad",jsonObject.getString("especialidad").toString())
                         parametros.put("img",jsonObject.getString("img").toString())
+                        parametros.put("idprofesional",IDP)
 
                         return parametros
                     }
@@ -346,10 +342,12 @@ class PrestacionesActivity : AppCompatActivity(), AdapterPrestacion.onPrestacion
 
 
     }//Guarda los datos de la lista de PRESTACION
+
+
     fun Save(JSON: String){
         //Primero Verifico si esta registrado el TOKEN ID
         val queue = Volley.newRequestQueue(this)
-        val url2 = "http://$url/cuentas.php?correo=${correo}"
+        val url2 = "http://$url/cuentas.php?idprofesional=${IDP}"
         val jsonObjectRequest= JsonObjectRequest(
             Request.Method.GET,url2,null,
             { response ->
@@ -375,20 +373,13 @@ class PrestacionesActivity : AppCompatActivity(), AdapterPrestacion.onPrestacion
                         parametros.put("horarios",jsonObject.getString("horarios").toString())
                         parametros.put("especialidad",jsonObject.getString("especialidad").toString())
                         parametros.put("img",jsonObject.getString("img").toString())
-
                         parametros.put("modificar","modificar")
                         return parametros
                     }
                 }
                 // con esto envio o SEND todo
                 queue.add(resultadoPost)
-                textname?.visibility = View.GONE
-                textcel?.visibility = View.GONE
-                textemail?.visibility = View.GONE
-                textesp?.visibility = View.GONE
-                textdire?.visibility = View.GONE
-                refreshcancel?.setImageDrawable(getDrawable(R.drawable.ic_edit))
-                refreshcancel?.imageTintList = resources.getColorStateList(R.color.black)
+
             }, { error ->
 
             }
@@ -396,5 +387,56 @@ class PrestacionesActivity : AppCompatActivity(), AdapterPrestacion.onPrestacion
         queue.add(jsonObjectRequest)
 
     } //GUARDO EN EL SERVIDOR
+    fun ClickSave(view: View){
+        //Primero Verifico si esta registrado el TOKEN ID
+        val queue = Volley.newRequestQueue(this)
+        val url2 = "http://$url/cuentas.php?idprofesional=${IDP}"
+        val jsonObjectRequest= JsonObjectRequest(
+            Request.Method.GET,url2,null,
+            { response ->
+                val jsonArray = response.getJSONArray("data")
+                val jsonObject = jsonArray.getJSONObject(0)
+                val url3 = "http://$url/cuentas.php"
+                val queue3= Volley.newRequestQueue(this)
+                //con este parametro aplico el metodo POST
+                val URL=url
+                var resultadoPost = object : StringRequest(Method.POST,url3,
+                    Response.Listener<String> { response ->
 
+                    }, Response.ErrorListener { error ->
+                        Toast.makeText(this,"ERROR $error", Toast.LENGTH_LONG).show()
+                    }){
+
+                    override fun getParams(): MutableMap<String, String>? {
+                        val parametros = HashMap<String,String>()
+                        // Key y value
+                        parametros.put("correo",jsonObject.getString("correo").toString())
+                        parametros.put("celular",jsonObject.getString("celular").toString())
+                        parametros.put("direccion",jsonObject.getString("direccion").toString())
+                        parametros.put("nombreapellido",jsonObject.getString("nombreapellido").toString())
+                        parametros.put("prestaciones","")
+                        parametros.put("horarios",jsonObject.getString("horarios").toString())
+                        parametros.put("especialidad",jsonObject.getString("especialidad").toString())
+                        parametros.put("img",jsonObject.getString("img").toString())
+                        parametros.put("modificar","modificar")
+                        return parametros
+                    }
+                }
+                // con esto envio o SEND todo
+                queue3.add(resultadoPost)
+
+            }, { error ->
+
+            }
+        )
+        queue.add(jsonObjectRequest)
+
+    }
+fun borrar(){
+    for ((i,hora) in arraylisP.distinct().withIndex()){
+
+        arraylisP.add(Prestacion(hora.toString(),""))
+
+    }
+}
 }

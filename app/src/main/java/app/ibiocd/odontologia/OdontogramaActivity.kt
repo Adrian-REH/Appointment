@@ -47,7 +47,8 @@ class OdontogramaActivity : AppCompatActivity(),AdapterDientInfError.onDientInfI
 
     var name:String?=""
     var url:String?=""
-    var correo:String?=""
+    //var correo:String?=""
+    var IDP:String?=""
     var dni:String?=""
     var Ndient:Int=0
     var fecha:Int=0
@@ -84,7 +85,8 @@ class OdontogramaActivity : AppCompatActivity(),AdapterDientInfError.onDientInfI
 
         if(intent.extras !=null){
             dni = intent.getStringExtra("dni")
-            correo = intent.getStringExtra("correo")
+            //correo = intent.getStringExtra("correo")
+            IDP = intent.getStringExtra("IDP")
             url = intent.getStringExtra("url")
             name = intent.getStringExtra("name")
             fecha = intent.getStringExtra("fecha").toString().toInt()
@@ -138,7 +140,7 @@ class OdontogramaActivity : AppCompatActivity(),AdapterDientInfError.onDientInfI
 
         CoroutineScope(Dispatchers.IO).launch {
         try {
-            val call=RetrofitClient.instance.getOdontograma(dni.toString(),correo.toString(),fecha.toString())
+            val call=RetrofitClient.instance.getOdontograma(dni.toString(),IDP.toString(),fecha.toString())
             val datos: OdontogramaRespons? =call.body()
             runOnUiThread{
                 if(call.isSuccessful){
@@ -177,7 +179,7 @@ class OdontogramaActivity : AppCompatActivity(),AdapterDientInfError.onDientInfI
 
         CoroutineScope(Dispatchers.IO).launch {
             try{
-                val call=RetrofitClient.instance.getOdontograma(dni.toString(),correo.toString(),fecha.toString())
+                val call=RetrofitClient.instance.getOdontograma(dni.toString(),IDP.toString(),fecha.toString())
                 val datos: OdontogramaRespons? =call.body()
                 runOnUiThread{
                 if (datos != null) {
@@ -240,7 +242,7 @@ class OdontogramaActivity : AppCompatActivity(),AdapterDientInfError.onDientInfI
 
 
         CoroutineScope(Dispatchers.IO).launch {
-            val call=RetrofitClient.instance.postOdontograma(JSONDiente.toString(),codigo.toInt(),"${correo}","${dni}",fecha.toString(),accion,accion)
+            val call=RetrofitClient.instance.postOdontograma(JSONDiente.toString(),codigo.toInt(),"${IDP}","${dni}",fecha.toString(),accion,accion)
             call.enqueue(object : Callback<OdontogramaRespons> {
                 override fun onFailure(call: Call<OdontogramaRespons>, t: Throwable) {
                     Toast.makeText(applicationContext,t.message,Toast.LENGTH_LONG).show()
@@ -251,7 +253,7 @@ class OdontogramaActivity : AppCompatActivity(),AdapterDientInfError.onDientInfI
                     if (back){
                         val intent = Intent(applicationContext, TurnoActivity::class.java)
                         intent.putExtra("url",url)
-                        intent.putExtra("correo",correo)
+                        intent.putExtra("IDP",IDP)
                         intent.putExtra("dni",dni)
                         intent.putExtra("name",name)
                         intent.putExtra("fecha",fecha.toString())

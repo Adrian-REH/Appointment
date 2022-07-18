@@ -38,8 +38,9 @@ class DetallesActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick 
     var DNI:String?=""
     var codigo=0
 
-    var CORREO:String?=""
+    //var CORREO:String?=""
     var BACKTXT:String?=""
+    var IDP:String?=""
     var JSONAgregadoArchivo:String?=""
     var JSONCompletArchivos:String?=""
     val arraylisH= ArrayList<Historial>()
@@ -48,7 +49,7 @@ class DetallesActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detalles)
         if(intent.extras !=null){
-            CORREO = intent.getStringExtra("correo")
+            IDP = intent.getStringExtra("IDP")
             URL = intent.getStringExtra("url")
             FECHA = intent.getStringExtra("fecha")
             DNI = intent.getStringExtra("dni")
@@ -141,7 +142,7 @@ class DetallesActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick 
 
         CoroutineScope(Dispatchers.IO).launch {
             try{
-                val call=RetrofitClient.instance.getListTurnodc(DNI.toString(),CORREO.toString())
+                val call=RetrofitClient.instance.getListTurnodc(DNI.toString(),IDP.toString())
                 val datos: List<TurnoRespons>? =call.body()
                 runOnUiThread{
 
@@ -246,7 +247,7 @@ class DetallesActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick 
     fun ClickOdontograma(view: View){
         val intent = Intent(this, OdontogramaActivity::class.java)
         intent.putExtra("url",URL)
-        intent.putExtra("correo",CORREO)
+        intent.putExtra("IDP",IDP)
         intent.putExtra("dni",DNI)
         intent.putExtra("name",NAME)
         intent.putExtra("codigo",codigo)

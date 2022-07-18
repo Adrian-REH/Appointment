@@ -31,7 +31,8 @@ import org.json.JSONObject
 class HistorialActivity : AppCompatActivity(), AdapterHistorial.onHistorialItemClick {
 
     var url:String?=""
-    var correo:String?=""
+    //var correo:String?=""
+    var IDP:String?=""
     var dni:String?=""
     val arraylisH= ArrayList<Historial>()
     var rcviewH: RecyclerView?=null
@@ -42,11 +43,11 @@ class HistorialActivity : AppCompatActivity(), AdapterHistorial.onHistorialItemC
 
         if(intent.extras !=null){
             dni = intent.getStringExtra("dni")
-            correo = intent.getStringExtra("correo")
+            IDP = intent.getStringExtra("IDP")
             url = intent.getStringExtra("url")
         }
 
-        if ( correo != ""){
+        if ( IDP != ""){
             getListHistorialturnos("",intent.getStringExtra("especialidad").toString())
             edtxtsearchhistorial.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
@@ -124,7 +125,7 @@ class HistorialActivity : AppCompatActivity(), AdapterHistorial.onHistorialItemC
          intent.putExtra("fecha",fecha)
          intent.putExtra("dni",dni)
          intent.putExtra("url",url)
-         intent.putExtra("correo",correo)
+         intent.putExtra("IDP",IDP)
         intent.putExtra("back","Historial")
 
         startActivity(intent)

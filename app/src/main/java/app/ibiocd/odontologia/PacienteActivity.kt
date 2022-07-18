@@ -31,27 +31,21 @@ import retrofit2.Callback
 
 class PacienteActivity : AppCompatActivity() {
     var url:String?=""
-    var correo:String?=""
+    var IDP:String?=""
     var BACKTXT:String?=""
     var dni:String?=""
     var especialidad:String?=""
     var name:String?=""
     var HISTORIAL:String?=""
-    var edtxtnombre: EditText?=null
-    var edtxttelefono: EditText?=null
-    var edtxtemail: EditText?=null
-    var edtxtdirec: EditText?=null
-    var edtxtdni: EditText?=null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_paciente)
-        edtxtnombre = findViewById(R.id.edtxtnombre)
-        edtxttelefono = findViewById(R.id.edtxttelefono)
-        edtxtemail = findViewById(R.id.edtxtemail)
-        edtxtdirec = findViewById(R.id.edtxtdirec)
+
         if(intent.extras !=null){
             dni = intent.getStringExtra("dni")
-            correo = intent.getStringExtra("correo")
+            //correo = intent.getStringExtra("correo")
+            IDP = intent.getStringExtra("IDP")
             url = intent.getStringExtra("url")
             name = intent.getStringExtra("name")
             especialidad = intent.getStringExtra("especialidad")
@@ -74,7 +68,7 @@ class PacienteActivity : AppCompatActivity() {
 
     fun getClienteSave(view: View,estado: String){
         CoroutineScope(Dispatchers.IO).launch {
-            val call=RetrofitClient.instance.getEnlace(dni.toString(),correo.toString())
+            val call=RetrofitClient.instance.getEnlace(dni.toString(),IDP.toString())
             val datos: EnlaceRespons? =call.body()
             runOnUiThread{
                 if(call.isSuccessful){
@@ -95,7 +89,7 @@ class PacienteActivity : AppCompatActivity() {
 
     private fun postCliente(accion:String,especialidad:String,estado:String,nameprof:String) {
         CoroutineScope(Dispatchers.IO).launch {
-            val call=RetrofitClient.instance.postEnlace("${correo}","${dni}","${especialidad}","$estado","${nameprof}","${txtnombre.text}",accion,accion)
+            val call=RetrofitClient.instance.postEnlace("${IDP}","${dni}","${especialidad}","$estado","${nameprof}","${txtnombre.text}",accion,accion)
             call.enqueue(object : Callback<EnlaceRespons> {
                 override fun onFailure(call: Call<EnlaceRespons>, t: Throwable) {
                     Toast.makeText(applicationContext,t.message,Toast.LENGTH_LONG).show()
@@ -131,15 +125,10 @@ class PacienteActivity : AppCompatActivity() {
                     val image= datos?.img ?: ""
                     val dni= datos?.dni ?: ""
                     txtcorreo?.setText(email)
-                    edtxtemail?.setText(email)
                     txtnombre?.setText(name)
-                    edtxtnombre?.setText(name)
                     txtcel?.setText(celul)
-                    edtxttelefono?.setText(celul)
                     txtdirec?.setText(direc)
-                    edtxtdirec?.setText(direc)
                     txtdni?.setText(dni)
-                    edtxtdni?.setText(dni)
                     Glide.with(applicationContext)
                         .load(image)
                         .centerCrop()
@@ -159,7 +148,7 @@ class PacienteActivity : AppCompatActivity() {
     fun ClickHistorial(view: View){
         Toast.makeText(this,"$especialidad",Toast.LENGTH_LONG).show()
         val intent = Intent(this, HistorialActivity::class.java)
-        intent.putExtra("correo",correo)
+        intent.putExtra("IDP",IDP)
         intent.putExtra("dni",dni)
         intent.putExtra("url",url)
         intent.putExtra("especialidad",especialidad)

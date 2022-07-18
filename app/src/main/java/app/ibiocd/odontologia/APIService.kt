@@ -25,7 +25,7 @@ interface APIService {
     fun postOdontograma(
         @Field("dientes")  dientes:String,
         @Field("odontogramaid")  ID:Int,
-        @Field("codigoprofesional")  matricula:String,
+        @Field("codigoprofesional")  idprofesional:String,
         @Field("dni")  dni:String,
         @Field("fecha")  fecha:String,
         @Field("insertar")  insertar:String,
@@ -35,8 +35,12 @@ interface APIService {
 
 
     //PARA LOS PROFESIONALES
+    @DELETE("/appointment/cuentas.php?")
+    suspend fun deleteProfesional(@Query("correo") correo:String):Response<ProfesionalRespons>
     @GET("/appointment/cuentas.php?")
-    suspend fun getProfesional(@Query("correo") correo:String):Response<ProfesionalRespons>
+    suspend fun getcorreoProfesional(@Query("correo") correo:String):Response<ProfesionalRespons>
+    @GET("/appointment/cuentas.php?")
+    suspend fun getProfesional(@Query("idprofesional") idprofesional:String):Response<ProfesionalRespons>
     @GET("/appointment/cuentas.php?")
     suspend fun getAllListProf(@Query("todos") todos:String):Response<List<ProfesionalRespons>>
 
@@ -62,6 +66,7 @@ interface APIService {
         @Field("img") img:String,
         @Field("matricula") matricula:String,
         @Field("TokenID") TID:String,
+        @Field("idprofesional") IDP:String,
         @Field("insertar") insertar:String,
         @Field("modificar") modificar:String
     ): Call<ProfesionalRespons>

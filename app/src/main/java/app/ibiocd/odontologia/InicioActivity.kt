@@ -23,15 +23,15 @@ import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import java.io.EOFException
-import java.lang.Exception
 import java.util.*
+import kotlin.Exception
 import kotlin.collections.ArrayList
 
 class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, AdapterClienteB.onClienteItemClick {
 
-    var correo:String?=""
     var clientes:String?=""
     var name:String?=""
+    var IDP:String?=""
     var url:String?=""
     var especialidad:String?=""
 
@@ -53,8 +53,8 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
         cvverifI.visibility=View.GONE
 
         if(intent.extras !=null){
-            correo = intent.getStringExtra("correo")
             url = intent.getStringExtra("url")
+            IDP = intent.getStringExtra("idprofesional")
         }
 
         swipe_container.setOnRefreshListener  {
@@ -194,54 +194,59 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
 
     fun getComprobarCliente(){
         CoroutineScope(Dispatchers.IO).launch {
-            val call=RetrofitClient.instance.getProfesional("$correo")
+            try {
+                val call=RetrofitClient.instance.getProfesional("$IDP")
 
-            runOnUiThread{
-                swipe_container.isRefreshing=false
+                runOnUiThread{
+                    swipe_container.isRefreshing=false
 
-                val datos: ProfesionalRespons? = call.body()
-                val nombre = datos?.nameprof ?: ""
-                val verif = datos?.verificar ?: ""
-                especialidad= datos?.especialidad ?: ""
-                if (verif=="V"){
-                    cvverifI.visibility=View.VISIBLE
+                    val datos: ProfesionalRespons? = call.body()
+                    val nombre = datos?.nameprof ?: ""
+                    val verif = datos?.verificar ?: ""
+                    especialidad= datos?.especialidad ?: ""
+                    if (verif=="V"){
+                        cvverifI.visibility=View.VISIBLE
 
-                }
-                if (nombre=="null" || nombre==""){
-                    ClickPerfil("LLENARPERFIL")
-                }else{
-                    name = nombre
-                    correo = datos?.correo ?: ""
-                    Glide.with(this@InicioActivity)
-                        .load(datos?.img ?: "")
-                        .centerCrop()
-                        .into(viewminiperfil)
-
-                }
-
-                FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-                    if (!task.isSuccessful) {
-                        return@OnCompleteListener
                     }
-                    val token = task.result
-                    if (datos?.TID!=token){
+                    if (nombre=="null" || nombre==""){
+                        ClickPerfil("LLENARPERFIL")
+                    }else{
+                        name = nombre
+                        IDP = datos?.IDP ?: ""
+                        Glide.with(this@InicioActivity)
+                            .load(datos?.img ?: "")
+                            .centerCrop()
+                            .into(viewminiperfil)
 
-                        postProfesional(datos!!,token)
                     }
 
-                })
+                    FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+                        if (!task.isSuccessful) {
+                            return@OnCompleteListener
+                        }
+                        val token = task.result
+                        if (datos?.TID!=token){
 
-                //ENVIO LOS DATOS
+                            postProfesional(datos!!,token)
+                        }
 
+                    })
+
+                    //ENVIO LOS DATOS
+
+
+                }
+            }catch (e:Exception){
 
             }
+
         }
     }
 
     private fun postProfesional(datos:ProfesionalRespons,token:String) {
 
         CoroutineScope(Dispatchers.IO).launch {
-            val call=RetrofitClient.instance.postProfesional("${datos.nameprof}","${datos.col}","${datos.especialidad}","${datos.celular}","${datos.direccion}","${correo}","${datos.horarios}","${datos.prestacion}","${datos.verificar}","${datos.img}","${datos.matricula}","$token","","modificar")
+            val call=RetrofitClient.instance.postProfesional("${datos.nameprof}","${datos.col}","${datos.especialidad}","${datos.celular}","${datos.direccion}","${datos.correo}","${datos.horarios}","${datos.prestacion}","${datos.verificar}","${datos.img}","${datos.matricula}","$token","$IDP","","modificar")
             call.enqueue(object : Callback<ProfesionalRespons> {
                 override fun onFailure(call: Call<ProfesionalRespons>, t: Throwable) {
                     Toast.makeText(applicationContext,t.message,Toast.LENGTH_LONG).show()
@@ -262,7 +267,7 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
 
             CoroutineScope(Dispatchers.IO).launch {
                 try {
-                    val call=RetrofitClient.instance.getAllEnlace(correo.toString())//turno.php
+                    val call=RetrofitClient.instance.getAllEnlace(IDP.toString())//turno.php
 
                     runOnUiThread{
                         swipe_container.isRefreshing=false
@@ -298,7 +303,7 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
         lisTurno.clear()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val call=RetrofitClient.instance.getListTurno(correo.toString())//turno.php
+                val call=RetrofitClient.instance.getListTurno(IDP.toString())//turno.php
                 runOnUiThread{
                     val datos: List<TurnoRespons>? = call.body()
 
@@ -365,7 +370,7 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
     }
     fun ClickPerfil(DATO:String){
         val intent = Intent(this, PerfilActivity::class.java)
-        intent.putExtra("correo",correo)
+        intent.putExtra("IDP",IDP)
         intent.putExtra("url",url)
         intent.putExtra("DATOS",DATO)
 
@@ -375,7 +380,7 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
     }
     fun ClickCalendar(view: View){
         val intent = Intent(this, CalendarActivity::class.java)
-        intent.putExtra("correo",correo)
+        intent.putExtra("IDP",IDP)
         intent.putExtra("url",url)
         intent.putExtra("especialidad",especialidad)
         intent.putExtra("name",name)
@@ -389,7 +394,7 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
         intent.putExtra("url",url)
         intent.putExtra("especialidad",especialidad)
         intent.putExtra("name",name)
-        intent.putExtra("correo",correo)
+        intent.putExtra("IDP",IDP)
         intent.putExtra("dni",dni)
         intent.putExtra("fecha",fecha)
         intent.putExtra("id","$ID")
@@ -402,7 +407,7 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
     override fun onClienteBItemClick(dni: String) {//Ingresa al perfil del paciente sin saber que tiene turno el mismo dia
         val intent = Intent(this, PacienteActivity::class.java)
         intent.putExtra("url",url)
-        intent.putExtra("correo",correo)
+        intent.putExtra("IDP",IDP)
         intent.putExtra("dni",dni)
         intent.putExtra("especialidad",especialidad)
         intent.putExtra("back","Inicio")
@@ -414,7 +419,7 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
         intent.putExtra("url",url)
         intent.putExtra("especialidad",especialidad)
         intent.putExtra("name",name)
-        intent.putExtra("correo",correo)
+        intent.putExtra("IDP",IDP)
         intent.putExtra("dni","patient")
         intent.putExtra("fecha","0")
         intent.putExtra("id","0")

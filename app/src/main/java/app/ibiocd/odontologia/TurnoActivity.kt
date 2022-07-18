@@ -73,7 +73,8 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
 
     var url:String?=""
     var IMG:String?=""
-    var correo:String?=""
+   // var correo:String?=""
+    var IDP:String?=""
     var dni:String?=""
     var name:String?=""
 
@@ -94,7 +95,8 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
 
         if(intent.extras !=null){
             dni = intent.getStringExtra("dni")
-            correo = intent.getStringExtra("correo")
+           // correo = intent.getStringExtra("correo")
+            IDP = intent.getStringExtra("IDP")
             url = intent.getStringExtra("url")
             name = intent.getStringExtra("name")
             fecha= intent.getStringExtra("fecha").toString().toInt()
@@ -158,7 +160,7 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
 
         val intent = Intent(this, OdontogramaActivity::class.java)
         intent.putExtra("url",url)
-        intent.putExtra("correo",correo)
+        intent.putExtra("IDP",IDP)
         intent.putExtra("dni",dni)
         intent.putExtra("name",name)
         intent.putExtra("fecha",fecha.toString())
@@ -173,7 +175,7 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
         displayListC.clear()
         CoroutineScope(Dispatchers.IO).launch {
             try{
-                val call=RetrofitClient.instance.getListTurnodc(dni.toString(),correo.toString())
+                val call=RetrofitClient.instance.getListTurnodc(dni.toString(),IDP.toString())
                 var datos: List<TurnoRespons>? =call.body()
                 runOnUiThread{
 
@@ -343,7 +345,7 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
     fun ClickPerfilPaciente(view: View){
         val intent = Intent(this, PacienteActivity::class.java)
         intent.putExtra("url",url)
-        intent.putExtra("correo",correo)
+        intent.putExtra("IDP",IDP)
         intent.putExtra("dni",dni)
         intent.putExtra("name",name)
         intent.putExtra("back","Turno")
@@ -425,7 +427,7 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
 
         CoroutineScope(Dispatchers.IO).launch {
                 try{
-                    val call=RetrofitClient.instance.getListTurnodc(dni.toString(),correo.toString())
+                    val call=RetrofitClient.instance.getListTurnodc(dni.toString(),IDP.toString())
                     val BDatos: List<TurnoRespons>? =call.body()
                     if (BDatos != null) {
                         for (i in 0 until BDatos.size){
@@ -506,7 +508,7 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
     private fun postCliente(accion:String,archivo1:String,archivo2:String,archivo3:String,archivo4:String,archivo5:String,estado:String) {
 
         CoroutineScope(Dispatchers.IO).launch {
-            val call=RetrofitClient.instance.postTurno(correo.toString(),txtepaciente.text.toString(),name.toString(),txtprofesion.text.toString(),txtespecialidad.text.toString(),dni.toString(),fecha.toString(),"${txtnumdia.text.toString()}",txtcomentario.text.toString(),estado,IMG.toString(),archivo1,archivo2,archivo3,archivo4,archivo5,accion,accion)
+            val call=RetrofitClient.instance.postTurno(IDP.toString(),txtepaciente.text.toString(),name.toString(),txtprofesion.text.toString(),txtespecialidad.text.toString(),dni.toString(),fecha.toString(),"${txtnumdia.text.toString()}",txtcomentario.text.toString(),estado,IMG.toString(),archivo1,archivo2,archivo3,archivo4,archivo5,accion,accion)
             //val call=RetrofitClient.instance.postTurno(correo.toString(),name.toString(),txteprofesional.text.toString(),txtespecialidad.text.toString(),txteprestacion.text.toString(),dni.toString(),fecha.toString(),"${txthora.text.toString()}",txtcomentario.text.toString(),estado,IMG.toString(),JSONCompletArchivos,accion,accion)
             call.enqueue(object : Callback<TurnoRespons> {
                 override fun onFailure(call: Call<TurnoRespons>, t: Throwable) {
@@ -661,7 +663,7 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
             val intent = Intent(this, OdontogramaActivity::class.java)
             intent.putExtra("codigo",link)
             intent.putExtra("url",url)
-            intent.putExtra("correo",correo)
+            intent.putExtra("IDP",IDP)
             intent.putExtra("dni",dni)
             intent.putExtra("name",name)
             intent.putExtra("fecha",fecha.toString())
@@ -785,7 +787,7 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
         val list=ArrayList<String>()
         CoroutineScope(Dispatchers.IO).launch {
 
-            val call=RetrofitClient.instance.getAllEnlace(correo.toString())
+            val call=RetrofitClient.instance.getAllEnlace(IDP.toString())
             val datos: List<EnlaceRespons>? =call.body()
             runOnUiThread{
 
@@ -827,8 +829,8 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
                 if (datos != null) {
                     for (i in 0 until datos.size) {
 
-                        if (search.equals(datos[i].correo)){
-                            correo = datos[i].correo
+                        if (search.equals(datos[i].IDP)){
+                            IDP = datos[i].IDP
                             if(datos[i].img !="null"){
                                 Glide.with(applicationContext)
                                     .load(datos[i].img )
@@ -838,7 +840,7 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
                             }
 
                             arraylisPres.clear()
-                            getTurnoHoraOcupada(correo.toString())
+                            getTurnoHoraOcupada(IDP.toString())
 
                             val jsonvalor= JSONObject(datos[i].prestacion)
                             val HistJSONArray=jsonvalor.getJSONArray("dato")
@@ -878,7 +880,7 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
         arraylis.clear()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val call=RetrofitClient.instance.getListTurno(correo.toString())
+                val call=RetrofitClient.instance.getListTurno(IDP.toString())
 
                 val datos: List<TurnoRespons>? =call.body()
                 runOnUiThread{
@@ -990,7 +992,7 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
         val datePicker = DatePickerFragment{day,month,year -> onDateSelected(day,month,year)}
         datePicker.show(supportFragmentManager,"datePicker")
 
-        getTurnoHoraOcupada(correo.toString())
+        getTurnoHoraOcupada(IDP.toString())
     }
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val item = parent?.getItemAtPosition(position).toString()
@@ -999,7 +1001,7 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
 
             if (item == arraylisP[i].nameclient) {
                 dni =  arraylisP[i].pacientedni
-                getListProfesional(correo.toString())
+                getListProfesional(IDP.toString())
                 cardhorariosd.visibility=View.VISIBLE
             }
         }

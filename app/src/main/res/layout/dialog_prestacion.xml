@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:clickable="false"
         android:focusable="false"
-        android:hint="NOMBRE DE LA PRESTACION">
+        android:hint="NOMBRE DE LA ESPECIALIDAD">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtxtprest"

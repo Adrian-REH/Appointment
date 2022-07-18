@@ -52,9 +52,10 @@ import retrofit2.Callback
 import java.io.IOException
 
 class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
-    var correo:String?=""
+    //var correo:String?=""
     var url:String?=""
     var BACKTXT:String?=""
+    var IDP:String?=""
     var snaph:Boolean=false
 
     private var imageData: ByteArray? = null
@@ -82,17 +83,16 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_perfil)
-        textname=findViewById(R.id.textname)
-        textcel=findViewById(R.id.textcel)
-        textemail=findViewById(R.id.textemail)
-        textdire=findViewById(R.id.textdire)
-        cvverif.visibility=View.GONE
-        cvedit?.visibility = View.GONE
-        lishorario?.visibility = View.GONE
+
+        LinearMisDatos.visibility=View.GONE
+        lishorario.visibility=View.GONE
 
         if(intent.extras !=null){
-            correo = intent.getStringExtra("correo")
-           var DATOS = intent.getStringExtra("DATOS")
+            //correo = intent.getStringExtra("correo")
+            IDP = intent.getStringExtra("IDP")
+            Toast.makeText(this, "$IDP", Toast.LENGTH_SHORT).show()
+
+            var DATOS = intent.getStringExtra("DATOS")
             if (DATOS=="LLENARPERFIL"){
                 ClickEditar(View(applicationContext))
                 Toast.makeText(this,"Ingrese sus datos", Toast.LENGTH_SHORT).show()
@@ -104,75 +104,12 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
             BACKTXT=intent.getStringExtra("back")
             perfbacktext.setText("$BACKTXT")
         }
-        edtxtemail.setText(correo)
-        txtcorreo.setText(correo)
-        edtxtnombre.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                txtnombre.setText(s)
-            }
+        //txtcorreo.setText(correo)
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-        })
-        edtxttelefono.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                txtcel.setText(edtxttcaracte.text.toString()+s)
-
-
-
-
-            }
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-        })
-        edtxtemail.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                txtcorreo.setText(s)
-            }
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-        })
-        edtxtdirec.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                txtdirec.setText(s)
-            }
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-        })
-        edtxtesp.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                txtesp.setText(s)
-            }
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-        })
-        edtxtmatr.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                txtmatricula.setText(s)
-            }
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
-        })
         getProfesionalDatos()
-        getListAllEspecialidades()
+       // getListAllEspecialidades()
     }
+/*
     fun getListAllEspecialidades(){
         var arraylisEspec = ArrayList<String>()
         CoroutineScope(Dispatchers.IO).launch {
@@ -194,21 +131,20 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
             }
         }
     }
+*/
     fun ClickEditar(view: View){
-        if(swe){
-            cvedit?.visibility = View.VISIBLE
-            cvinfo?.visibility = View.GONE
+    if(swe){
+        LinearMisDatos?.visibility = View.VISIBLE
+        btnimgedit?.setImageDrawable(getDrawable(R.drawable.ic_cancel))
+        btnimgedit?.imageTintList = resources.getColorStateList(R.color.black)
+        swe=false
+    }else if(!swe){
+        LinearMisDatos?.visibility = View.GONE
 
-            refreshcancel?.setImageDrawable(getDrawable(R.drawable.ic_cancel))
-            refreshcancel?.imageTintList = resources.getColorStateList(R.color.black)
-            swe=false
-        }else if(!swe){
-            cvedit?.visibility = View.GONE
-            cvinfo?.visibility = View.VISIBLE
-            refreshcancel?.setImageDrawable(getDrawable(R.drawable.ic_edit))
-            refreshcancel?.imageTintList = resources.getColorStateList(R.color.black)
-            swe=true
-        }
+        btnimgedit?.setImageDrawable(getDrawable(R.drawable.ic_edit))
+        btnimgedit?.imageTintList = resources.getColorStateList(R.color.black)
+        swe=true
+    }
 
 
     }
@@ -217,90 +153,89 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
 
     private fun getProfesionalDatos(){
         CoroutineScope(Dispatchers.IO).launch {
-            val call=RetrofitClient.instance.getProfesional(correo.toString())
-            val datos: ProfesionalRespons? =call.body()
-            runOnUiThread{
-                if(call.isSuccessful){
-                    val nombre = datos?.nameprof ?: ""
-                    val direc = datos?.direccion ?: ""
-                    val celul = datos?.celular ?: ""
-                    val matr= datos?.matricula ?: ""
-                    val espec= datos?.especialidad ?: ""
-                    val hora= datos?.horarios ?: ""
-                    val verf= datos?.verificar ?: ""
-                    val img= datos?.img ?: ""
-                    val prest= datos?.prestacion ?: ""
+            try{
+                val call=RetrofitClient.instance.getProfesional(IDP.toString())
+                val datos: ProfesionalRespons? =call.body()
+                runOnUiThread{
+                    if(call.isSuccessful){
+                        val nombre = datos?.nameprof ?: ""
+                        val direc = datos?.direccion ?: ""
+                        val celul = datos?.celular ?: ""
+                        val matr= datos?.matricula ?: ""
+                        val espec= datos?.especialidad ?: ""
+                        val hora= datos?.horarios ?: ""
+                        val verf= datos?.verificar ?: ""
+                        val img= datos?.img ?: ""
+                        val prest= datos?.prestacion ?: ""
+                        val correo= datos?.correo ?: ""
 
-                    if (hora!=""){
-                        JSONHORA=hora
+                        if (hora!=""){
+                            JSONHORA=hora
+                        }
+
+                        txtmatricula?.setText(matr)
+                        txtcorreo?.setText(correo)
+                        txtnombre?.setText(nombre)
+                        txtcel?.setText(celul)
+                        txtdirec?.setText(direc)
+                        txtesp?.setText(espec)
+                        txtdni.setText(nombre)
+                        if(verf=="V"){
+                            cvverifperf.visibility=View.VISIBLE
+
+                        }
+                        if(img!="null"){
+                            Glide.with(applicationContext)
+                                .load(img)
+                                .centerCrop()
+                                .into(viewimageperfil)
+
+                        }
+
+
+                        PRESTACION=prest
+                    }else{
+                        Toast.makeText(applicationContext,"Error",Toast.LENGTH_LONG).show()
                     }
-
-                    txtmatricula?.setText(matr)
-                    edtxtmatr?.setText(matr)
-                    txtcorreo?.setText(correo)
-                    edtxtemail?.setText(correo)
-                    txtnombre?.setText(nombre)
-                    edtxtnombre?.setText(nombre)
-                    txtcel?.setText(celul)
-                    edtxttelefono?.setText(celul)
-                    txtdirec?.setText(direc)
-                    edtxtdirec?.setText(direc)
-                    txtesp?.setText(espec)
-                    edtxtesp?.setText(espec)
-                    if(verf=="V"){
-                        cvverif.visibility=View.VISIBLE
-
-                    }
-                    if(img!="null"){
-                        Glide.with(applicationContext)
-                            .load(img)
-                            .centerCrop()
-                            .into(viewimageperfil)
-
-                    }
-
-
-                    PRESTACION=prest
-                }else{
-                    Toast.makeText(applicationContext,"Error",Toast.LENGTH_LONG).show()
                 }
+            }catch (e:Exception){
+
             }
+
 
         }
     }//
+
+
     fun getProfesionalSave(view: View){
         CoroutineScope(Dispatchers.IO).launch {
-            val call=RetrofitClient.instance.getProfesional(correo.toString())
+            val call=RetrofitClient.instance.getProfesional(IDP.toString())
             val datos: ProfesionalRespons? =call.body()
             runOnUiThread{
                 var Imagen=""
                 if(call.isSuccessful){
                     if (IMAGENAME==""){
                         if (datos != null) {
-                            postProfesional(datos.img,datos.verificar,datos.prestacion,datos.TID)
+                            postProfesional(datos.img,datos.verificar,datos.prestacion,datos.TID,datos)
                         }
                     }else{
                         if (datos != null) {
-                            postProfesional("http://${url}/docs/$IMAGENAME",datos.verificar,datos.prestacion,datos.TID)
+                            postProfesional("http://${url}/docs/$IMAGENAME",datos.verificar,datos.prestacion,datos.TID,datos)
                         }
                     }
                 }
             }
         }
     }//
-    private fun postProfesional(imagen:String,verificar:String,prestacion:String,token:String) {
+    private fun postProfesional(imagen:String,verificar:String,prestacion:String,token:String,datos:ProfesionalRespons) {
 
         CoroutineScope(Dispatchers.IO).launch {
-            val call=RetrofitClient.instance.postProfesional("${edtxtnombre?.text}","${edtxtdirec?.text}","${edtxtesp?.text}","${edtxttcaracte.text}${edtxttelefono?.text}","${edtxtdirec?.text}","${edtxtemail.text}","${JSONHORA}",prestacion,verificar,imagen,"${txtmatricula.text}","$token","","modificar")
+            val call=RetrofitClient.instance.postProfesional("${datos.nameprof}","${datos.col}","${datos.especialidad}","${datos.celular}","${datos.direccion}","${datos.correo}","${JSONHORA}",prestacion,verificar,imagen,"${txtmatricula.text}","$token","$IDP","modificar","modificar")
             call.enqueue(object : Callback<ProfesionalRespons> {
                 override fun onFailure(call: Call<ProfesionalRespons>, t: Throwable) {
                     Toast.makeText(applicationContext,t.message,Toast.LENGTH_LONG).show()
                 }
                 override fun onResponse(call: Call<ProfesionalRespons>, response: retrofit2.Response<ProfesionalRespons>) {
-                    if(cvinfo.visibility!=View.VISIBLE){
-                        ClickEditar(View(applicationContext))
-
-                    }
 
                     uploadImage()
 
@@ -311,6 +246,7 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
 
         }
     }
+
 
 
 
@@ -325,7 +261,7 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
             for (i in nombredias.indices){
                 val hora = jsonobject.getString(nombredias[i])
                 val dia = nombredias[i]
-                arraylisH.add(Horario(dia,hora,correo!!))
+                arraylisH.add(Horario(dia,hora,IDP!!))
             }
 
 
@@ -354,7 +290,7 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
         val intent = Intent(this, PrestacionesActivity::class.java)
         intent.putExtra("prestacion",PRESTACION)
         intent.putExtra("url",url)
-        intent.putExtra("correo",correo)
+        intent.putExtra("IDP",IDP)
         intent.putExtra("back",titleperfil.text.toString())
 
         startActivity(intent)
@@ -488,4 +424,81 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
     }
 
 
+
+//EDITAR DATOS PERSONALES
+    fun Identidadedit(view: View){
+        val intent = Intent(this, UploadPerfilActivity::class.java)
+        intent.putExtra("IDP",IDP)
+        intent.putExtra("email","false")
+        intent.putExtra("ubucacion","false")
+        intent.putExtra("telefono","false")
+        intent.putExtra("identidad","true")
+        intent.putExtra("back","Perfil")
+    intent.putExtra("matricula","false")
+    intent.putExtra("profesion","false")
+        startActivity(intent)
+
+    }
+    fun Ubicacionedit(view: View){
+        val intent = Intent(this, UploadPerfilActivity::class.java)
+        intent.putExtra("IDP",IDP)
+        intent.putExtra("email","false")
+        intent.putExtra("ubicacion","true")
+        intent.putExtra("telefono","false")
+        intent.putExtra("identidad","false")
+        intent.putExtra("back","Perfil")
+        intent.putExtra("matricula","false")
+        intent.putExtra("profesion","false")
+        startActivity(intent)
+
+    }
+    fun Telefonoedit(view: View){
+        val intent = Intent(this, UploadPerfilActivity::class.java)
+        intent.putExtra("IDP",IDP)
+        intent.putExtra("email","false")
+        intent.putExtra("ubucacion","false")
+        intent.putExtra("telefono","true")
+        intent.putExtra("identidad","false")
+        intent.putExtra("back","Perfil")
+        intent.putExtra("matricula","false")
+        intent.putExtra("profesion","false")
+        startActivity(intent)
+
+    }
+    fun Emailedit(view: View){
+        val intent = Intent(this, UploadPerfilActivity::class.java)
+        intent.putExtra("IDP",IDP)
+        intent.putExtra("email","true")
+        intent.putExtra("ubucacion","false")
+        intent.putExtra("telefono","false")
+        intent.putExtra("identidad","true")
+        intent.putExtra("back","Perfil")
+        intent.putExtra("matricula","false")
+        intent.putExtra("profesion","false")
+        startActivity(intent)
+    }
+    fun Matriculaedit(view: View){
+        val intent = Intent(this, UploadPerfilActivity::class.java)
+        intent.putExtra("IDP",IDP)
+        intent.putExtra("email","false")
+        intent.putExtra("ubucacion","false")
+        intent.putExtra("telefono","false")
+        intent.putExtra("identidad","false")
+        intent.putExtra("matricula","true")
+        intent.putExtra("profesion","false")
+        intent.putExtra("back","Perfil")
+        startActivity(intent)
+    }
+    fun Profesionedit(view: View){
+        val intent = Intent(this, UploadPerfilActivity::class.java)
+        intent.putExtra("IDP",IDP)
+        intent.putExtra("email","false")
+        intent.putExtra("ubucacion","false")
+        intent.putExtra("telefono","false")
+        intent.putExtra("identidad","false")
+        intent.putExtra("matricula","false")
+        intent.putExtra("profesion","true")
+        intent.putExtra("back","Perfil")
+        startActivity(intent)
+    }
 }

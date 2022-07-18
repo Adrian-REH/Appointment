@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity() {
     val auth = FirebaseAuth.getInstance()
     var md5user = ""
     var md5pass = ""
+    var IDP = ""
     var URL = "23herrera.xyz:81/appointment"
 
     var sw1b: Boolean=false
@@ -65,6 +66,24 @@ class MainActivity : AppCompatActivity() {
                 lny.visibility=View.VISIBLE
                 cards.visibility=View.VISIBLE
             }
+        }
+        if (fileList().contains("IDP.txt")) {
+            try {
+                val archivo = InputStreamReader(openFileInput("IDP.txt"))
+                val br = BufferedReader(archivo)
+                var linea = br.readLine()
+                val todo = StringBuilder()
+                while (linea != null) {
+                    todo.append(linea)
+                    linea = br.readLine()
+                }
+                br.close()
+                archivo.close()
+                IDP = (todo.toString())
+            } catch (e: IOException) {
+            }
+        }else{
+            IDP = ""
         }
         if (fileList().contains("usuarioC.txt")) {
             try {
@@ -123,12 +142,13 @@ class MainActivity : AppCompatActivity() {
 
                 try {
 
-                    val call=RetrofitClient.instance.getProfesional(usuario.toString())
+                    val call=RetrofitClient.instance.getcorreoProfesional(usuario.toString())
                     val datos: ProfesionalRespons? =call.body()
                     runOnUiThread{
                         if(call.isSuccessful){
                             val usuario = datos?.correo ?: ""
-                            doLigin(usuario)
+                            val IDP = datos?.IDP ?: ""
+                            doLigin(usuario,IDP)
 
                         }else{
                             Toast.makeText(applicationContext,"Error",Toast.LENGTH_LONG).show()
@@ -143,8 +163,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-
     private fun FinFullScreen(){
 
         Handler().postDelayed(Runnable {
@@ -153,7 +171,7 @@ class MainActivity : AppCompatActivity() {
                 swisesion.isChecked = true
                 edtxtuser.setText(md5user)
                 edtxtpass.setText(md5pass)
-                doLigin(md5user)
+                doLigin(md5user,IDP)
 
             } else if (md5pass==""&&md5user==""){
                 fullscrean.visibility=View.GONE
@@ -167,11 +185,11 @@ class MainActivity : AppCompatActivity() {
 
 
     }
-   private fun updateUI(currentUser:FirebaseUser?,correo:String){
+   private fun updateUI(currentUser:FirebaseUser?,correo:String,idprofesional:String){
         if (currentUser !=null){
             if (currentUser.isEmailVerified){
                 val intent = Intent(this, InicioActivity::class.java)
-                intent.putExtra("correo",correo)
+                intent.putExtra("idprofesional",idprofesional)
                 intent.putExtra("url",URL)
                 startActivity(intent)
                 finish()
@@ -195,7 +213,7 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun doLigin(correo:String){
+    fun doLigin(correo:String,idprofesional:String){
         if (edtxtuser.text.toString().isEmpty()){
             edtxtuser.error="Por favor ingrese un email o su DNI"
             BorrarSesion()
@@ -221,13 +239,18 @@ class MainActivity : AppCompatActivity() {
             if (task.isSuccessful){
                 val user=auth.currentUser
 
-                updateUI(user,correo)
-                GuardarSesion(correo)
+                updateUI(user,correo,idprofesional)
+                GuardarSesion(correo,idprofesional)
 
             }else{
                 edtxtpass.error="La clave es incorrecta"
                 edtxtpass.requestFocus()
-                updateUI(null,"null")
+                fullscrean.visibility=View.GONE
+                lny.visibility=View.VISIBLE
+                cards.visibility=View.VISIBLE
+                swisesion.isChecked = false
+                BorrarSesion()
+                updateUI(null,"null","null")
             }
         }
     }
@@ -263,7 +286,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun GuardarSesion(usuario:String){
+    fun GuardarSesion(usuario:String,idprofesional:String){
         md5user = usuario
         md5pass = edtxtpass.text.toString()
 
@@ -279,6 +302,14 @@ class MainActivity : AppCompatActivity() {
         try {
             val archivo = OutputStreamWriter(openFileOutput("passwC.txt", MODE_PRIVATE))
             archivo.write(md5pass.toString())
+
+            archivo.flush()
+            archivo.close()
+        } catch (e: IOException) {
+        }
+        try {
+            val archivo = OutputStreamWriter(openFileOutput("IDP.txt", MODE_PRIVATE))
+            archivo.write(idprofesional.toString())
 
             archivo.flush()
             archivo.close()
@@ -306,6 +337,14 @@ class MainActivity : AppCompatActivity() {
         try {
             val archivo = OutputStreamWriter(openFileOutput("passwC.txt", MODE_PRIVATE))
             archivo.write(md5pass.toString())
+
+            archivo.flush()
+            archivo.close()
+        } catch (e: IOException) {
+        }
+        try {
+            val archivo = OutputStreamWriter(openFileOutput("IDP.txt", MODE_PRIVATE))
+            archivo.write("")
 
             archivo.flush()
             archivo.close()
