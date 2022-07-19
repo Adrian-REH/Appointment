@@ -8,6 +8,7 @@
     tools:context=".PacienteActivity">
     <LinearLayout
         android:onClick="Back"
+        android:id="@+id/back"
         android:layout_margin="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -47,189 +48,347 @@
         android:textColor="@color/black"
         android:textSize="20dp" />
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cvid2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="40dp"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="10dp">
-
-        <LinearLayout
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginVertical="10dp"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cvid"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_margin="10dp"
-                app:cardCornerRadius="1000dp"
-                app:cardElevation="5dp">
-
-                <ImageView
-                    android:id="@+id/viewimageperfil"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/blank_profile" />
-            </androidx.cardview.widget.CardView>
-
-            <TextView
-
-                android:id="@+id/txtnombre"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textColor="@color/black"
-                android:textSize="30dp" />
-        </LinearLayout>
-
-
-    </androidx.cardview.widget.CardView>
-
 
     <ScrollView
-        android:layout_below="@+id/cvid2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        >
+        android:layout_below="@+id/back">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center">
-
+            android:gravity="center"
+            android:orientation="vertical">
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardinfo"
+                android:id="@+id/cvidd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="20dp"
-                android:layout_marginBottom="30dp"
-                app:cardCornerRadius="5dp"
+                android:background="#00000000"
+                app:cardCornerRadius="40dp"
+
                 app:cardElevation="10dp">
 
                 <LinearLayout
-                    android:id="@+id/lltxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="20dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="20dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
                     android:orientation="vertical">
 
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cvid"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_marginTop="10dp"
+                        app:cardCornerRadius="100dp">
+
+                        <ImageView
+                            android:id="@+id/viewimageperfil"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:src="@drawable/blank_profile" />
+                    </androidx.cardview.widget.CardView>
+
+
                     <TextView
+                        android:id="@+id/txtnombre"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:textSize="20dp" />
+                    <LinearLayout
+                        android:id="@+id/lltxt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="20dp"
-                        android:text="Informacion personal"
-                        android:textColor="@color/black"
-                        android:textSize="15dp" />
+                        android:orientation="vertical">
 
 
 
-                    <TextView
-                        android:layout_marginTop="10dp"
-                        android:drawableTint="@color/black"
-                        android:hint="Correo"
-                        android:drawableStart="@drawable/ic_email"
-                        android:id="@+id/txtcorreo"
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="1dp"
+                            android:background="@color/white"
+                            android:backgroundTint="@color/white"
+                            android:elevation="1dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_margin="10dp"
+                                app:cardCornerRadius="1000dp"
+                                app:cardElevation="1dp">
+
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_margin="10dp"
+
+                                    android:src="@drawable/ic_email"
+                                    app:tint="@color/black" />
+                            </androidx.cardview.widget.CardView>
+
+                            <LinearLayout
+                                android:layout_marginStart="20dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:drawableTint="@color/black"
+                                    android:text="E-mail"
+                                    android:textColor="@color/black"
+                                    android:textSize="16sp"
+                                    android:textStyle="normal" />
+
+                                <TextView
+                                    android:id="@+id/txtcorreo"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="#595959"
+                                    android:textSize="13sp"
+                                    android:textStyle="normal" />
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="1dp"
+                            android:background="@color/white"
+                            android:backgroundTint="@color/white"
+                            android:elevation="1dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_margin="10dp"
+                                app:cardCornerRadius="1000dp"
+                                app:cardElevation="1dp">
+
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_margin="10dp"
+                                    android:src="@drawable/ic_phone"
+                                    app:tint="@color/black" />
+                            </androidx.cardview.widget.CardView>
+
+                            <LinearLayout
+                                android:layout_marginStart="20dp"
+
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:drawableTint="@color/black"
+                                    android:text="Telefono de contacto"
+                                    android:textColor="@color/black"
+                                    android:textSize="16sp"
+                                    android:textStyle="normal" />
+
+                                <TextView
+                                    android:id="@+id/txtcel"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="#595959"
+                                    android:textSize="13sp"
+                                    android:textStyle="normal" />
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white"
+                            android:backgroundTint="@color/white"
+                            android:elevation="1dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_margin="10dp"
+                                app:cardCornerRadius="1000dp"
+                                app:cardElevation="1dp">
+
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_margin="10dp"
+
+                                    android:src="@drawable/ic_location"
+                                    app:tint="@color/black" />
+                            </androidx.cardview.widget.CardView>
+
+                            <LinearLayout
+                                android:layout_marginStart="20dp"
+
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:drawableTint="@color/black"
+                                    android:text="Ubicacion"
+                                    android:textColor="@color/black"
+                                    android:textSize="16sp"
+                                    android:textStyle="normal" />
+
+                                <TextView
+                                    android:id="@+id/txtdirec"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="#595959"
+                                    android:textSize="13sp"
+                                    android:textStyle="normal" />
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="1dp"
+                            android:background="@color/white"
+                            android:backgroundTint="@color/white"
+                            android:elevation="1dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_margin="10dp"
+                                app:cardCornerRadius="1000dp"
+                                app:cardElevation="1dp">
+
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_margin="10dp"
+                                    android:src="@drawable/ic_account"
+                                    app:tint="@color/black" />
+                            </androidx.cardview.widget.CardView>
+
+                            <LinearLayout
+                                android:layout_marginStart="20dp"
+
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:drawableTint="@color/black"
+                                    android:text="DNI"
+                                    android:textColor="@color/black"
+                                    android:textSize="16sp"
+                                    android:textStyle="normal" />
+
+                                <TextView
+                                    android:id="@+id/txtdni"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="#595959"
+                                    android:textSize="13sp"
+                                    android:textStyle="normal" />
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+
+
+                    </LinearLayout>
+
+
+                    <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="20dp"
-                        android:textStyle="normal" />
-
-
-
-                    <TextView
-                        android:layout_marginTop="10dp"
-                        android:drawableTint="@color/black"
-                        android:hint="Celular"
-                        android:drawableStart="@drawable/ic_phone"
-                        android:id="@+id/txtcel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="20dp"
-                        android:textStyle="normal" />
-
-
-                    <TextView
-                        android:layout_marginTop="10dp"
-                        android:drawableTint="@color/black"
-                        android:hint="Direccion"
-                        android:drawableStart="@drawable/ic_location"
-                        android:id="@+id/txtdirec"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="20dp"
-                        android:textStyle="normal" />
-
-
-                    <TextView
-                        android:layout_marginTop="10dp"
-                        android:drawableTint="@color/black"
-                        android:hint="DNI"
-                        android:drawableStart="@drawable/ic_baseline_fingerprint_24"
-                        android:id="@+id/txtdni"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="20dp"
-                        android:textStyle="normal" />
-                </LinearLayout>
-
-
-            </androidx.cardview.widget.CardView>
-
-
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardhorarios"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginVertical="10dp"
-                app:cardCornerRadius="100dp"
-                app:cardElevation="3dp"
-                android:onClick="ClickHistorial">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <RelativeLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="60dp"
+                        android:layout_marginHorizontal="20dp"
                         android:layout_marginVertical="10dp"
-                        android:gravity="center_vertical">
+                        android:layout_weight="1"
+                        android:onClick="ClickTurno"
+                        android:backgroundTint="@color/white"
+                        app:cardCornerRadius="100dp"
+                        app:cardElevation="5dp">
 
-                        <TextView
+                        <Button
+                            android:onClick="ClickTurno"
+                            style="?android:attr/borderlessButtonStyle"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_marginStart="10dp"
-                            android:gravity="center"
-                            android:text="Historial medico"
+                            android:text="Crear turno"
                             android:textColor="@color/black" />
+                    </androidx.cardview.widget.CardView>
+                    <ImageView
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_arrow_up"
+                        app:tint="@color/black"/>
 
-
-                    </RelativeLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:onClick="ClickHistorial"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/purple_500"
+                    app:cardCornerRadius="100dp"
+                    android:layout_marginHorizontal="10dp"
+                    app:cardElevation="5dp">
+
+                    <Button
+                        style="?android:attr/borderlessButtonStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="Historial medico"
+                        android:textColor="@color/white" />
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
 
         </LinearLayout>
 
 
-
-
     </ScrollView>
+
+
+
+
 
 
     <LinearLayout
