@@ -33,6 +33,7 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
     var name:String?=""
     var IDP:String?=""
     var url:String?=""
+    var CLAVE:String?=""
     var especialidad:String?=""
 
     var id:Int=0
@@ -54,6 +55,7 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
 
         if(intent.extras !=null){
             url = intent.getStringExtra("url")
+            CLAVE = intent.getStringExtra("contraseña")
             IDP = intent.getStringExtra("idprofesional")
         }
 
@@ -246,7 +248,7 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
     private fun postProfesional(datos:ProfesionalRespons,token:String) {
 
         CoroutineScope(Dispatchers.IO).launch {
-            val call=RetrofitClient.instance.postProfesional("${datos.nameprof}","${datos.col}","${datos.especialidad}","${datos.celular}","${datos.direccion}","${datos.correo}","${datos.horarios}","${datos.prestacion}","${datos.verificar}","${datos.img}","${datos.matricula}","$token","$IDP","","modificar")
+            val call=RetrofitClient.instance.postProfesional("${datos.nameprof}","${datos.col}","${datos.especialidad}","${datos.celular}","${datos.direccion}","${datos.correo}","${datos.horarios}","${datos.prestacion}","${datos.verificar}","${datos.img}","${datos.matricula}","$token","$IDP","${datos.DNI}","modificar","modificar")
             call.enqueue(object : Callback<ProfesionalRespons> {
                 override fun onFailure(call: Call<ProfesionalRespons>, t: Throwable) {
                     Toast.makeText(applicationContext,t.message,Toast.LENGTH_LONG).show()
@@ -387,6 +389,7 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
         val intent = Intent(this, PerfilActivity::class.java)
         intent.putExtra("IDP",IDP)
         intent.putExtra("url",url)
+        intent.putExtra("CLAVE",CLAVE)
         intent.putExtra("DATOS",DATO)
         intent.putExtra("back","Inicio")
 
@@ -423,6 +426,7 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
         intent.putExtra("url",url)
         intent.putExtra("IDP",IDP)
         intent.putExtra("dni",dni)
+        intent.putExtra("name",name)
         intent.putExtra("especialidad",especialidad)
         intent.putExtra("back","Inicio")
 

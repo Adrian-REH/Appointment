@@ -63,6 +63,7 @@ data class ProfesionalRespons(
     @SerializedName("prestaciones") var prestacion:String,
     @SerializedName("verificar") var verificar:String,
     @SerializedName("img") var img:String,
+    @SerializedName("dni") var DNI:String,
     @SerializedName("TokenID") var TID:String,
     @SerializedName("matricula") var matricula:String
 )

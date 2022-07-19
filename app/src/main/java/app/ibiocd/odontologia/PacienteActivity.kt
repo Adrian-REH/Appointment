@@ -144,6 +144,26 @@ class PacienteActivity : AppCompatActivity() {
     fun Back(view: View){
         finish()
     }
+    fun ClickTurno(view: View){
+        val intent = Intent(this, TurnoActivity::class.java)
+        intent.putExtra("dni",dni)
+        intent.putExtra("url",url)
+        intent.putExtra("IDP",IDP)
+        intent.putExtra("name",name)
+
+        intent.putExtra("especialidad",especialidad)
+        intent.putExtra("clientename",txtnombre.text.toString())
+
+        intent.putExtra("back","Paciente")
+
+
+        intent.putExtra("fecha","0")
+        intent.putExtra("id","0")
+        intent.putExtra("codigo","0")
+        intent.putExtra("JSONODONT","")
+
+        startActivity(intent)
+    }
 
     fun ClickHistorial(view: View){
         Toast.makeText(this,"$especialidad",Toast.LENGTH_LONG).show()

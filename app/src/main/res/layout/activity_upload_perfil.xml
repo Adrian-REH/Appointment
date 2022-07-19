@@ -40,7 +40,7 @@
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
-        android:text="Actualizacion de informacion"
+        android:text="Panel de actualizacion"
         android:textColor="@color/black"
         android:textSize="20dp"
         android:textStyle="bold" />
@@ -122,12 +122,27 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_marginBottom="10dp"
+                    android:id="@+id/helptextdato"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:startIconTint="@color/black">
                     <EditText
                         android:id="@+id/edtxtdato"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_marginBottom="10dp"
+                    android:id="@+id/selectord"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:startIconTint="@color/black">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/edtxtespecialidad"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -311,10 +326,18 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
+
+            <Switch
+                android:id="@+id/swisesionUpdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:text="Mantener inicio de sesion" />
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
-                android:layout_margin="20dp"
+                android:layout_margin="10dp"
                 app:cardCornerRadius="100dp"
                 android:backgroundTint="@color/grey"
                 app:cardElevation="5dp">
@@ -327,6 +350,24 @@
                     android:drawableTint="@color/black"
                     android:onClick="Upload"
                     android:text="Confirmation"
+                    android:textColor="@color/black" />
+                <Button
+                    android:id="@+id/btnverificar"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableTint="@color/black"
+                    android:onClick="ClickVerificar"
+                    android:text="Verificar"
+                    android:textColor="@color/black" />
+                <Button
+                    android:id="@+id/btnenviar"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:drawableTint="@color/black"
+                    android:onClick="ClickEnviar"
+                    android:text="Enviar sms de confirmacion"
                     android:textColor="@color/black" />
             </androidx.cardview.widget.CardView>
 

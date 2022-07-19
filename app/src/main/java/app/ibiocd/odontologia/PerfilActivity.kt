@@ -37,6 +37,10 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_detalles.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_perfil.*
@@ -55,6 +59,7 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
     //var correo:String?=""
     var url:String?=""
     var BACKTXT:String?=""
+    var CLAVE:String?=""
     var IDP:String?=""
     var snaph:Boolean=false
 
@@ -63,6 +68,7 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
     private var IMAGENAME = ""
     private var PRESTACION = ""
     //var a:Int=0
+
 
     var JSONHORA:String?="{\n" +
             "\"Domingo\": \"${"10 a 15"}\",\n" +
@@ -90,7 +96,7 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
         if(intent.extras !=null){
             //correo = intent.getStringExtra("correo")
             IDP = intent.getStringExtra("IDP")
-            Toast.makeText(this, "$IDP", Toast.LENGTH_SHORT).show()
+            CLAVE = intent.getStringExtra("CLAVE")
 
             var DATOS = intent.getStringExtra("DATOS")
             if (DATOS=="LLENARPERFIL"){
@@ -107,31 +113,7 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
         //txtcorreo.setText(correo)
 
         getProfesionalDatos()
-       // getListAllEspecialidades()
     }
-/*
-    fun getListAllEspecialidades(){
-        var arraylisEspec = ArrayList<String>()
-        CoroutineScope(Dispatchers.IO).launch {
-            val call=RetrofitClient.instance.getEspecialidades("")
-            runOnUiThread{
-                val datos: List<EspecialidadesRespons>? = call.body()
-                for (i in 0 until datos?.size!!){
-                    val espec= datos[i].especialidad
-                    val img= datos[i].img
-                    arraylisEspec.add(espec)
-                }
-                val arrayAdapter= ArrayAdapter(applicationContext,R.layout.dropdown_item,arraylisEspec)//
-                with(edtxtesp){
-                    setAdapter(arrayAdapter)
-
-                }
-
-
-            }
-        }
-    }
-*/
     fun ClickEditar(view: View){
     if(swe){
         LinearMisDatos?.visibility = View.VISIBLE
@@ -159,6 +141,7 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
                 runOnUiThread{
                     if(call.isSuccessful){
                         val nombre = datos?.nameprof ?: ""
+                        val dnid = datos?.DNI ?: ""
                         val direc = datos?.direccion ?: ""
                         val celul = datos?.celular ?: ""
                         val matr= datos?.matricula ?: ""
@@ -179,7 +162,7 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
                         txtcel?.setText(celul)
                         txtdirec?.setText(direc)
                         txtesp?.setText(espec)
-                        txtdni.setText(nombre)
+                        txtdni.setText(dnid)
                         if(verf=="V"){
                             cvverifperf.visibility=View.VISIBLE
 
@@ -230,7 +213,7 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
     private fun postProfesional(imagen:String,verificar:String,prestacion:String,token:String,datos:ProfesionalRespons) {
 
         CoroutineScope(Dispatchers.IO).launch {
-            val call=RetrofitClient.instance.postProfesional("${datos.nameprof}","${datos.col}","${datos.especialidad}","${datos.celular}","${datos.direccion}","${datos.correo}","${JSONHORA}",prestacion,verificar,imagen,"${txtmatricula.text}","$token","$IDP","modificar","modificar")
+            val call=RetrofitClient.instance.postProfesional("${datos.nameprof}","${datos.col}","${datos.especialidad}","${datos.celular}","${datos.direccion}","${datos.correo}","${JSONHORA}",prestacion,verificar,imagen,"${txtmatricula.text}","$token","$IDP","${datos.DNI}","modificar","modificar")
             call.enqueue(object : Callback<ProfesionalRespons> {
                 override fun onFailure(call: Call<ProfesionalRespons>, t: Throwable) {
                     Toast.makeText(applicationContext,t.message,Toast.LENGTH_LONG).show()
@@ -429,6 +412,8 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
     fun Identidadedit(view: View){
         val intent = Intent(this, UploadPerfilActivity::class.java)
         intent.putExtra("IDP",IDP)
+        intent.putExtra("url",url)
+        intent.putExtra("CLAVE",CLAVE)
         intent.putExtra("email","false")
         intent.putExtra("ubucacion","false")
         intent.putExtra("telefono","false")
@@ -436,12 +421,16 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
         intent.putExtra("back","Perfil")
     intent.putExtra("matricula","false")
     intent.putExtra("profesion","false")
-        startActivity(intent)
+    intent.putExtra("seguridad","false")
+
+    startActivity(intent)
 
     }
     fun Ubicacionedit(view: View){
         val intent = Intent(this, UploadPerfilActivity::class.java)
         intent.putExtra("IDP",IDP)
+        intent.putExtra("url",url)
+        intent.putExtra("CLAVE",CLAVE)
         intent.putExtra("email","false")
         intent.putExtra("ubicacion","true")
         intent.putExtra("telefono","false")
@@ -449,12 +438,16 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
         intent.putExtra("back","Perfil")
         intent.putExtra("matricula","false")
         intent.putExtra("profesion","false")
+        intent.putExtra("seguridad","false")
+
         startActivity(intent)
 
     }
     fun Telefonoedit(view: View){
         val intent = Intent(this, UploadPerfilActivity::class.java)
         intent.putExtra("IDP",IDP)
+        intent.putExtra("url",url)
+        intent.putExtra("CLAVE",CLAVE)
         intent.putExtra("email","false")
         intent.putExtra("ubucacion","false")
         intent.putExtra("telefono","true")
@@ -462,43 +455,73 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
         intent.putExtra("back","Perfil")
         intent.putExtra("matricula","false")
         intent.putExtra("profesion","false")
+        intent.putExtra("seguridad","false")
+
         startActivity(intent)
 
     }
     fun Emailedit(view: View){
         val intent = Intent(this, UploadPerfilActivity::class.java)
         intent.putExtra("IDP",IDP)
+        intent.putExtra("url",url)
+        intent.putExtra("CLAVE",CLAVE)
         intent.putExtra("email","true")
         intent.putExtra("ubucacion","false")
         intent.putExtra("telefono","false")
         intent.putExtra("identidad","true")
-        intent.putExtra("back","Perfil")
         intent.putExtra("matricula","false")
         intent.putExtra("profesion","false")
+        intent.putExtra("seguridad","false")
+        intent.putExtra("back","Perfil")
+
         startActivity(intent)
     }
     fun Matriculaedit(view: View){
         val intent = Intent(this, UploadPerfilActivity::class.java)
         intent.putExtra("IDP",IDP)
+        intent.putExtra("url",url)
+        intent.putExtra("CLAVE",CLAVE)
         intent.putExtra("email","false")
         intent.putExtra("ubucacion","false")
         intent.putExtra("telefono","false")
         intent.putExtra("identidad","false")
         intent.putExtra("matricula","true")
         intent.putExtra("profesion","false")
+        intent.putExtra("seguridad","false")
         intent.putExtra("back","Perfil")
         startActivity(intent)
     }
     fun Profesionedit(view: View){
         val intent = Intent(this, UploadPerfilActivity::class.java)
         intent.putExtra("IDP",IDP)
+        intent.putExtra("url",url)
+        intent.putExtra("CLAVE",CLAVE)
         intent.putExtra("email","false")
         intent.putExtra("ubucacion","false")
         intent.putExtra("telefono","false")
         intent.putExtra("identidad","false")
         intent.putExtra("matricula","false")
         intent.putExtra("profesion","true")
+        intent.putExtra("seguridad","false")
         intent.putExtra("back","Perfil")
         startActivity(intent)
     }
+    fun ClickSeguridad(view: View){
+
+        val intent = Intent(this, UploadPerfilActivity::class.java)
+        intent.putExtra("IDP",IDP)
+        intent.putExtra("url",url)
+        intent.putExtra("CLAVE",CLAVE)
+        intent.putExtra("email","false")
+        intent.putExtra("ubucacion","false")
+        intent.putExtra("telefono","false")
+        intent.putExtra("identidad","false")
+        intent.putExtra("matricula","false")
+        intent.putExtra("profesion","false")
+        intent.putExtra("seguridad","true")
+        intent.putExtra("back","Perfil")
+        startActivity(intent)
+    }
+
+
 }

@@ -67,6 +67,7 @@ interface APIService {
         @Field("matricula") matricula:String,
         @Field("TokenID") TID:String,
         @Field("idprofesional") IDP:String,
+        @Field("dni") dni:String,
         @Field("insertar") insertar:String,
         @Field("modificar") modificar:String
     ): Call<ProfesionalRespons>

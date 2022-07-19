@@ -587,11 +587,12 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
                         android:orientation="vertical">
                         <TextView
                             android:drawableTint="@color/black"
                             android:textColor="@color/black"
-                            android:text="  E-mail"
+                            android:text="E-mail"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textSize="16sp"
@@ -633,13 +634,15 @@
                             app:tint="@color/black" />
                     </androidx.cardview.widget.CardView>
                     <LinearLayout
+                        android:layout_marginStart="10dp"
+
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
                         <TextView
                             android:drawableTint="@color/black"
                             android:textColor="@color/black"
-                            android:text="  Telefono de contacto"
+                            android:text="Telefono de contacto"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textSize="16sp"
@@ -681,13 +684,15 @@
                             app:tint="@color/black" />
                     </androidx.cardview.widget.CardView>
                     <LinearLayout
+                        android:layout_marginStart="10dp"
+
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
                         <TextView
                             android:drawableTint="@color/black"
                             android:textColor="@color/black"
-                            android:text="  Ubicacion"
+                            android:text="Ubicacion"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textSize="16sp"
@@ -729,13 +734,15 @@
                             app:tint="@color/black" />
                     </androidx.cardview.widget.CardView>
                     <LinearLayout
+                        android:layout_marginStart="10dp"
+
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
                         <TextView
                             android:drawableTint="@color/black"
                             android:textColor="@color/black"
-                            android:text="  Identidad"
+                            android:text="Identidad"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textSize="16sp"
@@ -777,13 +784,15 @@
                             app:tint="@color/black" />
                     </androidx.cardview.widget.CardView>
                     <LinearLayout
+                        android:layout_marginStart="10dp"
+
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
                         <TextView
                             android:drawableTint="@color/black"
                             android:textColor="@color/black"
-                            android:text="  Matricula"
+                            android:text="Matricula"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textSize="16sp"
@@ -825,13 +834,15 @@
                             app:tint="@color/black" />
                     </androidx.cardview.widget.CardView>
                     <LinearLayout
+                        android:layout_marginStart="10dp"
+
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
                         <TextView
                             android:drawableTint="@color/black"
                             android:textColor="@color/black"
-                            android:text="  Profesion"
+                            android:text="Profesion"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textSize="16sp"
@@ -953,7 +964,6 @@
 
 
                 <TextView
-                    android:visibility="gone"
 
                     android:layout_marginTop="1dp"
                     android:drawableTint="@color/black"
@@ -1043,14 +1053,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="10dp"
         android:gravity="end"
         android:orientation="horizontal">
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:layout_marginBottom="10sp"
-
+            android:layout_marginEnd="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
@@ -1061,7 +1070,8 @@
             android:onClick="getProfesionalSave"
             android:src="@drawable/ic_save"
             app:backgroundTint="#00FFFFFF"
-            app:tint="@color/black"></com.google.android.material.floatingactionbutton.FloatingActionButton>
+            app:tint="@color/black">
+        </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
 
     </LinearLayout>

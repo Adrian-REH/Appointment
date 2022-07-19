@@ -120,7 +120,7 @@ class PrestacionesActivity : AppCompatActivity(), AdapterPrestacion.onPrestacion
     private fun postProfesional(datos: ProfesionalRespons,JSON:String) {
 
         CoroutineScope(Dispatchers.IO).launch {
-            val call=RetrofitClient.instance.postProfesional("${datos.nameprof}","${datos.col}","${datos.especialidad}","${datos.celular}","${datos.direccion}","${datos.correo}","${datos.horarios}","$JSON","${datos.verificar}","${datos.img}","${datos.matricula}","${datos.TID}","$IDP","modificar","modificar")
+            val call=RetrofitClient.instance.postProfesional("${datos.nameprof}","${datos.col}","${datos.especialidad}","${datos.celular}","${datos.direccion}","${datos.correo}","${datos.horarios}","$JSON","${datos.verificar}","${datos.img}","${datos.matricula}","${datos.TID}","$IDP","${datos.DNI}","modificar","modificar")
             call.enqueue(object : Callback<ProfesionalRespons> {
                 override fun onFailure(call: Call<ProfesionalRespons>, t: Throwable) {
                     Toast.makeText(applicationContext,t.message,Toast.LENGTH_LONG).show()

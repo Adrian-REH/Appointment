@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_marginVertical="1dp"
         app:cardCornerRadius="1dp"
-        android:backgroundTint="#FFFFFF">
+        android:backgroundTint="@color/white">
         <RelativeLayout
             android:id="@+id/RLview"
             android:layout_width="match_parent"

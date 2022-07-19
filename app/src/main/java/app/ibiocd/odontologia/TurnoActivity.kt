@@ -129,16 +129,24 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
                     rviewcliente.visibility=View.VISIBLE
 
                 //ClickAgregarJson(View(applicationContext))
-                }else if (id!=0){
+                }
+            else if (id!=0){
                  getListTurnos()
 
-                }
+            }
 
             if(dni=="patient"){
                 getListPaciente(intent.getStringExtra("especialidad").toString())
 
                 txteprofesional.setText( intent.getStringExtra("name").toString())
                 txtprofesion.setText( intent.getStringExtra("especialidad").toString())
+            }else if (dni !=null){
+                getListProfesional(IDP.toString())
+                cardhorariosd.visibility=View.VISIBLE
+
+                txteprofesional.setText( intent.getStringExtra("name").toString())
+                txtprofesion.setText( intent.getStringExtra("especialidad").toString())
+                txtepaciente.setText( intent.getStringExtra("clientename").toString())
             }
 
         }

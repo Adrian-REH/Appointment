@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity() {
     val auth = FirebaseAuth.getInstance()
     var md5user = ""
     var md5pass = ""
+    var CLAVE = ""
     var IDP = ""
     var URL = "23herrera.xyz:81/appointment"
 
@@ -116,10 +117,13 @@ class MainActivity : AppCompatActivity() {
                 br.close()
                 archivo.close()
                 md5pass = (todo.toString())
+                CLAVE = (todo.toString())
+
             } catch (e: IOException) {
             }
         }else{
             md5pass = ""
+            CLAVE = edtxtpass.text.toString()
         }
 
         swisesion.setOnCheckedChangeListener { compoundButton, b ->
@@ -190,6 +194,7 @@ class MainActivity : AppCompatActivity() {
             if (currentUser.isEmailVerified){
                 val intent = Intent(this, InicioActivity::class.java)
                 intent.putExtra("idprofesional",idprofesional)
+                intent.putExtra("contraseña",CLAVE)
                 intent.putExtra("url",URL)
                 startActivity(intent)
                 finish()
@@ -273,6 +278,8 @@ class MainActivity : AppCompatActivity() {
     private fun forgotPassword(username: EditText){
         if (username.text.toString().isEmpty()){
             username.error="Please enter email"
+            edtxtuser.requestFocus()
+
             return
         }
         if (!Patterns.EMAIL_ADDRESS.matcher(username.text.toString()).matches()){
