@@ -137,15 +137,8 @@ class CalendarActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick
                             }
 
                             if (datos[i].fecha==fechahoy.toString()){
+                                lisTurno.add(datos[i])
 
-                                for (j in listturnhora.indices){
-                                    if (datos[i].hora==listturnhora[j]){
-                                        if (j+10>=hour){
-                                            lisTurno.add(datos[i])
-
-                                        }
-                                    }
-                                }
                             }
                             //TEST
                             lisTurno.add(datos[i])
@@ -162,7 +155,7 @@ class CalendarActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick
 
                 }
             }catch (e: EOFException){
-                Toast.makeText(applicationContext,"Error: $e",Toast.LENGTH_LONG).show()
+               // Toast.makeText(applicationContext,"Error: $e",Toast.LENGTH_LONG).show()
             }
 
         }
