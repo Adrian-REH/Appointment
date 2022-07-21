@@ -170,7 +170,7 @@ class SignActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            val call=RetrofitClient.instance.postCliente("${edtxtcorreo.text.toString()}","","${edtxtname.text.toString()}","http://23herrera.xyz:81/appointment/docs/blank_profile.png","","${edtxtdni.text.toString()}","ssd","insertar","")
+            val call=RetrofitClient.instance.postCliente("${edtxtcorreo.text.toString()}","","${edtxtname.text.toString()}","http://23herrera.xyz:81/appointment/docs/blank_profile.png","","${edtxtdni.text.toString()}","","ssd","insertar","")
             call.enqueue(object : Callback<ClienteRespons> {
                 override fun onFailure(call: Call<ClienteRespons>, t: Throwable) {
                     Toast.makeText(applicationContext,t.message,Toast.LENGTH_LONG).show()

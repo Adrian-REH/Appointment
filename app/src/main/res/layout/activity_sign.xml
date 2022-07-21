@@ -140,6 +140,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
+
                 android:onClick="ClickRegistrarse"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -24,6 +24,7 @@ data class OdontogramaRespons(
     @SerializedName("dni") var dni:String
 )
 data class ClienteRespons(
+    @SerializedName("idclientes") var IDC:String,
     @SerializedName("direccion") var direccion:String,
     @SerializedName("nombreapellido") var name:String,
     @SerializedName("correo") var correo:String,

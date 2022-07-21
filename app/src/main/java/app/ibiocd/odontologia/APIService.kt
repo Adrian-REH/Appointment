@@ -74,7 +74,7 @@ interface APIService {
 
     //PARA LOS CLIENTES
     @GET("/appointment/clientes.php?")
-    suspend fun getCliente(@Query("dni") dni:String):Response<ClienteRespons>
+    suspend fun getCliente(@Query("idclientes") dni:String):Response<ClienteRespons>
     @GET("/appointment/clientes.php?")
     suspend fun getClienteCorreo(@Query("correo") correo:String):Response<ClienteRespons>
 
@@ -87,6 +87,7 @@ interface APIService {
         @Field("img") img:String,
         @Field("celular") celular:String,
         @Field("dni") dni:String,
+        @Field("idclientes") IDC:String,
         @Field("TokenID") TID:String,
         @Field("insertar") insertar:String,
         @Field("modificar") modificar:String

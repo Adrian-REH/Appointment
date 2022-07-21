@@ -131,8 +131,6 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
 
     }
 
-
-
     private fun getProfesionalDatos(){
         CoroutineScope(Dispatchers.IO).launch {
             try{
@@ -189,29 +187,34 @@ class PerfilActivity : AppCompatActivity(), AdapterHorarios.onHorarioItemClick {
         }
     }//
 
-
     fun getProfesionalSave(view: View){
         CoroutineScope(Dispatchers.IO).launch {
-            val call=RetrofitClient.instance.getProfesional(IDP.toString())
-            val datos: ProfesionalRespons? =call.body()
-            runOnUiThread{
-                var Imagen=""
-                if(call.isSuccessful){
-                    if (IMAGENAME==""){
-                        if (datos != null) {
-                            postProfesional(datos.img,datos.verificar,datos.prestacion,datos.TID,datos)
-                        }
-                    }else{
-                        if (datos != null) {
-                            postProfesional("http://${url}/docs/$IMAGENAME",datos.verificar,datos.prestacion,datos.TID,datos)
+            try{
+                val call=RetrofitClient.instance.getProfesional(IDP.toString())
+                val datos: ProfesionalRespons? =call.body()
+                runOnUiThread{
+                    var Imagen=""
+                    if(call.isSuccessful){
+                        if (IMAGENAME==""){
+                            if (datos != null) {
+                                postProfesional(datos.img,datos.verificar,datos.prestacion,datos.TID,datos)
+                            }
+                        }else{
+                            if (datos != null) {
+                                postProfesional("http://${url}/docs/$IMAGENAME",datos.verificar,datos.prestacion,datos.TID,datos)
+                            }
                         }
                     }
                 }
+
+            }catch (e:Exception){
+
             }
+
+
         }
     }//
     private fun postProfesional(imagen:String,verificar:String,prestacion:String,token:String,datos:ProfesionalRespons) {
-
         CoroutineScope(Dispatchers.IO).launch {
             val call=RetrofitClient.instance.postProfesional("${datos.nameprof}","${datos.col}","${datos.especialidad}","${datos.celular}","${datos.direccion}","${datos.correo}","${JSONHORA}",prestacion,verificar,imagen,"${txtmatricula.text}","$token","$IDP","${datos.DNI}","modificar","modificar")
             call.enqueue(object : Callback<ProfesionalRespons> {

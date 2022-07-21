@@ -62,7 +62,7 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
         swipe_container.setOnRefreshListener  {
             getListTurnos()
             getListEnlace()
-            getComprobarCliente()
+            getComprobarProfesional()
 
 
             Handler(Looper.getMainLooper()).postDelayed({
@@ -74,7 +74,8 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
 
         getListTurnos()
         getListEnlace()
-        getComprobarCliente()
+
+        getComprobarProfesional()
 
         clickperfil.setOnClickListener { ClickPerfil("") }
         edtxtsearch.addTextChangedListener(object : TextWatcher {
@@ -104,39 +105,43 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
         for (j in 0 until lisEnlace.size) {
             var clientes = lisEnlace[j].pacientedni
             CoroutineScope(Dispatchers.IO).launch {
-                val call=RetrofitClient.instance.getCliente("$clientes")
-                runOnUiThread{
+                try {
+                    val call=RetrofitClient.instance.getCliente("$clientes")
 
-                    if (call.isSuccessful){
-                        val datos: ClienteRespons? = call.body()
-                        //swipe_container.isRefreshing=false
+                    runOnUiThread{
 
-                        val name =  datos?.name ?: ""
-                        val direc =  datos?.direccion ?: ""
-                        val telefono =  datos?.cel ?: ""
-                        val email =  datos?.correo ?: ""
-                        val image=  datos?.img ?: ""
-                        val dni=  datos?.dni ?: ""
+                        if (call.isSuccessful){
+                            val datos: ClienteRespons? = call.body()
+                            if (datos!=null){
 
-                        if (search.equals(dni) || search.equals(name)){
-                            displayListC.add(Clientes(name, telefono, dni,image,direc,email,image,"",0,""))
-                        }else if (search==""){
-                            displayListC.add(Clientes(name, telefono, dni,image,direc,email,image,"",0,""))
+                                val name =  datos?.name ?: ""
+                                val direc =  datos?.direccion ?: ""
+                                val telefono =  datos?.cel ?: ""
+                                val email =  datos?.correo ?: ""
+                                val image=  datos?.img ?: ""
+                                val dni=  datos?.IDC ?: ""
+
+                                if (search.equals(dni) || search.equals(name)){
+                                    displayListC.add(Clientes(name, telefono, dni,image,direc,email,image,"",0,""))
+                                }else if (search==""){
+                                    displayListC.add(Clientes(name, telefono, dni,image,direc,email,image,"",0,""))
+                                }
+
+
+                                val adapterclienteb = AdapterClienteB(displayListC, applicationContext, this@InicioActivity)
+                                rviewclienteb?.layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
+                                rviewclienteb?.adapter = adapterclienteb
+                            }
+
+
                         }
-
-
-                        val adapterclienteb = AdapterClienteB(displayListC, applicationContext, this@InicioActivity)
-                        rviewclienteb?.layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
-                        rviewclienteb?.adapter = adapterclienteb
-
-                    }else
-                    {
 
                     }
 
-
+                }catch (e:Exception){
 
                 }
+
             }
 
         }
@@ -148,10 +153,12 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
         displayListC.clear()
         arraylisC.clear()
         if (lisTurno.size>0){
-            for (j in 0 until lisTurno.size) {
+              for (j in 0 until lisTurno.size) {
                 var dni = lisTurno[j].dni
+
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
+
                         val call=RetrofitClient.instance.getCliente("$dni")
                         runOnUiThread{
 
@@ -164,7 +171,7 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
                                 val telefono =  datos?.cel ?: ""
                                 val email =  datos?.correo ?: ""
                                 val image=  datos?.img ?: ""
-                                val dni=  datos?.dni ?: ""
+                                val dni=  datos?.IDC ?: ""
 
                                 if (search.equals(dni) || search.equals(name)){
                                     arraylisC.add(Clientes(name, telefono, dni,image,direc,email,image,lisTurno[j].fecha,lisTurno[j].ID,lisTurno[j].hora))
@@ -184,17 +191,19 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
 
 
                         }
+
                     }catch (e:Exception){
 
                     }
-
                 }
+                    
             }
+       
         }
     }
 
 
-    fun getComprobarCliente(){
+    fun getComprobarProfesional(){
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val call=RetrofitClient.instance.getProfesional("$IDP")
@@ -270,19 +279,18 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val call=RetrofitClient.instance.getAllEnlace(IDP.toString())//turno.php
-
                     runOnUiThread{
                         swipe_container.isRefreshing=false
 
                         val datos: List<EnlaceRespons>? = call.body()
                         if (datos!=null){
                             for (i in 0 until datos?.size!!){
-                                val dni = datos[i].pacientedni
                                 val estp = datos[i].estado
                                 if (estp=="OCUPADO"){
                                     lisEnlace.add(datos[i])
 
                                 }
+                                
                             }
                             getListClientes("")
 
@@ -300,6 +308,7 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
 
 
     }
+
     fun getListTurnos(){
 
         lisTurno.clear()
@@ -329,37 +338,33 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
                             array.removeIf {  it < ("$hour:$min")}
 
                         }
+                        var fechahoy=0
+                        if (mes<10){
+                            fechahoy = ("$anno"+"0"+"$mes$dia").toInt()
+                            if(dia<10){
+                                fechahoy = ("$anno"+"0"+"$mes"+"0"+"$dia").toInt()
+                            }
+                        } else if(dia<10){
+                            fechahoy = ("$anno$mes"+"0"+"$dia").toInt()
+                        }else{
+                            fechahoy = ("$anno$mes$dia").toInt()
+                        }
                         for (i in 0 until datos.size){
 
 
-                            var fechahoy=0
-                            if (mes<10){
-                                fechahoy = ("$anno"+"0"+"$mes$dia").toInt()
-                                if(dia<10){
-                                    fechahoy = ("$anno"+"0"+"$mes"+"0"+"$dia").toInt()
-                                }
-                            } else if(dia<10){
-                                fechahoy = ("$anno$mes"+"0"+"$dia").toInt()
-                            }else{
-                                fechahoy = ("$anno$mes$dia").toInt()
-                            }
                             if (datos[i].fecha==fechahoy.toString()){
 
                                 for (j in listturnhora){
+
                                     if (datos[i].hora==j ){
+
+
                                         lisTurno.add(datos[i])
                                     }
-
-
-
-
 
                                 }
                             }
                             //TEST
-
-
-
                         }
 
 
@@ -376,8 +381,6 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
         }
 
     }
-
-
     fun ClickBack(view: View) {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("DATA","A")
@@ -405,14 +408,13 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
 
         startActivity(intent)
     }
-
-    override fun onClienteAItemClick(dni: String,fecha:String,ID:Int) {//Ingresa al perfil del paciente sabiendo que tiene turno el mismo dia
+    override fun onClienteAItemClick(IDC: String,fecha:String,ID:Int) {//Ingresa al perfil del paciente sabiendo que tiene turno el mismo dia
         val intent = Intent(this, TurnoActivity::class.java)
         intent.putExtra("url",url)
         intent.putExtra("especialidad",especialidad)
         intent.putExtra("name",name)
         intent.putExtra("IDP",IDP)
-        intent.putExtra("dni",dni)
+        intent.putExtra("dni",IDC)
         intent.putExtra("fecha",fecha)
         intent.putExtra("id","$ID")
         intent.putExtra("codigo","0")
@@ -421,11 +423,11 @@ class InicioActivity : AppCompatActivity(), AdapterClienteA.onClienteItemClick, 
 
         startActivity(intent)
     }
-    override fun onClienteBItemClick(dni: String) {//Ingresa al perfil del paciente sin saber que tiene turno el mismo dia
+    override fun onClienteBItemClick(IDC: String) {//Ingresa al perfil del paciente sin saber que tiene turno el mismo dia
         val intent = Intent(this, PacienteActivity::class.java)
         intent.putExtra("url",url)
         intent.putExtra("IDP",IDP)
-        intent.putExtra("dni",dni)
+        intent.putExtra("dni",IDC)
         intent.putExtra("name",name)
         intent.putExtra("especialidad",especialidad)
         intent.putExtra("back","Inicio")

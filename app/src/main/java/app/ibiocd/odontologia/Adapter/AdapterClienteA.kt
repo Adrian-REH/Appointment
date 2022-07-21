@@ -16,7 +16,7 @@ class AdapterClienteA(val arrayList: ArrayList<Clientes>, val context: Context, 
     RecyclerView.Adapter<AdapterClienteA.ViewHolder>(){
 
     interface onClienteItemClick{
-        fun onClienteAItemClick(dni: String,fecha:String,ID:Int)
+        fun onClienteAItemClick(IDC: String,fecha:String,ID:Int)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

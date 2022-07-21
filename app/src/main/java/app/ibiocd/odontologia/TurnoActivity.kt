@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.database.Cursor
+import android.graphics.Color
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -97,6 +98,7 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
             dni = intent.getStringExtra("dni")
            // correo = intent.getStringExtra("correo")
             IDP = intent.getStringExtra("IDP")
+            Toast.makeText(applicationContext, "$dni", Toast.LENGTH_SHORT).show()
             url = intent.getStringExtra("url")
             name = intent.getStringExtra("name")
             fecha= intent.getStringExtra("fecha").toString().toInt()
@@ -202,6 +204,7 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
                                 val img = datos[i].img
                                 val espc = datos[i].especialidad
                                 val prest = datos[i].prestacion
+                                val estado = datos[i].estado
 
                                 txtnumdia.text=datos[i].hora
 
@@ -320,7 +323,17 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
                                 }
                                 if (datos[i].estado=="C"){
                                     floatcanc?.visibility=View.GONE
+                                    cardestado.setCardBackgroundColor(Color.RED)
                                 }
+                                if (datos[i].estado=="A"){
+                                    cardestado.setCardBackgroundColor(Color.GREEN)
+                                }
+                                if (datos[i].estado=="E"){
+                                 cardestado.setCardBackgroundColor(Color.TRANSPARENT)
+                                }
+
+
+
                                 if (displayListC.size>0 && displayListC.size<6){
                                     rviewcliente.visibility=View.VISIBLE
 
@@ -544,15 +557,24 @@ class TurnoActivity : AppCompatActivity(), AdapterArchivo.onArchivoItemClick,
                 override fun onResponse(call: Call<TurnoRespons>, response: retrofit2.Response<TurnoRespons>) {
                     arraylisP.clear()
                     arraylisPres.clear()
-                    if (estado!="C"){
 
+                    if (accion=="insertar"){
                         getClientDatos(dni.toString(),accion,txtepaciente.text.toString())
 
-                    }else{
-
-                        getClientDatos(dni.toString(),"borrar",txtepaciente.text.toString())
-
                     }
+
+
+
+
+                        /*            if (estado!="C"){
+
+                                        getClientDatos(dni.toString(),accion,txtepaciente.text.toString())
+
+                                    }else{
+
+                                        getClientDatos(dni.toString(),"borrar",txtepaciente.text.toString())
+
+                                    }*/
 
                     if (id==0){
                         finish()
