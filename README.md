@@ -43,18 +43,11 @@
 
  <p align="center"><img height="800" src=""> </p>
 
-### Registro e Informe de Cliente
+### Actividad de Turnos
+### Actividad de Clientes
+### Actividad de Profesional
+### Actividad de Configuracion
 
- <p align="left"><img height="400" src=""> </p>
- 
- 
-### Registro e Informe de Maquina
-
- <p align="left"><img height="400" src=""> </p>
- 
-### Registro de Proveedor
-
- <p align="left"><img height="400" src=""> </p>
 
 
 ## Librerias o repositorios
