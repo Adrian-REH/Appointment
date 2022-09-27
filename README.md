@@ -51,7 +51,6 @@
 
 
 ## Librerias o repositorios
-  - Volley
   - retrofit
   - okhttp
   - gson
