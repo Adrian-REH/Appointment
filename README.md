@@ -51,6 +51,17 @@
 
 
 ## Librerias o repositorios
+Api
   - retrofit
   - okhttp
   - gson
+Testing
+  - Junit
+  - Mokito
+  - Expresso(Vista)
+UI
+  - JetPack Compose
+Data Base Offline
+  - Room
+Dependencias Injection
+  - Hilt
