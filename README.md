@@ -4,7 +4,7 @@
 [![php](https://img.shields.io/badge/php-F7DF1E?style=flat-square&logo=php&logoColor=black&labelColor=F7DF1E)]()
 [![MySQL](https://img.shields.io/badge/MySQL-279FDF?style=flat-square&logo=mysql&logoColor=white&labelColor=279FDF)]()
 </br>
-   Nos especializamos unicamente en ODONTOLOGIA, queremso facilitar la organizacion de turnos para los profesionales, asi tambien aplicaremos distintas funcionalidades como:
+   Esta app se especializa unicamente en Odontologia, queremso facilitar la organizacion de turnos para los profesionales, asi tambien aplicaremos distintas funcionalidades como:
    - Visualizar, gestionar y diferenciar por calificacion las distintas Tarifas o aplicacion de Descuentos a sus clientes
    - Generar, limitar y combinar distintos Tickets temporales para regalar a sus clientes por bondad del profesional.
    - Organizar los distintos clientes y beneficiarlos con me gusta, una ESTRELLA!, descuentos,  tickets tambien se podra descalificar con un Bloqueo
