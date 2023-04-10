@@ -14,7 +14,8 @@
    - Tambien podra ver los clientes que quieren sacar turnos para el profesional.
    - P
 ## Diagrama de estado
-![diagrama](https://github.com/Adrian-REH/Appointment/blob/main/Diagrama%20sin%20título.drawio.png)
+<img src="https://github.com/Adrian-REH/Appointment/blob/main/Diagrama%20sin%20título.drawio.png" align="center" width="520"/>
+
 ## Descarga
 [![Google Play](https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&logo=googleplay&logoColor=white&labelColor=414141)]() Proximamente
 ## Vista previa y descripcion de actividad
@@ -50,7 +51,7 @@
 ### Actividad de Profesional
 ### Actividad de Configuracion
 
-## Tech stack & Open-source libraries
+## Librerias 
 - Minimum SDK level 23
 - [Kotlin](https://kotlinlang.org/) based, [Coroutines](https://github.com/Kotlin/kotlinx.coroutines) + [Flow](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/) for asynchronous.
 - Jetpack
