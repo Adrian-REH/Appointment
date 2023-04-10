@@ -18,38 +18,7 @@
 
 ## Descarga
 [![Google Play](https://img.shields.io/badge/Google_Play-414141?style=for-the-badge&logo=googleplay&logoColor=white&labelColor=414141)]() Proximamente
-## Vista previa y descripcion de actividad
-### Principal
-  - **Turnos( en espera y proximos a atender) y Descuentos, limite de tickets**
-    1. Seran dos listas uno que son los turnos que se atienden en la fecha, los que estan en espera para confirmar y un BOTON que de un calendario de todos los turnos que 
-  sacaron los clientes en general.
-    2. Los turnos tendran descuentos personalizados para cada clientes que podra cambiarlos entrando a su perfil, su entra a configuracion puede agregar mas descuentos o quitar
-    algunos
-    3. Podra ver la lista de Tickets usados o sin usar con un boton podra entrar y regalar mas tickets o podra simplemente anularos notificando a su cliente.
-    4. al Ingresar a al Turno podra cancelarlo o cambiar su hora.
-  
-  
-  - **Lista de clientes con me gusta y estrellas**
-    1.Habra una lista inmensa de clientes que podra ver con me gusta, estrella o simplemente entrando a su perfil podra bloquearlos, tambien regalarle Ticket o darle descuentos
-    2.La lista de clientes tiene que tener un orden de, clientes que le dio una estrella o los que simplemente no, tambien podra ver el numero de turnos que saco en general.
-    
-  - **Configuracion y Boton de datos personales**
-    1. Aqui tendra acceso a sus datos personales presionando un boton. podra cambiarlos instantaneamente excepto los que piden verificacion, Tambien se podra aplicar descuentos
-    y ticket para los clientes dependiendo el numero de turnos si quiere que se aplique de forma automatica o por estrella o un simple me gusta.
-    2. Tambien podra configurar:
-     - El acceso
-     - Crear nuevos Clientes 
-     - Codigo de Recomendacion
-     - Estilo de la vista e Idioma
-     - Tambien podra ver la lista de bloqueados y desbloquearlos
-     - Podra desHabilitar los turnos para todos los clientes o solo algunos.
 
- <p align="center"><img height="800" src=""> </p>
-
-### Actividad de Turnos
-### Actividad de Clientes
-### Actividad de Profesional
-### Actividad de Configuracion
 
 ## Librerias 
 - Minimum SDK level 23
